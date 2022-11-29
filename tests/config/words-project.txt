@@ -1,0 +1,17 @@
+HEREDOCS
+LLMNR
+autofix
+brycewray
+danielfdickinson
+davidsneighbour
+dmacvicar
+gitleaks
+gitlint
+gsub
+kvm
+linebreak
+loadavg
+markdownlint
+qcow2
+tfvars
+vardefs
