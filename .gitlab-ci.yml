@@ -8,8 +8,7 @@ image:
   name: danielfdickinson/gitlab-debian-ansible-pre-commit:0.1.0
 
 before_script:
-- DEBIAN_FRONTEND=noninteractive apt install -y ansible
-- ansible --version
+- DEBIAN_FRONTEND=noninteractive apt install -y ansible-lint
 
 checks_a:
   rules:
