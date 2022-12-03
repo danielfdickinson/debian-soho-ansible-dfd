@@ -1,0 +1,6 @@
+---
+virtual_mailbox_domains:
+- "{{ central_local_domain }}"
+virtual_alias_domains_hosts: "{{ ([(( hostvars.values() | map(attribute='ansible_facts')) | map(attribute='fqdn')), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique }}" # yamllint disable-line
+virtual_alias_domains: "{{ [ vault_virtual_alias_domains, virtual_alias_domains_hosts ] | flatten | unique }}" # yamllint disable-line
+...

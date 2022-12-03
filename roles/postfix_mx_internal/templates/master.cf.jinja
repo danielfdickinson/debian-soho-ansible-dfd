@@ -1,0 +1,73 @@
+#
+# Postfix master process configuration file.  For details on the format
+# of the file, see the master(5) manual page (command: "man 5 master" or
+# on-line: http://www.postfix.org/master.5.html).
+#
+# Do not forget to execute "postfix reload" after editing this file.
+#
+# ==========================================================================
+# service type  private unpriv  chroot  wakeup  maxproc command + args
+#               (yes)   (yes)   (no)    (never) (100)
+# ==========================================================================
+localhost:smtp      inet  n       -       y       -       -       smtpd
+  -o syslog_name=postfix/smtpd
+  -o smtpd_sasl_auth_enable=$mta_sasl_auth_enable
+  -o smtpd_relay_restrictions=$mta_relay_restrictions
+  -o smtpd_recipient_restrictions=$mta_recipient_restrictions
+#smtp      inet  n       -       y       -       1       postscreen
+#smtpd     pass  -       -       y       -       -       smtpd
+#dnsblog   unix  -       -       y       -       0       dnsblog
+#tlsproxy  unix  -       -       y       -       0       tlsproxy
+{{ ansible_facts['ens3']['ipv4']['address'] }}:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
+  -o syslog_name=postfix/lsmtpd
+  -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
+  -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
+  -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
+  -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_security_level=$lsmtpd_tls_security_level
+#  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
+#  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
+#  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
+#  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
+#  -o milter_macro_daemon_name=LSMTPD
+#628       inet  n       -       y       -       -       qmqpd
+pickup    unix  n       -       y       60      1       pickup
+cleanup   unix  n       -       y       -       0       cleanup
+qmgr      unix  n       -       n       300     1       qmgr
+#qmgr     unix  n       -       n       300     1       oqmgr
+tlsmgr    unix  -       -       y       1000?   1       tlsmgr
+rewrite   unix  -       -       y       -       -       trivial-rewrite
+bounce    unix  -       -       y       -       0       bounce
+defer     unix  -       -       y       -       0       bounce
+trace     unix  -       -       y       -       0       bounce
+verify    unix  -       -       y       -       1       verify
+flush     unix  n       -       y       1000?   0       flush
+proxymap  unix  -       -       n       -       -       proxymap
+proxywrite unix -       -       n       -       1       proxymap
+smtp      unix  -       -       y       -       -       smtp
+relay     unix  -       -       y       -       -       smtp
+        -o syslog_name=postfix/$service_name
+#       -o smtp_helo_timeout=5 -o smtp_connect_timeout=5
+showq     unix  n       -       y       -       -       showq
+error     unix  -       -       y       -       -       error
+retry     unix  -       -       y       -       -       error
+discard   unix  -       -       y       -       -       discard
+local     unix  -       n       n       -       -       local
+virtual   unix  -       n       n       -       -       virtual
+lmtp      unix  -       -       y       -       -       lmtp
+anvil     unix  -       -       y       -       1       anvil
+scache    unix  -       -       y       -       1       scache
+postlog   unix-dgram n  -       n       -       1       postlogd
+#
+# ====================================================================
+# Interfaces to non-Postfix software. Be sure to examine the manual
+# pages of the non-Postfix software to find out what options it wants.
+#
+# Many of the following services use the Postfix pipe(8) delivery
+# agent.  See the pipe(8) man page for information about ${recipient}
+# and other message envelope options.
+# ====================================================================
+#
+#mailman   unix  -       n       n       -       -       pipe
+#  flags=FRX user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
+#  ${nexthop} ${user}

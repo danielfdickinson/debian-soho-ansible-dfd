@@ -1,0 +1,3 @@
+{%- for mailuser in mailbox_users %}
+{{ mailuser['username'] }}@{{ mailuser['maildomain'] }}:{{ mailuser['mailpassword'] }}:{{ mailuser['uid'] }}:{{ mailuser['gid'] }}::/var/vmail/{{ mailuser['username'] }}@{{ mailuser['maildomain'] }}::
+{% endfor %}

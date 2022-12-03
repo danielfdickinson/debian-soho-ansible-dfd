@@ -1,0 +1,3 @@
+---
+email_relayhost: "{{ vault_email_relayhost }}"
+...

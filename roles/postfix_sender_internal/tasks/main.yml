@@ -1,0 +1,29 @@
+---
+- name: Configure postfix as an email sender (only to own internal server)
+  become: yes
+  block:
+  - name: Configure email aliases
+    ansible.builtin.template:
+      dest: /etc/aliases
+      group: root
+      mode: "0644"
+      owner: root
+      src: aliases.jinja
+    notify: Apply email aliases
+  - name: Configure postfix main.cf
+    ansible.builtin.template:
+      dest: /etc/postfix/main.cf
+      group: root
+      mode: "0644"
+      owner: root
+      src: main.cf.jinja
+    notify: Restart postfix
+  - name: Configure postfix servers (master.cf)
+    ansible.builtin.copy:
+      dest: /etc/postfix/master.cf
+      group: root
+      mode: "0644"
+      owner: root
+      src: master.cf
+    notify: Restart postfix
+...

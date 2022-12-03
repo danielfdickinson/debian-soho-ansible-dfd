@@ -1,0 +1,64 @@
+---
+- name: Configure postfix as an email sender (only to own server)
+  become: yes
+  block:
+  - name: Configure postfix main.cf
+    ansible.builtin.template:
+      dest: /etc/postfix/main.cf
+      group: root
+      mode: "0644"
+      owner: root
+      src: main.cf.jinja
+    notify: Restart postfix
+  - name: Configure postfix master.cf
+    ansible.builtin.template:
+      dest: /etc/postfix/master.cf
+      group: root
+      mode: "0644"
+      owner: root
+      src: master.cf.jinja
+    notify: Restart postfix
+  - name: Configure sender addresses to only deliver locally
+    ansible.builtin.template:
+      dest: /etc/postfix/sender_default_transport_map
+      group: root
+      mode: "0644"
+      owner: root
+      src: sender_default_transport_map.jinja
+    notify: Rehash sender transport map
+  - name: Configure virtual mailboxes
+    ansible.builtin.template:
+      dest: /etc/postfix/vmailbox
+      group: root
+      mode: "0644"
+      owner: root
+      src: vmailbox.jinja
+    notify: Rehash virtual mailboxes
+  - name: Configure virtual aliases
+    ansible.builtin.template:
+      dest: /etc/postfix/virtual_aliases
+      group: root
+      mode: "0644"
+      owner: root
+      src: virtual_aliases.jinja
+    notify: Rehash virtual aliases
+  - name: Configure system email aliases
+    ansible.builtin.template:
+      dest: /etc/aliases
+      group: root
+      mode: "0644"
+      owner: root
+      src: aliases.jinja
+    notify: Apply email aliases
+- name: Allow localnet SMTP (alternate port)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    interface: ens3
+    direction: in
+    proto: tcp
+    src: "{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['network'] }}/{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['netmask'] }}" # yamllint disable-line
+    dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+    to_port: "{{ internal_relay_port }}"
+  loop: "{{ groups['email_internal_senders'] }}"
+...

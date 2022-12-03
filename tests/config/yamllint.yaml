@@ -31,8 +31,7 @@ rules:
     indent-sequences: false
     spaces: 2
   key-duplicates: enable
-  key-ordering:
-    level: warning
+  key-ordering: disable
   line-length:
     max: 80
   new-line-at-end-of-file: enable
@@ -54,8 +53,7 @@ rules:
     # required: false
     required: only-when-needed
   trailing-spaces: enable
-  # truthy:
-  #   level: warning
+  truthy: disable
 
 yaml-files:
 - "*.yaml"

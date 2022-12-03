@@ -1,0 +1,4 @@
+{%- for mydestination in mail_local_host_destinations %}
+MAILER-DAEMON@{{ mydestination }} local:{{ ansible_facts['fqdn'] }}
+postmaster@{{ mydestination }} local:{{ ansible_facts['fqdn'] }}
+{%- endfor %}

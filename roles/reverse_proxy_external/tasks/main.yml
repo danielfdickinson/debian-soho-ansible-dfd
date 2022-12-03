@@ -1,0 +1,30 @@
+---
+- name: Configure HAProxy
+  become: yes
+  block:
+  - name: Create/Update HAProxy configuration file
+    ansible.builtin.template:
+      dest: /etc/haproxy/haproxy.cfg
+      group: root
+      mode: "0644"
+      owner: root
+      src: haproxy.cfg.jinja
+    notify: Reload haproxy
+- name: Configure firewall
+  become: yes
+  block:
+  - name: Allow IMAP in on external interface
+    community.general.ufw:
+      rule: allow
+      interface: ens4
+      direction: in
+      proto: tcp
+      to_port: "{{ imap_port }}"
+#  - name: Allow Submission in on external interface
+#    community.general.ufw:
+#      rule: allow
+#      interface: ens4
+#      direction: in
+#      proto: tcp
+#      to_port: "{{ submission_port }}"
+...

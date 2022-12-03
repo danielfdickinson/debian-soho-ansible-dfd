@@ -1,0 +1,5 @@
+---
+- name: Add CA certificate to system
+  become: yes
+  ansible.builtin.command: update-ca-certificates
+...

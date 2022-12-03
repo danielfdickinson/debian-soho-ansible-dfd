@@ -1,0 +1,19 @@
+---
+- name: Restart postfix
+  become: yes
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+- name: Rehash sender transport map
+  become: yes
+  ansible.builtin.command: postmap hash:/etc/postfix/sender_default_transport_map # yamllint disable-line
+- name: Rehash virtual mailboxes
+  become: yes
+  ansible.builtin.command: postmap hash:/etc/postfix/vmailbox
+- name: Rehash virtual aliases
+  become: yes
+  ansible.builtin.command: postmap hash:/etc/postfix/virtual_aliases
+- name: Apply email aliases
+  become: yes
+  ansible.builtin.command: newaliases
+...

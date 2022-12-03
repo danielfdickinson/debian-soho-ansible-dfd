@@ -1,0 +1,10 @@
+---
+- name: Apply email aliases
+  become: yes
+  ansible.builtin.command: newaliases
+- name: Restart postfix
+  become: yes
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+...

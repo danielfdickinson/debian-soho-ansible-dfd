@@ -1,0 +1,6 @@
+*.swp
+*~
+#*#
+*.retry
+test.yml
+/*.tf

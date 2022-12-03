@@ -1,0 +1,7 @@
+---
+- name: Reload dovecot configuration
+  become: yes
+  ansible.builtin.service:
+    name: dovecot
+    state: reloaded
+...

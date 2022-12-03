@@ -1,0 +1,34 @@
+---
+- name: Add private certificates (and CA) to system
+  become: yes
+  block:
+  - name: Add private CA as file
+    ansible.builtin.copy:
+      content: "{{ private_ca_cert_certificate }}"
+      dest: "{{ private_ca_cert_file }}"
+      group: root
+      mode: "0644"
+      owner: root
+    notify: Add CA certificate to system
+  - name: Add directory for private certificate and key
+    ansible.builtin.file:
+      group: root
+      mode: "0755"
+      owner: root
+      path: /etc/ssl/privcert
+      state: directory
+  - name: Add private certificate as file
+    ansible.builtin.copy:
+      content: "{{ private_cert_cert_content }}"
+      dest: "{{ private_cert_cert_file }}"
+      group: root
+      mode: "0644"
+      owner: root
+  - name: Add private key for private cert as file
+    ansible.builtin.copy:
+      content: "{{ private_cert_key_content }}"
+      dest: "{{ private_cert_key_file }}"
+      group: root
+      mode: "0600"
+      owner: root
+...

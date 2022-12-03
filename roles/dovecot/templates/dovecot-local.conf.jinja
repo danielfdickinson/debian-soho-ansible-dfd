@@ -1,0 +1,19 @@
+# Allow ProxyProtocol from HAProxy
+haproxy_trusted_networks = {% for proxy_host in groups['rproxy_external'] %} {{ hostvars[proxy_host]['ansible_facts']['ens3']['ipv4']['address'] }}{% endfor +%}
+haproxy_timeout = 3s
+mail_location = sdbox:~/mail
+mail_server_admin = mailto:{{ central_local_email }}
+ssl = required
+ssl_cert = <{{ private_cert_cert_file }}
+ssl_key = <{{ private_cert_key_file }}
+# For Dovecot acting as client (e.g. submission)
+#ssl_client_ca_dir = /etc/ssl/certs
+#ssl_client_ca_file =
+ssl_min_protocol = TLSv1.2
+ssl_prefer_server_ciphers = yes
+imap_client_workarounds = tb-extra-mailbox-sep tb-lsub-flags
+#submission_max_recipients = 20
+#submission_relay_host = {{ submission_relay_host }}
+#submission_relay_port = {{ submission_relay_port }}
+#submission_relay_trusted = yes
+#submission_relay_ssl = starttls
