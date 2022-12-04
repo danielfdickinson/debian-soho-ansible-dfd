@@ -5,9 +5,8 @@ infrastructure'. This repository takes a cluster spun up via Terraform and adds
 and updates configuration to finalize the cluster for use.
 
 This repository should not include any private or even particularly personalised
-information. It does, however, depend on adding some (documented) variables and
-supplying them to the Terraform plan command (e.g. using
-`-var-file my-personalisation.tfvars.hcl`).
+information. It does, however, depend on adding some (to be documented)
+variables and supplying them to Ansible vaults.
 
 Despite not having personalised details, it is still designed for DFD's uses and
 is likely not a 'plug and play' option for others. It is Daniel's hope, however,
