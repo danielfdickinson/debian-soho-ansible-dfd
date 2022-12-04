@@ -1,4 +1,5 @@
 ---
+ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_common_args: "{% if not ('bastions' in group_names) %}-o ProxyCommand=\"ssh -p {{ vault_bastion_port }} -W %h:%p -q {{ vault_bastion_user }}@{{ vault_bastion_host }}\"{% endif %}" # yamllint disable-line
 ansible_ssh_host_key_checking: false # Note: this should be true in production
 ansible_ssh_port: "{{ vault_ansible_port }}"

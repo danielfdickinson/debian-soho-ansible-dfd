@@ -1,9 +1,8 @@
 ---
 - hosts: all
   gather_facts: true
-  tasks:
-  - name: Make sure we gather facts
-    ansible.builtin.setup:
+  roles:
+  - add_admin_password
 - hosts: private_cert_ssl_servers
   roles:
   - private_cert

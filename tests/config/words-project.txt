@@ -99,6 +99,7 @@ showq
 smtpd
 spampolice
 starttls
+sudonp
 tcplog
 tfvars
 tlsmgr

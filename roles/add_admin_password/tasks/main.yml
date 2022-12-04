@@ -1,0 +1,18 @@
+---
+- name: Require admin password for sudo
+  become: yes
+  block:
+  - name: Set admin user password
+    ansible.builtin.user:
+      name: "{{ local_admin_user }}"
+      password: "{{ vault_admin_password }}"
+      password_lock: false
+  - name: Remove admin user from sudonp group
+    ansible.builtin.user:
+      name: "{{ local_admin_user }}"
+      groups:
+      - adm
+      - sudo
+      - sys
+  notify: Restart SSH
+...
