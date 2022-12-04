@@ -1,7 +1,8 @@
 ---
-ansible_user: "{{ vault_admin_user }}"
-ansible_port: "{{ vault_default_ansible_port }}"
-ansible_ssh_common_args: "{% if not ('bastions' in group_names) %}{{ '-o ProxyCommand=\"ssh -o \\\"ForwardAgent yes\\\" -W %h:%p -q ' }}{{ vault_bastion_user }}{{ '@' }}{{ vault_bastion_host }}{{ '\"' }}{% endif %}" # yamllint disable-line
+ansible_ssh_common_args: "{% if not ('bastions' in group_names) %}-o ProxyCommand=\"ssh -p {{ vault_bastion_port }} -W %h:%p -q {{ vault_bastion_user }}@{{ vault_bastion_host }}\"{% endif %}" # yamllint disable-line
+ansible_ssh_host_key_checking: false # Note: this should be true in production
+ansible_ssh_port: "{{ vault_ansible_port }}"
+ansible_ssh_user: "{{ vault_admin_user }}"
 central_local_domain: "{{ vault_central_local_domain }}"
 central_local_email: "{{ vault_central_local_email }}"
 dovecot_health_check_port: "{{ vault_dovecot_health_check_port }}"
