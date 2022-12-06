@@ -3,7 +3,7 @@
   become: yes
   block:
   - name: Add configuration for PROXY protocol
-    ansible.builtin.template:
+    ansible.builtin.copy:
       dest: /etc/apache2/conf-available/haproxy-proxy-protocol.conf
       group: root
       mode: "0644"
