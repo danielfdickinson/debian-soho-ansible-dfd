@@ -91,6 +91,7 @@ qmgr
 qmqpd
 redispatch
 relayhost
+remoteip
 rproxy
 rubygems
 scache

@@ -18,4 +18,7 @@
 - hosts: rproxy_external
   roles:
   - reverse_proxy_external
+- hosts: website_servers:rproxy_internal
+  roles:
+  - apache2_proxy_protocol
 ...
