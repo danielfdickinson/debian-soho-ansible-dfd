@@ -30,7 +30,7 @@
       group: root
       mode: "0644"
       owner: root
-      src: dovecot-conf.d/10-master.conf.jinja
+      src: dovecot-conf.d/10-master.conf.j2
     notify: Reload dovecot configuration
   - name: Configure dovecot local overrides to config
     ansible.builtin.template:
@@ -38,7 +38,7 @@
       group: root
       mode: "0644"
       owner: root
-      src: dovecot-local.conf.jinja
+      src: dovecot-local.conf.j2
     notify: Reload dovecot configuration
   - name: Configure dovecot users
     ansible.builtin.template:
@@ -46,7 +46,7 @@
       group: dovecot
       mode: "0640"
       owner: mail
-      src: users.jinja
+      src: users.j2
     notify: Reload dovecot configuration
 - name: Allow access to Dovecot through firewall
   become: yes

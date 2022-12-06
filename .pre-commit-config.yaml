@@ -34,7 +34,7 @@ repos:
     args: [--unique]
   - id: fix-byte-order-marker
   # - removes utf-8 byte order marker
-  # - id: forbid-new-submodules
+  - id: forbid-new-submodules
   # - prevents addition of new git submodules.
   - id: mixed-line-ending
   # replaces or checks mixed line ending.
@@ -67,7 +67,7 @@ repos:
     exclude: ^(_vendor|.*/vault.yml$)
 
 - repo: "https://github.com/zricethezav/gitleaks"
-  rev: v8.8.4
+  rev: v8.15.2
   hooks:
   - id: gitleaks
 
@@ -83,7 +83,12 @@ repos:
     alias: ec
     args:
     - -no-color
-    exclude: ^(LICENSE|.*/master.cf(.jinja)?$)
+    exclude: ^(LICENSE|.*/master\.cf(\.j2)?$)
+
+- repo: "https://github.com/semaphor-dk/dansabel"
+  rev: b72c70351d1a9e32a75db505fcb3aa414f3282f8
+  hooks:
+  - id: dansabel
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
   rev: v6.14.1

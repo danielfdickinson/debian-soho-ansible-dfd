@@ -21,6 +21,7 @@ ccert
 checkpassword
 ciphersuites
 danielfdickinson
+dansabel
 davidsneighbour
 ddev
 dgram

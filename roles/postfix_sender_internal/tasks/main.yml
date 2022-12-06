@@ -8,7 +8,7 @@
       group: root
       mode: "0644"
       owner: root
-      src: aliases.jinja
+      src: aliases.j2
     notify: Apply email aliases
   - name: Configure postfix main.cf
     ansible.builtin.template:
@@ -16,7 +16,7 @@
       group: root
       mode: "0644"
       owner: root
-      src: main.cf.jinja
+      src: main.cf.j2
     notify: Restart postfix
   - name: Configure postfix servers (master.cf)
     ansible.builtin.copy:
