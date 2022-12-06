@@ -1,16 +1,15 @@
-# DFD Debian VM cluster on Libvirt Ansible configuration
+# DFD Debian Libvirt VM cluster via Ansible
 
-Daniel F. Dickinson's Libvirt virtual machine deployment for a 'personal
-infrastructure'. This repository takes a cluster spun up via Terraform and adds
-and updates configuration to finalize the cluster for use.
+Bare-metal and Libvirt virtual machine deployment via Ansible for a 'personal
+infrastructure' cluster, including mail server, groupware, and web hosting.
 
-This repository should not include any private or even particularly personalised
-information. It does, however, depend on adding some (to be documented)
-variables and supplying them to Ansible vaults.
+This repository should not include any unencrypted private or even particularly
+personalised information. It does, however, depend on adding some (to be
+documented) variables and supplying them to Ansible vaults.
 
-Despite not having personalised details, it is still designed for DFD's uses and
-is likely not a 'plug and play' option for others. It is Daniel's hope, however,
-that it still proves informative and useful.
+It is designed for DFD's uses and is likely not a 'plug and play' option for
+others. It is Daniel's hope, however, that it still proves informative and
+useful.
 
 ## Metadata
 
