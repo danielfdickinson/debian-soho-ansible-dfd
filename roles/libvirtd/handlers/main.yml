@@ -1,0 +1,12 @@
+---
+- name: Restart libvirt-guests
+  become: yes
+  ansible.builtin.service:
+    name: libvirt-guests
+    state: restarted
+- name: Reload apparmor
+  become: yes
+  ansible.builtin.service:
+    name: apparmor
+    state: reloaded
+...

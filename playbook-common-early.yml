@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: true
+  roles:
+  - packages_base
+  - packages_firmware
+
+- hosts: storage_extra_local
+  roles:
+  - storage_setup_extra_local
+
+- hosts: edge_hosts:libvirtd_hosts
+  roles:
+  - fail2ban
+
+- hosts: cert_private_ssl_servers
+  roles:
+  - cert_private
+...

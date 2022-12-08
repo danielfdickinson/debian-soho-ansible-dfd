@@ -1,0 +1,19 @@
+---
+- hosts: bare_metal
+  gather_facts: false
+  roles:
+  - user_admin_add
+  vars:
+    ansible_ssh_port: 22
+    ansible_become_password: ""
+    ansible_ssh_user: debian
+
+- hosts: bare_metal
+  roles:
+  - user_debian_remove
+  - sshd_port_set
+  vars:
+    ansible_ssh_port: 22
+    ansible_become_password: "{{ vault_ansible_become_password }}"
+    ansible_ssh_user: "{{ vault_admin_user }}"
+...

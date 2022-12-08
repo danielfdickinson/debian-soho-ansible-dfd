@@ -1,0 +1,5 @@
+---
+- name: Bring up br1
+  become: yes
+  ansible.builtin.command: ifup br1
+...

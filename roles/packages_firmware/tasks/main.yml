@@ -1,0 +1,11 @@
+---
+- name: Install firmware and microcode
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - firmware-linux
+    - firmware-realtek
+    update_cache: true
+    state: present
+  notify: Reboot host
+...

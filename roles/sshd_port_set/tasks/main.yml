@@ -1,0 +1,13 @@
+---
+- name: Ensure external SSH port and other SSH config is as desired
+  become: yes
+  block:
+  - name: Set SSH config
+    ansible.builtin.template:
+      dest: /etc/ssh/sshd_config.d/sshd_custom.conf
+      group: root
+      mode: "0644"
+      owner: root
+      src: sshd_custom.conf.j2
+    notify: Restart SSH
+...

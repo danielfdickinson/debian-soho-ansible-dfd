@@ -1,0 +1,13 @@
+---
+dependencies:
+- role: packages_apt_non_free
+galaxy_info:
+  author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
+  description: Add contrib and non-free apt repos
+  license: MIT
+  min_ansible_version: "6.0"
+  platforms:
+  - name: Debian
+    versions:
+    - all
+...

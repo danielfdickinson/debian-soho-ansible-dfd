@@ -1,0 +1,27 @@
+---
+ansible_ssh_port: "{{ vault_ansible_port }}"
+pool_list:
+- base-images
+- fast
+- slow
+second_interface: "{{ vault_second_interface }}"
+storage_mountpoints:
+- /var/lib/libvirt/images/slow
+storage_mounts:
+- src: /dev/dlcicl01vg1/libvirt-slow
+  boot: yes
+  fstype: ext4
+  opts: relatime,nodev,nosuid,noexec
+  path: /var/lib/libvirt/images/slow
+storage_filesystems:
+- /dev/dlcicl01vg1/libvirt-slow
+storage_logical_volumes:
+- lvname: libvirt-slow
+  opts: --type raid1 --mirrors 1
+  resizefs: false
+  size: 1T
+  vgname: dlcicl01vg1
+storage_volume_groups:
+- vgname: dlcicl01vg1
+  pvs: "{{ vault_vg1_pvs }}"
+...

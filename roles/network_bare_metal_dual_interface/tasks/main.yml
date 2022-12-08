@@ -1,0 +1,25 @@
+---
+- name: Disable cloud-init network config
+  become: yes
+  ansible.builtin.copy:
+    content: "network: {config: disabled}"
+    dest: /etc/cloud/cloud.cfg.d/99_disable-network-config.cfg
+    group: root
+    mode: "0644"
+    owner: root
+- name: Install bridge utilities
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - bridge-utils
+    state: present
+- name: Configure br1 on second interface
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/network/interfaces.d/70-br1
+    group: root
+    mode: "0644"
+    owner: root
+    src: br1.j2
+  notify: Bring up br1
+...

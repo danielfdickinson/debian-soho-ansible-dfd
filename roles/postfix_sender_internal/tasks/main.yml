@@ -2,6 +2,10 @@
 - name: Configure postfix as an email sender (only to own internal server)
   become: yes
   block:
+  - name: Ensure postfix is installed
+    ansible.builtin.apt:
+      name:
+      - postfix
   - name: Configure email aliases
     ansible.builtin.template:
       dest: /etc/aliases

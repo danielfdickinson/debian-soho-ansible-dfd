@@ -1,0 +1,13 @@
+---
+- name: Remove 'debian' user
+  become: yes
+  ansible.builtin.user:
+    force: true
+    name: debian
+    remove: true
+    state: absent
+  notify: Restart SSH server
+  vars:
+    ansible_become_password: "{{ vault_ansible_become_password }}"
+    ansible_ssh_user: "{{ vault_admin_user }}"
+...

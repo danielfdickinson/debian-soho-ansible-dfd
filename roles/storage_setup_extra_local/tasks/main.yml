@@ -1,0 +1,59 @@
+---
+- name: Install lvm2 (we'll also use it for RAID when applicable)
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - lvm2
+    state: present
+- name: Add physical volumes and volume groups to lvm2
+  become: yes
+  community.general.lvg:
+    vg: "{{ item.vgname }}"
+    pvs: "{{ item.pvs }}"
+    state: present
+  loop: "{{ storage_volume_groups }}"
+  when: storage_volume_groups is defined
+- name: Add logical volumes via lvm2
+  become: yes
+  community.general.lvol:
+    lv: "{{ item.lvname }}"
+    opts: "{{ item.opts }}"
+    resizefs: "{{ item.resizefs }}"
+    shrink: false
+    state: present
+    size: "{{ item.size }}"
+    vg: "{{ item.vgname }}"
+  loop: "{{ storage_logical_volumes }}"
+  when: storage_logical_volumes is defined
+- name: Add filesystems
+  become: yes
+  community.general.filesystem:
+    dev: "{{ item }}"
+    fstype: ext4
+    resizefs: true
+    state: present
+  loop: "{{ storage_filesystems }}"
+  when: storage_filesystems is defined
+- name: Add mountpoints
+  become: yes
+  # If you need special ownership or
+  # permission, you will need to do add
+  # that elsewhere
+  ansible.builtin.file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+  loop: "{{ storage_mountpoints }}"
+  when: storage_mountpoints is defined
+- name: Mount filesystems
+  become: yes
+  ansible.posix.mount:
+    src: "{{ item.src }}"
+    boot: "{{ item.boot }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts }}"
+    path: "{{ item.path }}"
+    state: mounted
+  loop: "{{ storage_mounts }}"
+  when: storage_mounts is defined
+...

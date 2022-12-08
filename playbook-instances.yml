@@ -1,11 +1,8 @@
 ---
-- hosts: all
-  gather_facts: true
+- hosts: libvirtd_hosts
   roles:
-  - add_admin_password
-- hosts: private_cert_ssl_servers
-  roles:
-  - private_cert
+  - libvirtd
+  - user_libvirt_client_add
 - hosts: mailbox_servers
   roles:
   - dovecot

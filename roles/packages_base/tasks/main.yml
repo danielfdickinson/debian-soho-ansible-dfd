@@ -1,0 +1,80 @@
+---
+- name: Upgrade packages if needed
+  become: yes
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
+    purge: true
+    upgrade: yes
+- name: Configure base packages and make sure they are present
+  become: yes
+  block:
+  - name: Configure base packages
+    # Note that restic and rsyslog have their own roles
+    block:
+    - name: Configure unattended-upgrades
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+        group: root
+        mode: "0644"
+        owner: root
+        src: 50unattended-upgrades
+    - name: Configure tmux for new users
+      ansible.builtin.copy:
+        dest: /etc/skel/.tmux.conf
+        group: root
+        mode: "0644"
+        owner: root
+        src: .tmux.conf
+    - name: Configure tmux for local admin
+      become: no
+      ansible.builtin.copy:
+        dest: /local-home/{{ vault_admin_user }}/.tmux.conf
+        mode: "0644"
+        src: .tmux.conf
+  - name: Ensure our desired base packages are present
+    become: yes
+    ansible.builtin.apt:
+      autoclean: true
+      autoremove: true
+      name:
+      - molly-guard
+      - mutt
+      - needrestart
+      - powermgmt-base
+      - python3-gi
+      - restic
+      - rsyslog-relp
+      - tmux
+      - ufw
+      - unattended-upgrades
+      purge: true
+      state: present
+  - name: Ensure cifs-utils only for OVH backup clients
+    become: yes
+    ansible.builtin.apt:
+      name:
+      - cifs-utils
+      state: present
+    when: "'backup_clients_ovh' in group_names"
+  - name: Ensure smartmontools only for bare-metal hosts
+    become: yes
+    ansible.builtin.apt:
+      name:
+      - smartmontools
+      state: present
+    when: "'bare_metal' in group_names"
+  - name: Post-configure base packages
+    become: yes
+    block:
+    - name: Allow SSH incoming
+      community.general.ufw:
+        direction: in
+        rule: limit
+        port: "{{ ansible_ssh_port }}"
+        proto: tcp
+    - name: Enable logging and start UFW
+      community.general.ufw:
+        logging: low
+        state: enabled
+...

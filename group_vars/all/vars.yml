@@ -1,6 +1,6 @@
 ---
 ansible_become_password: "{{ vault_ansible_become_password }}"
-ansible_ssh_common_args: "{% if not ('bastions' in group_names) %}-o ProxyCommand=\"ssh -p {{ vault_bastion_port }} -W %h:%p -q {{ vault_bastion_user }}@{{ vault_bastion_host }}\"{% endif %}" # yamllint disable-line
+ansible_ssh_common_args: "{% if 'external_ssh' not in group_names %}-o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -p {{ vault_bastion_port }} -W %h:%p -q {{ vault_bastion_user }}@{{ vault_bastion_host }}\"{% endif %}" # yamllint disable-line
 ansible_ssh_host_key_checking: false # Note: this should be true in production
 ansible_ssh_port: "{{ vault_ansible_port }}"
 ansible_ssh_user: "{{ vault_admin_user }}"
@@ -8,6 +8,8 @@ central_local_domain: "{{ vault_central_local_domain }}"
 central_local_email: "{{ vault_central_local_email }}"
 dovecot_health_check_port: "{{ vault_dovecot_health_check_port }}"
 envname: "{{ vault_envname }}"
+external_rfc1618_domain: "{{ vault_external_rfc1618_domain }}"
+fallback_dns: "{{ vault_fallback_dns }}"
 imap_port: "{{ vault_imap_port }}"
 internal_domain: "{{ vault_envname }}"
 internal_fqdn: "{{ ansible_facts['hostname'] }}.{{ internal_domain }}"
@@ -34,6 +36,8 @@ proxied_imap_port: "{{ vault_proxied_imap_port }}"
 proxied_submission_port: "{{ vault_proxied_submission_port }}"
 public_cert_cert_file: "{{ vault_public_cert_cert_file }}"
 public_cert_key_file: "{{ vault_public_cert_key_file }}"
+remote_admin_ip: "{{ vault_remote_admin_ip }}"
+remote_monitoring_ips: "{{ vault_remote_monitoring_ips }}"
 submission_port: "{{ vault_submission_port }}"
 submission_relay_host: "{{ vault_submission_relay_host }}"
 submission_relay_port: "{{ vault_submission_relay_port }}"
