@@ -8,6 +8,13 @@
       mode: "1777"
       owner: root
       path: /var/vmail
+  - name: Ensure dovecot packages present
+    ansible.builtin.apt:
+      name:
+      - dovecot-core
+      - dovecot-imapd
+      - dovecot-lmtpd
+      - dovecot-submissiond
   - name: Create dovecot authentication config
     ansible.builtin.copy:
       dest: /etc/dovecot/conf.d/10-auth.conf
@@ -31,7 +38,7 @@
       mode: "0644"
       owner: root
       src: dovecot-conf.d/10-master.conf.j2
-    notify: Reload dovecot configuration
+    notify: Restart dovecot
   - name: Configure dovecot local overrides to config
     ansible.builtin.template:
       dest: /etc/dovecot/local.conf
