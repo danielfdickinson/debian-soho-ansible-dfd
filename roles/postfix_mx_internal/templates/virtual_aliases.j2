@@ -3,11 +3,11 @@ postmaster@{{ central_local_domain }} postmaster@{{ ansible_facts['fqdn'] }}
 postmaster@{{ vdomain }} postmaster@{{ central_local_domain }}
 {% endfor %}
 {% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ central_local_domain ] )) %}
-{% for adminaddr in well_known_admin_aliases %}
+{% for adminaddr in well_known_admin_aliases | unique %}
 {{ adminaddr }}@{{ vdomain }} {{ central_local_email }}
 {% endfor %}
 {% endfor %}
-{% for adminaddr in well_known_admin_aliases | difference( [ local_admin_user ] ) %}
+{% for adminaddr in well_known_admin_aliases | unique | difference( [ local_admin_user ] ) %}
 {{ adminaddr }}@{{ central_local_domain }} {{ central_local_email }}
 {% endfor %}
 # Note that we don't include regular users' emails; they'll come in on the

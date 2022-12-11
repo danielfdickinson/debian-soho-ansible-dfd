@@ -43,24 +43,6 @@ remote_monitoring_ips: "{{ vault_remote_monitoring_ips }}"
 submission_port: "{{ vault_submission_port }}"
 submission_relay_host: "{{ vault_submission_relay_host }}"
 submission_relay_port: "{{ vault_submission_relay_port }}"
-well_known_admin_aliases:
-- "{{ local_admin_user }}"
-- root
-- spampolice
-- virusalert
-# - admin # If local_admin_user is 'admin' this is a duplicate
-- bin
-- daemon
-- named
-- nobody
-- uucp
-- www
-- ftp-bugs
-- postfix
-- manager
-- dumper
-- operator
-- abuse
-- decode
 vbridge: "{{ vault_vbridge }}"
+well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
 ...
