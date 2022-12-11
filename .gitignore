@@ -4,3 +4,4 @@
 *.retry
 test.yml
 /*.tf
+ansible.log
