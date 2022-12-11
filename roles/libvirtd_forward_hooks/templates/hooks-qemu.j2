@@ -2,7 +2,7 @@
 
 # Modified from https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections
 
-# We only use IPv4 on internal network.
+# We only use IPv4 on internal (private) network.
 GUEST_IP="{{ hostvars[item.name  + '.' + internal_domain]['ansible_facts']['ens3']['ipv4']['address'] }}"
 
 if [ "${1}" = "{{ item.name }}" ]; then

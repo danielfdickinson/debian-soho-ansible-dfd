@@ -19,7 +19,7 @@
   loop: "{{ changed_guests.results | map(attribute='stdout') | unique }}"
   when:
   - item is defined
-  - item != """
+  - item != ""
   listen: Restart changed libvirt guests
 - name: Start changed libvirt guests
   become: yes
@@ -27,7 +27,7 @@
   loop: "{{ changed_guests.results | map(attribute='stdout') | unique }}"
   when:
   - item is defined
-  - item != """
+  - item != ""
   listen: Restart changed libvirt guests
 - name: Flush handlers in handlers
   ansible.builtin.meta: flush_handlers
