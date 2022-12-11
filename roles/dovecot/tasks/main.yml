@@ -22,7 +22,7 @@
       mode: "0644"
       owner: root
       src: dovecot-conf.d/10-auth.conf
-    notify: Reload dovecot configuration
+    notify: Restart dovecot
   - name: Create dovecot password file config
     ansible.builtin.copy:
       dest: /etc/dovecot/conf.d/auth-passwdfile.conf.ext
@@ -30,7 +30,7 @@
       mode: "0644"
       owner: root
       src: dovecot-conf.d/auth-passwdfile.conf.ext
-    notify: Reload dovecot configuration
+    notify: Restart dovecot
   - name: Configure dovecot listeners
     ansible.builtin.template:
       dest: /etc/dovecot/conf.d/10-master.conf
@@ -46,7 +46,7 @@
       mode: "0644"
       owner: root
       src: dovecot-local.conf.j2
-    notify: Reload dovecot configuration
+    notify: Restart dovecot
   - name: Configure dovecot users
     ansible.builtin.template:
       dest: /etc/dovecot/users
@@ -54,7 +54,7 @@
       mode: "0640"
       owner: mail
       src: users.j2
-    notify: Reload dovecot configuration
+    notify: Restart dovecot
 - name: Allow access to Dovecot through firewall
   become: yes
   block:

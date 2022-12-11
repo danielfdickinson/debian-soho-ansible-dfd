@@ -2,12 +2,12 @@
 - hosts: libvirtd_hosts
   roles:
   - user_libvirt_client_add
-- hosts: mailbox_servers
-  roles:
-  - dovecot
 - hosts: internal_mxes
   roles:
   - postfix_mx_internal
+- hosts: mailbox_servers
+  roles:
+  - dovecot
 - hosts: email_internal_senders:!internal_mxes
   roles:
   - postfix_sender_internal
