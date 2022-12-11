@@ -20,6 +20,10 @@
   roles:
   - packages_bare_metal
 
+- hosts: libvirtd_hosts
+  roles:
+  - libvirtd
+
 - name: Include plays which define instances
   ansible.builtin.import_playbook: playbook-instances.yml
 ...

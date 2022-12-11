@@ -11,6 +11,7 @@
     update_cache: true
     state: present
 - name: Ensure dnsmasq disabled except for Libvirt
+  become: yes
   ansible.builtin.systemd:
     name: dnsmasq
     enabled: false
