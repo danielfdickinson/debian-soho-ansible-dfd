@@ -5,10 +5,9 @@ stages:
 - build
 
 image:
-  name: danielfdickinson/gitlab-debian-ansible-pre-commit:0.2.1
+  name: danielfdickinson/gitlab-debian-ansible-pre-commit:0.2.2
 
 before_script:
-- apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y shellcheck jq # yamllint disable-line
 - ansible --version
 - ansible-lint --version
 

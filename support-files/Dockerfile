@@ -16,7 +16,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
 	python3-pip \
 	rsync \
 	ruby-rubygems \
-	ruby-dev
+	ruby-dev \
+	shellcheck \
+	shfmt
 
 ENV PATH=/root/.local/bin:${PATH}
 

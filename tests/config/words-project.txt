@@ -129,6 +129,7 @@ rsyslog
 rubygems
 scache
 sdbox
+shfmt
 showq
 skel
 smtpd
