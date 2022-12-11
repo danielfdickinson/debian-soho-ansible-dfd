@@ -1,3 +1,4 @@
+ON_BOOT=start
 START_DELAY=7
 ON_SHUTDOWN=suspend
 SYNC_TIME=1

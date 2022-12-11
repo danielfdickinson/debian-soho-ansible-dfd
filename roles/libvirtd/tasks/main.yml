@@ -10,6 +10,10 @@
     install_recommends: false
     update_cache: true
     state: present
+- name: Ensure dnsmasq disabled except for Libvirt
+  ansible.builtin.systemd:
+    name: dnsmasq
+    enabled: false
 - name: Configure Libvirt shutdown guest handling
   become: yes
   ansible.builtin.copy:
@@ -18,7 +22,6 @@
     mode: "0644"
     owner: root
     src: libvirt-guests
-  notify: Restart libvirt-guests
 - name: Add/split Libvirt storage pools
   when: pool_list is defined
   become: yes
@@ -50,13 +53,13 @@
         state: directory
       loop: "{{ pool_list }}"
     - name: Define pools
-      ansible.builtin.command: "virsh pool-define-as {{ item }} dir --target /var/lib/libvirt/images/{{ item }}" # yamllint disable-line
+      ansible.builtin.command: "virsh pool-define-as {{ item | quote }} dir --target /var/lib/libvirt/images/{{ item | quote }}" # yamllint disable-line
       loop: "{{ pool_list }}"
       register: pdefout
       changed_when: pdefout.rc == 0
       failed_when: "'already exists' not in pdefout.stderr and pdefout.rc != 0"
     - name: Start pools
-      ansible.builtin.command: virsh pool-start {{ item }}
+      ansible.builtin.command: virsh pool-start {{ item | quote }}
       loop: "{{ pool_list }}"
       register: pstartout
       changed_when: pstartout.rc == 0
@@ -68,7 +71,7 @@
         register: pool_autostarts
         changed_when: false
       - name: Mark pool as autostarted
-        ansible.builtin.command: virsh pool-autostart {{ item }}
+        ansible.builtin.command: virsh pool-autostart {{ item | quote }}
         register: pautoout
         loop: "{{ pool_list }}"
         when: item not in pool_autostarts.stdout

@@ -16,6 +16,10 @@
 - name: Include early plays which should be used on all hosts
   ansible.builtin.import_playbook: playbook-common-early.yml
 
+- hosts: bare_metal
+  roles:
+  - packages_bare_metal
+
 - name: Include plays which define instances
   ansible.builtin.import_playbook: playbook-instances.yml
 ...

@@ -50,20 +50,6 @@
       - unattended-upgrades
       purge: true
       state: present
-  - name: Ensure cifs-utils only for OVH backup clients
-    become: yes
-    ansible.builtin.apt:
-      name:
-      - cifs-utils
-      state: present
-    when: "'backup_clients_ovh' in group_names"
-  - name: Ensure smartmontools only for bare-metal hosts
-    become: yes
-    ansible.builtin.apt:
-      name:
-      - smartmontools
-      state: present
-    when: "'bare_metal' in group_names"
   - name: Post-configure base packages
     become: yes
     block:

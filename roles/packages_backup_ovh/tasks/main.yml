@@ -1,0 +1,8 @@
+---
+- name: Ensure cifs-utils
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - cifs-utils
+    state: present
+...

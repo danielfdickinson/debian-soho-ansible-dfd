@@ -5,6 +5,14 @@
   - packages_base
   - packages_firmware
 
+- hosts: bare_metal
+  roles:
+  - packages_bare_metal
+
+- hosts: backup_clients_ovh
+  roles:
+  - packages_backup_ovh
+
 - hosts: storage_extra_local
   roles:
   - storage_setup_extra_local
