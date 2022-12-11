@@ -14,14 +14,4 @@
     owner: root
     src: jail.local.j2
   notify: Reload fail2ban
-- name: Add fail2ban SSH config
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/fail2ban/jail.d/ssh.local
-    group: root
-    mode: "0644"
-    owner: root
-    src: ssh_jail.local.j2
-  when: "'external_ssh' in group_names"
-  notify: Reload fail2ban
 ...

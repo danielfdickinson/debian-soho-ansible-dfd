@@ -14,6 +14,8 @@ imap_port: "{{ vault_imap_port }}"
 internal_domain: "{{ vault_envname }}"
 internal_fqdn: "{{ ansible_facts['hostname'] }}.{{ internal_domain }}"
 internal_relay_port: "{{ vault_internal_relay_port }}"
+libvirt_domain_forwards: "{{ vault_libvirt_domain_forwards }}"
+libvirt_domain_ssh_forwards: "{{ vault_libvirt_domain_ssh_forwards }}"
 lmtp_port: "{{ vault_lmtp_port }}"
 local_admin_user: "{{ vault_admin_user }}"
 mail_local_host_destinations:
@@ -60,4 +62,5 @@ well_known_admin_aliases:
 - operator
 - abuse
 - decode
+vbridge: "{{ vault_vbridge }}"
 ...

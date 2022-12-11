@@ -1,7 +1,6 @@
 ---
 - hosts: libvirtd_hosts
   roles:
-  - libvirtd
   - user_libvirt_client_add
 - hosts: mailbox_servers
   roles:

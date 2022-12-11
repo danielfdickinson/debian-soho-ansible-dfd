@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Modified from https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections
+
+if [ "${1}" = "{{ item.name }}" ]; then
+	if [ "${2}" = "stopped" ] || [ "${2}" = "reconnect" ]; then
+		/usr/sbin/iptables -D FORWARD -o {{ vbridge }} -p tcp -d {{ item.guest_ip }} --dport {{ item.guest_port }} -j ACCEPT
+		/usr/sbin/iptables -t nat -D PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to {{ item.guest_ip }}:{{ item.guest_port }}
+	fi
+	if [ "${2}" = "start" ] || [ "${2}" = "reconnect" ]; then
+		/usr/sbin/iptables -I FORWARD -o {{ vbridge }} -p tcp -d {{ item.guest_ip }} --dport {{ item.guest_port }} -j ACCEPT
+		/usr/sbin/iptables -t nat -I PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to {{ item.guest_ip }}:{{ item.guest_port }}
+	fi
+fi

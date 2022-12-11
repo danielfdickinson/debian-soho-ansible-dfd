@@ -1,0 +1,7 @@
+---
+- name: Reload chrony
+  become: yes
+  ansible.builtin.service:
+    name: chrony
+    state: restarted
+...

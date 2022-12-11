@@ -16,14 +16,14 @@
   - name: Allow IMAP in on external interface
     community.general.ufw:
       rule: allow
-      interface: ens4
+      interface: ens3
       direction: in
       proto: tcp
       to_port: "{{ imap_port }}"
 #  - name: Allow Submission in on external interface
 #    community.general.ufw:
 #      rule: allow
-#      interface: ens4
+#      interface: ens3
 #      direction: in
 #      proto: tcp
 #      to_port: "{{ submission_port }}"

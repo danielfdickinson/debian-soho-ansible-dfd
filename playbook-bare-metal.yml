@@ -9,6 +9,10 @@
   roles:
   - network_dns_use_resolved
 
+- hosts: external_ssh
+  roles:
+  - user_bastion_user_add
+
 - name: Include early plays which should be used on all hosts
   ansible.builtin.import_playbook: playbook-common-early.yml
 

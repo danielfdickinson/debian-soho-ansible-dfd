@@ -1,4 +1,18 @@
 ---
+- hosts: libvirtd_hosts
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+  - user_bastion_user_add
+  - libvirtd_forward_hooks_external_ssh
+
+- hosts: bastions
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+  - user_bastion_user_add
+  - packages_ssh_proxy
+
 - hosts: all
   gather_facts: true
   roles:

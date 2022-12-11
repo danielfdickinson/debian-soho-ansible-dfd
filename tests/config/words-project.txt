@@ -1,5 +1,6 @@
 CHACHA
 DN's
+DNAT
 ESMTP
 GSSAPI
 HEREDOCS
@@ -15,10 +16,13 @@ airlockddev
 apop
 autocreation
 autofix
+backupmx
 brycewray
 bsdauth
 ccert
 checkpassword
+chrony
+chronyd
 cifs
 ciphersuites
 danielfdickinson
@@ -33,6 +37,7 @@ dnsmasq
 dontlognull
 doveadm
 dovenull
+dport
 endfor
 envname
 errorfile
@@ -53,6 +58,7 @@ httpv
 iface
 ifup
 ignoreip
+imapd
 imapddev
 imaps
 inet
@@ -62,6 +68,7 @@ leastconn
 libvirtd
 linebreak
 lmtp
+lmtpd
 loadavg
 localdomain
 localnet
@@ -83,6 +90,8 @@ mydomain
 myhostname
 mynetworks
 myorigin
+netaddr
+netaddrs
 newaliases
 nexthop
 nocows
@@ -125,6 +134,7 @@ skel
 smtpd
 spampolice
 starttls
+submissiond
 sudonp
 tcplog
 tfvars
@@ -135,8 +145,10 @@ unpriv
 userdb
 userdbs
 vardefs
+vbridge
 vdomain
 vgname
+virbr
 virsh
 virt
 virusalert

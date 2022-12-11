@@ -70,7 +70,7 @@
     - name: Allow SSH incoming
       community.general.ufw:
         direction: in
-        rule: limit
+        rule: allow
         port: "{{ ansible_ssh_port }}"
         proto: tcp
     - name: Enable logging and start UFW
