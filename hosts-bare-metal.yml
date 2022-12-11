@@ -1,6 +1,10 @@
 ---
 all:
   children:
+    backup_clients:
+      children:
+        backup_clients_ovh:
+          hosts: {}
     bare_metal:
       children:
         dual_interface_metal:
@@ -9,6 +13,8 @@ all:
         libvirtd_hosts:
           hosts:
             dlcicl01.internal.dfd:
+    cert_private_ssl_servers:
+      hosts: {}
     edge_hosts:
       children:
         external_ssh:
@@ -22,4 +28,11 @@ all:
     storage_extra_local:
       hosts:
         dlcicl01.internal.dfd:
+    zz_placeholders:
+      children:
+        internal_mxes: {}
+        mailbox_servers: {}
+        rproxy_external: {}
+        rproxy_internal: {}
+        website_servers: {}
 ...

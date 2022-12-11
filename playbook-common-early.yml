@@ -29,9 +29,4 @@
 - hosts: cert_private_ssl_servers
   roles:
   - cert_private
-
-- hosts: libvirtd_hosts
-  roles:
-  - libvirtd_forward_hooks
-  - chronyd_libvirtd
 ...

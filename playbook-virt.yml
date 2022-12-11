@@ -19,6 +19,12 @@
   roles:
   - user_admin_add_password
 
+  # Must happen after an 'all' with gather_facts
+- hosts: libvirtd_hosts
+  roles:
+  - libvirtd_forward_hooks
+  - chronyd_libvirtd
+
 # Expects the hosts files to be for all hosts
 - name: Include early plays which should be used on all hosts
   ansible.builtin.import_playbook: playbook-common-early.yml
