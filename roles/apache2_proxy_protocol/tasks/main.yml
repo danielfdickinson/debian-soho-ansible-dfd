@@ -2,6 +2,12 @@
 - name: Enable PROXY Protocol from HAProxy
   become: yes
   block:
+  - name: Ensure apache2 present
+    ansible.builtin.apt:
+      name:
+      - apache2
+      - apache2-utils
+      state: present
   - name: Add configuration for PROXY protocol
     ansible.builtin.copy:
       dest: /etc/apache2/conf-available/haproxy-proxy-protocol.conf

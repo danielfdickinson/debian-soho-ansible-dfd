@@ -2,6 +2,11 @@
 - name: Configure HAProxy
   become: yes
   block:
+  - name: Ensure HAproxy present
+    ansible.builtin.apt:
+      name:
+      - haproxy
+      state: present
   - name: Create/Update HAProxy configuration file
     ansible.builtin.template:
       dest: /etc/haproxy/haproxy.cfg

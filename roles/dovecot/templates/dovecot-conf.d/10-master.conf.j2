@@ -161,10 +161,12 @@ service dict {
 	}
 }
 
+# Enable HAProxy health check (without spamming logs)
 service health-check {
 	executable = script -p health-check.sh
 
 	inet_listener health-check {
-				port = {{ dovecot_health_check_port }}
+		address = {{ ansible_facts['ens3']['ipv4']['address'] }}
+		port = {{ dovecot_health_check_port }}
 	}
 }
