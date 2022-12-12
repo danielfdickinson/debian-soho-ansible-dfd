@@ -1,5 +1,10 @@
 ---
+- name: Restart networking to apply new configuration
+  become: yes
+  ansible.builtin.command: systemctl restart networking.service
+  listen: Update network on second interface
 - name: Bring up br1
   become: yes
   ansible.builtin.command: ifup br1
+  listen: Update network on second interface
 ...
