@@ -31,7 +31,9 @@
     mode: "0755"
     owner: root
     src: hooks-qemu.j2
-  loop: "{{ libvirt_domain_forwards }}"
+  loop: "{{ libvirt_domain_forwards_map }}"
+  vars:
+    item_guest_ip: "{{ item.guest_ip | default( hostvars[item.name  + '.' + internal_domain]['ansible_facts']['ens3']['ipv4']['address'] | default('')) }}"
   register: hooks_qemu_result
   notify: Restart libvirtd
 - name: Flush handlers

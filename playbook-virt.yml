@@ -4,7 +4,9 @@
   any_errors_fatal: true
   roles:
   - user_bastion_user_add
-  - libvirtd_forward_hooks_external_ssh
+  - libvirtd_forward_hooks
+  vars:
+    libvirt_domain_forwards_map: "{{ libvirt_domain_ssh_forwards }}"
 
 - hosts: bastions
   gather_facts: true
@@ -24,6 +26,8 @@
   roles:
   - libvirtd_forward_hooks
   - chronyd_libvirtd
+  vars:
+    libvirt_domain_forwards_map: "{{ libvirt_domain_forwards }}"
 
 # Expects the hosts files to be for all hosts
 - name: Include early plays which should be used on all hosts

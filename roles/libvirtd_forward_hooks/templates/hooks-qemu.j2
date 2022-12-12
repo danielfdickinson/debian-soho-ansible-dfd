@@ -2,8 +2,8 @@
 
 # Modified from https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections
 
-# We only use IPv4 on internal (private) network.
-GUEST_IP="{{ hostvars[item.name  + '.' + internal_domain]['ansible_facts']['ens3']['ipv4']['address'] }}"
+# We only use IPv4 on internal network.
+GUEST_IP="{{ item_guest_ip }}"
 
 if [ "${1}" = "{{ item.name }}" ]; then
 	if [ "${2}" = "stopped" ] || [ "${2}" = "reconnect" ]; then
