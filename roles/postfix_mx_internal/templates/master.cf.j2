@@ -9,7 +9,12 @@
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (no)    (never) (100)
 # ==========================================================================
-localhost:smtp      inet  n       -       y       -       -       smtpd
+127.0.0.1:smtp      inet  n       -       y       -       -       smtpd
+  -o syslog_name=postfix/smtpd
+  -o smtpd_sasl_auth_enable=$mta_sasl_auth_enable
+  -o smtpd_relay_restrictions=$mta_relay_restrictions
+  -o smtpd_recipient_restrictions=$mta_recipient_restrictions
+[::1]:smtp      inet  n       -       y       -       -       smtpd
   -o syslog_name=postfix/smtpd
   -o smtpd_sasl_auth_enable=$mta_sasl_auth_enable
   -o smtpd_relay_restrictions=$mta_relay_restrictions
@@ -18,7 +23,14 @@ localhost:smtp      inet  n       -       y       -       -       smtpd
 #smtpd     pass  -       -       y       -       -       smtpd
 #dnsblog   unix  -       -       y       -       0       dnsblog
 #tlsproxy  unix  -       -       y       -       0       tlsproxy
-{{ ansible_facts['ens3']['ipv4']['address'] }}:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
+{{ ansible_facts['default_ipv4']['address'] }}:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
+  -o syslog_name=postfix/lsmtpd
+  -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
+  -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
+  -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
+  -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_security_level=$lsmtpd_tls_security_level
+[{{ ansible_facts['default_ipv6']['address'] }}]:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
   -o syslog_name=postfix/lsmtpd
   -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
   -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions

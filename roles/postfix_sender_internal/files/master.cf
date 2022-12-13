@@ -9,7 +9,9 @@
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (no)    (never) (100)
 # ==========================================================================
-localhost:smtp      inet  n       -       y       -       -       smtpd
+127.0.0.1:smtp inet  n   -       y       -       -       smtpd
+  -o syslog_name=postfix/smtpd
+[::1]:smtp inet  n       -       y       -       -       smtpd
   -o syslog_name=postfix/smtpd
 #smtp      inet  n       -       y       -       1       postscreen
 #smtpd     pass  -       -       y       -       -       smtpd

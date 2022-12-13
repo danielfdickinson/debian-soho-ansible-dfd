@@ -64,8 +64,8 @@
       interface: ens3
       direction: in
       proto: tcp
-      src: "{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['address'] }}"
-      dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+      src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
+      dest: "{{ ansible_facts['default_ipv4']['address'] }}"
       to_port: "{{ dovecot_health_check_port }}"
     loop: "{{ groups['rproxy_external'] }}"
   - name: Allow IMAP when proxied through gate
@@ -74,8 +74,8 @@
       interface: ens3
       direction: in
       proto: tcp
-      src: "{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['address'] }}"
-      dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+      src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
+      dest: "{{ ansible_facts['default_ipv4']['address'] }}"
       to_port: "{{ proxied_imap_port }}"
     loop: "{{ groups['rproxy_external'] }}"
     # - name: Allow Submission when proxied through gate
@@ -84,8 +84,8 @@
     #     interface: ens3
     #     direction: in
     #     proto: tcp
-    #   src: "{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['address'] }}"
-    #     dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+    #   src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
+    #     dest: "{{ ansible_facts['default_ipv4']['address'] }}"
     #     to_port: "{{ proxied_submission_port }}"
     #   loop: "{{ groups['rproxy_external'] }}"
     # - name: Allow localnet LMTP
@@ -95,10 +95,10 @@
     #     direction: in
     #     proto: tcp
     # Join the following three lines on one line (and delete this one)
-    # src: "{{ hostvars[item]['ansible_facts']['ens3']['ipv4']['network'] }}/
-    # {{ hostvars[item]['ansible_facts']['ens3']['ipv4']['netmask'] }}"
+    # src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['network'] }}/
+    # {{ hostvars[item]['ansible_facts']['default_ipv4']['netmask'] }}"
     # yamllint disable-line
-    #     dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+    #     dest: "{{ ansible_facts['default_ipv4']['address'] }}"
     #     to_port: "{{ lmtp_port }}"
     #   loop: "{{ groups['mailbox_servers'] }}"
 ...

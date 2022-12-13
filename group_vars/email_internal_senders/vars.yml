@@ -1,3 +1,4 @@
 ---
+email_interfaces: all
 email_relayhost: "{{ vault_email_relayhost }}"
 ...

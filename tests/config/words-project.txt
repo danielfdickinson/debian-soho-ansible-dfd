@@ -10,6 +10,7 @@ LOGINDISABLED
 Referer
 SASL
 SPNEGO
+UFW
 Winbind
 addrtype
 adminaddr

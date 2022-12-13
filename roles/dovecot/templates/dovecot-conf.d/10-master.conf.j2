@@ -27,7 +27,6 @@ service imap-login {
 	}
 
 	inet_listener imap_haproxy {
-		address = {{ ansible_facts['ens3']['ipv4']['address'] }}
 		haproxy = yes
 		port = {{ proxied_imap_port }}
 		ssl = yes
@@ -64,7 +63,6 @@ service submission-login {
 	}
 
 #	inet_listener submission_haproxy {
-#		address = {{ ansible_facts['ens3']['ipv4']['address'] }}
 #		haproxy = yes
 #		port = {{ proxied_submission_port }}
 #	}
@@ -89,7 +87,6 @@ service lmtp {
 	#}
 
 	inet_listener lmtp_localnet {
-		address = {{ ansible_facts['ens3']['ipv4']['address'] }}
 		port = {{ lmtp_port }}
 	}
 }
@@ -166,7 +163,6 @@ service health-check {
 	executable = script -p health-check.sh
 
 	inet_listener health-check {
-		address = {{ ansible_facts['ens3']['ipv4']['address'] }}
 		port = {{ dovecot_health_check_port }}
 	}
 }

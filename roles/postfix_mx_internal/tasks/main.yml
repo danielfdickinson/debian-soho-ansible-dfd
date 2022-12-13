@@ -54,14 +54,6 @@
       owner: root
       src: aliases.j2
     notify: Apply email aliases
-    # yamllint disable rule:line-length
-- name: Generate network/netmask for email_internal_senders
-  ansible.builtin.command: echo "{{ item.network | quote }}/{{ item.netmask | quote }}"
-  loop: "{{ internal_sender_ipv4 }}"
-  vars:
-    internal_sender_ipv4: "{{ ( groups['email_internal_senders'] | difference(groups['bare_metal'] )) | map('extract', hostvars, ['ansible_facts', 'ens3', 'ipv4'] ) }}"
-  register: netaddr
-  changed_when: false
 - name: Allow localnet SMTP (alternate port)
   become: yes
   community.general.ufw:
@@ -69,11 +61,17 @@
     interface: ens3
     direction: in
     proto: tcp
-    src: "{{ item }}"
-    dest: "{{ ansible_facts['ens3']['ipv4']['address'] }}"
+    src: "{{ v4natnet_gwcidr | ansible.utils.ipaddr('net') }}"
+    dest: "{{ ansible_facts['default_ipv4']['address'] }}"
     to_port: "{{ internal_relay_port }}"
-  loop: "{{ internal_sender_cidrs }}"
-  vars:
-    internal_sender_netaddrs: "{{ netaddr.results | map(attribute='stdout') }}"
-    internal_sender_cidrs: "{{ internal_sender_netaddrs | ansible.utils.ipaddr('net') | unique }}"
+- name: Allow localnet6 SMTP (alternate port)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    interface: ens3
+    direction: in
+    proto: tcp
+    src: "{{ v6natnet_cidr }}"
+    dest: "{{ ansible_facts['default_ipv6']['address'] }}"
+    to_port: "{{ internal_relay_port }}"
 ...
