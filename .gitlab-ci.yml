@@ -8,6 +8,7 @@ image:
   name: danielfdickinson/gitlab-debian-ansible-pre-commit:0.2.2
 
 before_script:
+- chmod 0700 .
 - ansible --version
 - ansible-lint --version
 
