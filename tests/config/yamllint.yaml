@@ -32,8 +32,7 @@ rules:
     spaces: 2
   key-duplicates: enable
   key-ordering: disable
-  line-length:
-    max: 80
+  line-length: disable
   new-line-at-end-of-file: enable
   new-lines:
     type: unix

@@ -1,0 +1,16 @@
+---
+- name: Start v4v6natnet
+  become: yes
+  listen: Start v4v6natnet and set autostarted
+  ansible.builtin.command: virsh net-start {{ envname | quote }}
+  register: netstartout
+  changed_when: netstartout.rc == 0
+  failed_when: "'already started' not in netstartout.stderr and netstartout.rc != 0"
+- name: Start v4v6natnet
+  become: yes
+  listen: Start v4v6natnet and set autostarted
+  ansible.builtin.command: virsh net-autostart {{ envname | quote }}
+  register: netautostartout
+  changed_when: false
+  failed_when: netautostartout.rc != 0
+...

@@ -3,7 +3,7 @@
 - name: Configure chronyd to allow NTP from guests
   become: yes
   ansible.builtin.copy:
-    dest: /etc/chrony/conf.d/allow_guests.conf
+    dest: /etc/chrony/conf.d/allow_{{ envname }}_guests.conf
     content: allow {{ vbridge_network_netmask | ansible.utils.ipaddr('net') }}
     group: root
     mode: "0644"

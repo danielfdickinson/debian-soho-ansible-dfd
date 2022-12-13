@@ -1,29 +1,37 @@
 ---
-- hosts: dual_interface_metal
-  roles:
-  - network_bare_metal_dual_interface
-
-# Expects the hosts files to be only for bare_metal hosts
-- hosts: all
+- hosts: bare_metal
   gather_facts: true
   roles:
   - network_dns_use_resolved
 
-- hosts: external_ssh
+- hosts: local_ipv6
   roles:
-  - user_bastion_user_add
+  - network_local_ipv6
 
-- name: Include early plays which should be used on all hosts
-  ansible.builtin.import_playbook: playbook-common-early.yml
+- hosts: dual_interface_metal
+  roles:
+  - network_bare_metal_dual_interface
+
+- hosts: storage_extra_local
+  roles:
+  - storage_setup_extra_bare_metal
 
 - hosts: bare_metal
   roles:
+  - packages_base
   - packages_bare_metal
+  - packages_firmware
+
+- hosts: backup_clients_ovh
+  roles:
+  - packages_backup_ovh
 
 - hosts: libvirtd_hosts
   roles:
   - libvirtd
-
-- name: Include plays which define instances
-  ansible.builtin.import_playbook: playbook-instances.yml
+  - user_libvirt_client_add
+  - fail2ban
+  - fail2ban_ssh
+  - postfix_sender_internal
+  - user_bastion_user_add
 ...

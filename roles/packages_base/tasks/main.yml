@@ -50,7 +50,7 @@
       - unattended-upgrades
       purge: true
       state: present
-  - name: Post-configure base packages
+  - name: Post-configure UFW
     become: yes
     block:
     - name: Allow SSH incoming
@@ -59,6 +59,15 @@
         rule: allow
         port: "{{ ansible_ssh_port }}"
         proto: tcp
+    - name: Don't log noisy v4 multicast blocking
+      # yamllint disable rule:line-length
+      ansible.builtin.blockinfile:
+        path: /etc/ufw/after.rules
+        insertbefore: "# don't log noisy broadcast"
+        block: |
+          # don't log noisy multicast
+          -A ufw-after-input -m addrtype --dst-type MULTICAST -j ufw-skip-to-policy-input
+      notify: Restart UFW
     - name: Enable logging and start UFW
       community.general.ufw:
         logging: low

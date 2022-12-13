@@ -1,0 +1,70 @@
+---
+- hosts: libvirtd_hosts
+  gather_facts: true
+  any_errors_fatal: true
+  # Note that roles here must not interfere with other environments on the same
+  # libvirtd_host
+  roles:
+  - libvirtd_forward_hooks
+  vars:
+    libvirt_domain_forwards_map: "{{ libvirt_domain_ssh_forwards }}"
+
+- hosts: bastions
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+  - packages_base
+  - user_bastion_user_add
+  - packages_ssh_proxy
+  - fail2ban_ssh
+  - packages_firmware
+
+- hosts: all
+  any_errors_fatal: true
+  gather_facts: true
+  roles:
+  - user_admin_add_password
+
+  # Must happen after an 'all' with gather_facts
+- hosts: libvirtd_hosts
+  # Note that roles here must not interfere with other environments on the same
+  # libvirtd_host
+  roles:
+  - libvirtd_forward_hooks
+  vars:
+    libvirt_domain_forwards_map: "{{ libvirt_domain_forwards }}"
+
+- hosts: all:!libvirtd_hosts:!bastions
+  any_errors_fatal: true
+  roles:
+  - packages_base
+  - packages_firmware
+
+- hosts: backup_clients_ovh
+  roles:
+  - packages_backup_ovh
+
+- hosts: cert_private_ssl_servers
+  roles:
+  - cert_private
+
+- hosts: internal_mxes
+  roles:
+  - postfix_mx_internal
+
+- hosts: mailbox_servers
+  roles:
+  - dovecot
+
+- hosts: email_internal_senders:!internal_mxes
+  roles:
+  - postfix_sender_internal
+
+- hosts: rproxy_external
+  roles:
+  - reverse_proxy_external
+
+- hosts: website_servers:rproxy_internal
+  roles:
+  - apache2_proxy_protocol
+...

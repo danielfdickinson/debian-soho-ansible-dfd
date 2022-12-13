@@ -1,0 +1,6 @@
+auto {{ first_interface }}
+iface {{ first_interface }} inet6 static
+	address {{ local_ipv6_cidr }}
+{% if local_ipv6_gateway is defined %}
+	gateway {{ local_ipv6_gateway }}
+{% endif %}

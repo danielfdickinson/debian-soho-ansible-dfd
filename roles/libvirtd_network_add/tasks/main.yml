@@ -1,0 +1,19 @@
+---
+- name: Create XML for ipv4 and ipv6 NAT based network
+  become: yes
+  ansible.builtin.template:
+    dest: /root/v4v6natnet.xml
+    group: root
+    mode: "0600"
+    owner: root
+    src: v4v6natnet.xml.j2
+- name: Define ipv4 and ipv6 NAT based network
+  become: yes
+  ansible.builtin.command: virsh net-define /root/v4v6natnet.xml
+  register: netdefineout
+  changed_when: netdefineout.rc == 0
+  failed_when: "'already exists' not in netdefineout.stderr and netdefineout.rc != 0" # yamllint disable-line
+  notify: Start v4v6natnet and set autostarted
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+...

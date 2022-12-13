@@ -1,6 +1,9 @@
 ---
 ansible_ssh_port: "{{ vault_ansible_port }}"
-email_relayhost: "[hostvars[{{ vault_email_relay_fqdn }}]['ansible_facts']['ens3']['ipv4']['address']]:{{ internal_relay_port }}" # yamllint disable-line
+email_interfaces: "{{ vault_email_interfaces }}"
+email_relayhost: "{{ vault_email_relayhost }}"
+first_interface: "{{ vault_first_interface }}"
+local_ipv6_cidr: "{{ vault_local_ipv6_cidr }}"
 pool_list: "{{ vault_pool_list }}"
 second_interface: "{{ vault_second_interface }}"
 storage_filesystems: "{{ vault_storage_filesystems }}"

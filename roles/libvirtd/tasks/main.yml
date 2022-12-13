@@ -59,22 +59,5 @@
       register: pdefout
       changed_when: pdefout.rc == 0
       failed_when: "'already exists' not in pdefout.stderr and pdefout.rc != 0"
-    - name: Start pools
-      ansible.builtin.command: virsh pool-start {{ item | quote }}
-      loop: "{{ pool_list }}"
-      register: pstartout
-      changed_when: pstartout.rc == 0
-      failed_when: "'already active' not in pstartout.stderr and pstartout.rc != 0" # yamllint disable-line
-    - name: Ensure pools autostarted
-      block:
-      - name: Get list of autostarted pools
-        ansible.builtin.command: virsh pool-list --autostart
-        register: pool_autostarts
-        changed_when: false
-      - name: Mark pool as autostarted
-        ansible.builtin.command: virsh pool-autostart {{ item | quote }}
-        register: pautoout
-        loop: "{{ pool_list }}"
-        when: item not in pool_autostarts.stdout
-        changed_when: pautoout.rc == 0
+      notify: start and autostart pools
 ...

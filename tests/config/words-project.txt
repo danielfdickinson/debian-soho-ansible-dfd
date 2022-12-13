@@ -11,6 +11,7 @@ Referer
 SASL
 SPNEGO
 Winbind
+addrtype
 adminaddr
 airlockddev
 apop
@@ -51,6 +52,7 @@ gitleaks
 gitlint
 gssapi
 gsub
+gwcidr
 helo
 hostvars
 httplog
