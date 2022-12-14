@@ -28,6 +28,7 @@ mail_local_host_destinations:
 - "{{ ansible_facts['fqdn'] }}"
 mailbox_users: "{{ vault_mailbox_users }}"
 mx_mail_users: "{{ vault_mx_mail_users }}"
+ovh_rtm_hosts: "{{ vault_ovh_rtm_hosts }}"
 private_ca_cert_certificate: "{{ vault_private_ca_cert_certificate }}"
 private_ca_cert_file: "{{ vault_private_ca_cert_file }}"
 private_cert_cert_content: "{{ vault_private_cert_cert_content }}"

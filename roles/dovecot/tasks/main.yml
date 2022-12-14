@@ -58,47 +58,23 @@
 - name: Allow access to Dovecot through firewall
   become: yes
   block:
-  - name: Allow health check from gate
+  - name: Allow health check from OVH RTM
     community.general.ufw:
       rule: allow
       interface: ens3
       direction: in
       proto: tcp
-      src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
+      src: "{{ item }}"
       dest: "{{ ansible_facts['default_ipv4']['address'] }}"
       to_port: "{{ dovecot_health_check_port }}"
-    loop: "{{ groups['rproxy_external'] }}"
-  - name: Allow IMAP when proxied through gate
+    loop: "{{ ovh_rtm_hosts }}"
+  - name: Allow IMAP from anywhere
     community.general.ufw:
       rule: allow
       interface: ens3
       direction: in
       proto: tcp
-      src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
+      src: any
       dest: "{{ ansible_facts['default_ipv4']['address'] }}"
       to_port: "{{ proxied_imap_port }}"
-    loop: "{{ groups['rproxy_external'] }}"
-    # - name: Allow Submission when proxied through gate
-    #   community.general.ufw:
-    #     rule: allow
-    #     interface: ens3
-    #     direction: in
-    #     proto: tcp
-    #   src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['address'] }}"
-    #     dest: "{{ ansible_facts['default_ipv4']['address'] }}"
-    #     to_port: "{{ proxied_submission_port }}"
-    #   loop: "{{ groups['rproxy_external'] }}"
-    # - name: Allow localnet LMTP
-    #   community.general.ufw:
-    #     rule: allow
-    #     interface: ens3
-    #     direction: in
-    #     proto: tcp
-    # Join the following three lines on one line (and delete this one)
-    # src: "{{ hostvars[item]['ansible_facts']['default_ipv4']['network'] }}/
-    # {{ hostvars[item]['ansible_facts']['default_ipv4']['netmask'] }}"
-    # yamllint disable-line
-    #     dest: "{{ ansible_facts['default_ipv4']['address'] }}"
-    #     to_port: "{{ lmtp_port }}"
-    #   loop: "{{ groups['mailbox_servers'] }}"
 ...
