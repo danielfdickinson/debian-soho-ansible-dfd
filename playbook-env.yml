@@ -25,6 +25,10 @@
   roles:
   - user_admin_add_password
 
+- hosts: edge_hosts
+  roles:
+  - fail2ban
+
   # Must happen after an 'all' with gather_facts
 - hosts: libvirtd_hosts
   # Note that roles here must not interfere with other environments on the same
@@ -62,7 +66,7 @@
 
 - hosts: rproxy_external
   roles:
-  - reverse_proxy_external
+  - haproxy
 
 - hosts: website_servers:rproxy_internal
   roles:

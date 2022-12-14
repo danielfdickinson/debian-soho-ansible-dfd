@@ -93,6 +93,7 @@ mydomain
 myhostname
 mynetworks
 myorigin
+nbsrv
 netaddr
 netaddrs
 newaliases

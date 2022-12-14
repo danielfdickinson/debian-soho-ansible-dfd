@@ -1,0 +1,43 @@
+---
+- name: Configure HAProxy
+  become: yes
+  block:
+  - name: Ensure HAproxy present
+    ansible.builtin.apt:
+      name:
+      - haproxy
+      state: present
+  - name: Create/Update HAProxy SystemD service file
+    ansible.builtin.copy:
+      dest: /etc/systemd/system/haproxy.service
+      group: root
+      mode: "0644"
+      owner: root
+      src: haproxy.service
+    notify: Restart haproxy service
+  - name: Ensure HAProxy configuration directory exists
+    ansible.builtin.file:
+      path: /etc/haproxy/haproxy.cfg.d
+      group: root
+      mode: "0750"
+      owner: root
+      state: directory
+  - name: Create/Update HAProxy configuration static files
+    ansible.builtin.copy:
+      dest: /etc/haproxy/haproxy.cfg.d/
+      group: root
+      mode: "0640"
+      owner: root
+      src: haproxy.cfg.d/
+    notify: Restart haproxy
+- name: Configure firewall
+  become: yes
+  block:
+  - name: Allow HTTP in on external interface
+    community.general.ufw:
+      rule: allow
+      interface: ens3
+      direction: in
+      proto: tcp
+      to_port: 80
+...

@@ -105,6 +105,6 @@ repos:
     - --show-context
     - --show-suggestions
     - --validate-directives
-    exclude: ^(LICENSE|tests/config/cspell.json|\.gitlab-ci\.yml$) # yamllint disable-line
+    exclude: ^(LICENSE|tests/config/cspell.json|\.gitlab-ci\.yml|roles/haproxy/files/haproxy\.cfg\.d/20-.*-userlist-.*\.cfg$) # yamllint disable-line
 # yamllint enable rule:key-ordering
 ...
