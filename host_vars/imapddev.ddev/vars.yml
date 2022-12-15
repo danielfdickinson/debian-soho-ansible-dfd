@@ -1,4 +1,6 @@
 ---
+private_cert_cert_content: "{{ vault_private_cert_cert_content }}"
+private_cert_key_content: "{{ vault_private_cert_key_content }}"
 public_cert_cert_file: "{{ vault_public_cert_cert_file }}"
 public_cert_private_key: "{{ vault_public_cert_private_key }}"
 ...
