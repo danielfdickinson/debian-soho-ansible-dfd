@@ -2,7 +2,7 @@
 # yamllint disable rule:line-length
 - name: Configure chronyd to allow NTP from guests
   become: yes
-  ansible.builtin.copy:
+  ansible.builtin.template:
     dest: /etc/chrony/conf.d/allow_{{ envname }}_guests.conf
     content: allow {{ vbridge_network_netmask | ansible.utils.ipaddr('net') }}
     group: root

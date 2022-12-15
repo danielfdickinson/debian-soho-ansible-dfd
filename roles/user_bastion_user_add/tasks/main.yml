@@ -33,7 +33,7 @@
       owner: "{{ vault_bastion_user }}"
       state: directory
   - name: Add bastion user incoming public key
-    ansible.builtin.copy:
+    ansible.builtin.template:
       dest: /local-home/{{ vault_bastion_user }}/.ssh/authorized_keys
       content: "{{ vault_bastion_ssh_key }}"
       group: "{{ vault_bastion_user }}"

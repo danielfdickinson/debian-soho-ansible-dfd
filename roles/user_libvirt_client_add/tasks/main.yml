@@ -35,7 +35,7 @@
       owner: "{{ vault_libvirt_client_user }}"
       state: directory
   - name: Add libvirt client user incoming public key
-    ansible.builtin.copy:
+    ansible.builtin.template:
       dest: /local-home/{{ vault_libvirt_client_user }}/.ssh/authorized_keys
       content: "{{ vault_libvirt_client_ssh_key }}"
       group: "{{ vault_libvirt_client_user }}"
