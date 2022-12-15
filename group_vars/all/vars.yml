@@ -1,9 +1,16 @@
 ---
+admin_base_homedir: "{{ vault_admin_base_homedir }}"
+admin_gecos: "{{ vault_admin_gecos }}"
+admin_ssh_key: "{{ vault_admin_ssh_key }}"
+admin_ssh_key_userdata: "{{ vault_admin_ssh_key_userdata }}"
+admin_user: "{{ vault_admin_user }}"
 ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_common_args: "{% if 'external_ssh' not in group_names %}-o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -p {{ vault_bastion_port }} -W %h:%p -q {{ vault_bastion_user }}@{{ vault_bastion_host }}\"{% endif %}" # yamllint disable-line
 ansible_ssh_host_key_checking: false # Note: this should be true in production
 ansible_ssh_port: "{{ vault_ansible_port }}"
 ansible_ssh_user: "{{ vault_admin_user }}"
+bastion_user: "{{ vault_bastion_user }}"
+bastion_ssh_key: "{{ vault_bastion_ssh_key }}"
 central_local_domain: "{{ vault_central_local_domain }}"
 central_local_email: "{{ vault_central_local_email }}"
 dovecot_health_check_port: "{{ vault_dovecot_health_check_port }}"
