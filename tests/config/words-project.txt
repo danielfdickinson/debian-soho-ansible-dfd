@@ -7,6 +7,7 @@ HEREDOCS
 LLMNR
 LMTP
 LOGINDISABLED
+NOPASSWD
 Referer
 SASL
 SPNEGO
@@ -15,6 +16,8 @@ Winbind
 addrtype
 adminaddr
 airlockddev
+airlockldev
+apic
 apop
 autocreation
 autofix
@@ -22,6 +25,7 @@ backupmx
 brycewray
 bsdauth
 ccert
+chdir
 checkpassword
 chrony
 chronyd
@@ -30,6 +34,7 @@ ciphersuites
 danielfdickinson
 dansabel
 davidsneighbour
+ddata
 ddev
 dgram
 dlcicl
@@ -37,9 +42,11 @@ dmacvicar
 dnsblog
 dnsmasq
 dontlognull
+dosfstools
 doveadm
 dovenull
 dport
+edata
 endfor
 envname
 errorfile
@@ -58,6 +65,7 @@ helo
 hostvars
 httplog
 httpv
+idata
 iface
 ifup
 ignoreip
@@ -67,6 +75,7 @@ imaps
 inet
 keytab
 kvm
+ldev
 leastconn
 libvirtd
 linebreak
@@ -86,7 +95,9 @@ mailuser
 markdownlint
 maxconn
 maxproc
+mcopy
 mmap
+mtools
 mxes
 mydestination
 mydomain
@@ -98,6 +109,7 @@ netaddr
 netaddrs
 newaliases
 nexthop
+nocloud
 nocows
 nodev
 noexec
@@ -114,6 +126,7 @@ postlog
 postlogd
 postmap
 postscreen
+prealloc
 privcert
 proxymap
 proxywrite
@@ -147,15 +160,19 @@ tlsmgr
 tlsproxy
 unauth
 unpriv
+urandom
 userdb
 userdbs
 vardefs
 vbridge
+vcpu
 vdomain
+vfat
 vgname
 virbr
 virsh
 virt
+virtio
 virusalert
 vmail
 vmailbox

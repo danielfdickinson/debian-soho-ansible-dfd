@@ -23,6 +23,10 @@ trim_trailing_whitespace = true
 indent_size = 2
 indent_style = space
 
+[{user-data,meta-data}.j2]
+indent_size = 2
+indent_style = space
+
 # Make sure we don't trim hard line breaks
 # Using pre-commit we can clean out unwanted trailing whitespace
 [*.md]
