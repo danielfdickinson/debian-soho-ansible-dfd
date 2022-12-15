@@ -29,15 +29,6 @@
   roles:
   - fail2ban
 
-  # Must happen after an 'all' with gather_facts
-- hosts: libvirtd_hosts
-  # Note that roles here must not interfere with other environments on the same
-  # libvirtd_host
-  roles:
-  - libvirtd_forward_hooks
-  vars:
-    libvirt_domain_forwards_map: "{{ libvirt_domain_forwards }}"
-
 - hosts: all:!libvirtd_hosts:!bastions
   any_errors_fatal: true
   roles:
@@ -71,4 +62,15 @@
 - hosts: website_servers:rproxy_internal
   roles:
   - apache2_proxy_protocol
+
+  # Must happen after an 'all' with gather_facts
+  # We want this *after* configuring the instances since it's allowing traffic
+  # to the instances
+- hosts: libvirtd_hosts
+  # Note that roles here must not interfere with other environments on the same
+  # libvirtd_host
+  roles:
+  - libvirtd_forward_hooks
+  vars:
+    libvirt_domain_forwards_map: "{{ libvirt_domain_forwards }}"
 ...
