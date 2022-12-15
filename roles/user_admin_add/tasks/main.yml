@@ -39,9 +39,9 @@
       owner: "{{ vault_admin_user }}"
       state: directory
   - name: Add admin incoming public key
-    ansible.builtin.copy:
+    ansible.builtin.template:
       dest: /local-home/{{ vault_admin_user }}/.ssh/authorized_keys
-      content: "{{ vault_admin_ssh_key }}"
+      content: no-agent-forwarding,no-port-forwarding {{ vault_admin_ssh_key }}
       group: "{{ vault_admin_user }}"
       mode: "0600"
       owner: "{{ vault_admin_user }}"
