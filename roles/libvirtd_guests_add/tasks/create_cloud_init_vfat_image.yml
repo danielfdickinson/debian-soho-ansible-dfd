@@ -5,12 +5,14 @@
     mode: "0640"
     src: meta-data.j2
   register: meta_data_out
+  notify: Create nocloud image
 - name: Create instance user-data
   ansible.builtin.template:
     dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/user-data
     mode: "0640"
     src: user-data.j2
   register: user_data_out
+  notify: Create nocloud image
 - name: Ensure mtools is available
   become: yes
   ansible.builtin.apt:
@@ -25,18 +27,9 @@
     size: 2M
     sparse: true
   register: nocloud_img_size
-- name: Copy nocloud data to image file
-  ansible.builtin.command:
-    argv:
-    - mcopy
-    - -oi
-    - nocloud.img
-    - user-data
-    - meta-data
-    - "::"
-    chdir: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}
-  changed_when: false
-  when: meta_data_out is changed or user_data_out is changed or nocloud_img_size is changed
+  notify: Create nocloud image
+- name: Flush handlers (make sure cloudinit image is ready)
+  ansible.builtin.meta: flush_handlers
 - name: Copy nocloud data to a pool
   become: yes
   ansible.builtin.copy:
@@ -45,7 +38,7 @@
     mode: "0600"
     owner: libvirt-qemu
     remote_src: true
-    src: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/nocloud.img
+    src: "{{ nocloud_img_size.path }}"
   notify: Refresh list of volumes in pool containing cloud-init images
 - name: Flush handlers (make sure cloudinit image is available)
   ansible.builtin.meta: flush_handlers

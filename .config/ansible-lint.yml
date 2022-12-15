@@ -1,6 +1,5 @@
 ---
 skip_list:
-- no-handler
 - yaml[indentation]
 - yaml[line-length]
 - yaml[truthy]
