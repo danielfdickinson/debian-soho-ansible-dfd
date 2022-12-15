@@ -1,19 +1,38 @@
 ---
 - hosts: bare_metal
   gather_facts: false
+  tasks:
+  - name: Ensure needed variables are defined
+    ansible.builtin.assert:
+      that:
+      - bare_metal_env is defined
+      - initial_ssh_port is defined
+      - initial_password is defined
+      - initial_ssh_user is defined
+      quiet: true
+      fail_msg: bare_metal_env, initial_ssh_port, initial_password, and initial_ssh_user must be defined
+
+- hosts: bare_metal
+  gather_facts: true
   roles:
   - user_admin_add
   vars:
-    ansible_ssh_port: 22
-    ansible_become_password: ""
-    ansible_ssh_user: debian
+    new_admin_base_homedir: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_base_homedir'] }}"
+    new_admin_gecos: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_gecos'] }}"
+    new_admin_password: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_password'] }}"
+    new_admin_ssh_key: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_ssh_key'] }}"
+    new_admin_user: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_user'] }}"
+    ansible_ssh_port: "{{ initial_ssh_port }}"
+    ansible_become_password: "{{ initial_password }}"
+    ansible_ssh_user: "{{ initial_ssh_user }}"
 
 - hosts: bare_metal
   roles:
   - user_debian_remove
   - sshd_port_set
   vars:
-    ansible_ssh_port: 22
-    ansible_become_password: "{{ vault_ansible_become_password }}"
-    ansible_ssh_user: "{{ vault_admin_user }}"
+    ansible_ssh_port: "{{ initial_ssh_port }}"
+    ansible_become_password: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_become_password'] }}"
+    ansible_ssh_user: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_ssh_user'] }}"
+    new_ansible_port: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_ssh_port'] }}"
 ...
