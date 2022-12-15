@@ -4,15 +4,15 @@
   roles:
   - network_dns_use_resolved
 
-- hosts: local_ipv6
+- hosts: bare_metal:&local_ipv6
   roles:
   - network_local_ipv6
 
-- hosts: dual_interface_metal
+- hosts: bare_metal:&dual_interface
   roles:
   - network_bare_metal_dual_interface
 
-- hosts: storage_extra_local
+- hosts: bare_metal:&storage_extra
   roles:
   - storage_setup_extra_bare_metal
 
@@ -22,7 +22,7 @@
   - packages_bare_metal
   - packages_firmware
 
-- hosts: backup_clients_ovh
+- hosts: bare_metal:&backup_clients_ovh
   roles:
   - packages_backup_ovh
 
