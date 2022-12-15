@@ -6,7 +6,7 @@
   - libvirtd_network_add
 
 # After creating the network we need to gather facts again to pick-up the new
-# network
+# network(s)
 - hosts: libvirtd_hosts
   gather_facts: true
   any_errors_fatal: true
