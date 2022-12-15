@@ -1,0 +1,73 @@
+---
+- name: Create OS volume for instance {{ instance_item.name }} in {{ instance_item.envname }}
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh vol-create-as {{ edata['pool_os'] | quote }}  {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
+    creates: /var/lib/libvirt/images/{{ edata['pool_os'] }}/{{ instance_item.vol_name_os }}
+  register: vol_os_create_out
+  changed_when: vol_os_create_out.rc == 0 and not ('skipped, since' in vol_os_create_out.stdout and 'exists' in vol_os_create_out.stdout)
+  failed_when: vol_os_create_out.rc != 0
+  notify: Refresh list of volumes in {{ edata['pool_os'] }} pool
+- name: Create data volumes for instance
+  include_tasks: create_data_volumes.yml
+  loop: "{{ instance_item.data_volumes }}"
+  when: instance_item.data_volumes is defined
+- name: Create base directory for instance working data
+  become: yes
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data
+    group: "{{ ansible_user }}"
+    mode: "0750"
+    owner: "{{ ansible_user }}"
+    state: directory
+- name: Create environment directory for instance working data
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data/{{ instance_item.envname }}
+    mode: "0750"
+    state: directory
+- name: Create instance directory for instance working data
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}
+    mode: "0750"
+    state: directory
+- name: Create cloudinit vfat image
+  include_tasks: create_cloud_init_vfat_image.yml
+- name: Create domain xml
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/domain.xml
+    mode: "0640"
+    src: domain.xml.j2
+- name: Define libvirt domain
+  become: yes
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - define
+    - /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/domain.xml
+    - --validate
+    creates: /etc/libvirt/qemu/{{ instance_item.libvirt_domain_name }}.xml
+  register: domain_define_out
+  changed_when: domain_define_out.rc == 0
+- name: Flush handlers (make sure images are available)
+  ansible.builtin.meta: flush_handlers
+- name: Start libvirt domain
+  become: yes
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - start
+    - "{{ instance_item.libvirt_domain_name }}"
+  register: domain_start_out
+  changed_when: domain_start_out.rc == 0
+  failed_when: "'already exists' not in domain_start_out.stderr and domain_start_out.rc != 0"
+- name: Set libvirt domain as autostarted
+  become: yes
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - autostart
+    - "{{ instance_item.libvirt_domain_name }}"
+    creates: /etc/libvirt/qemu/autostart/{{ instance_item.libvirt_domain_name }}.xml
+  register: domain_autostart_out
+  changed_when: domain_autostart_out.rc == 0
+...

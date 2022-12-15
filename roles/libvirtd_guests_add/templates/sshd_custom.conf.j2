@@ -1,0 +1,4 @@
+Port {{ instance_item['sshd_port'] is defined | ternary(instance_item['sshd_port'], edata.sshd_port) }}
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no

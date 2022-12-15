@@ -13,4 +13,8 @@
   roles:
   - chronyd_libvirtd
 
+- hosts: dlcicl01.internal.dfd
+  any_errors_fatal: true
+  roles:
+  - libvirtd_guests_add
 ...

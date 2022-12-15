@@ -1,0 +1,26 @@
+---
+- name: Copy base OS volume file to libvirtd host
+  become: yes
+  # We use 'get_url' since we're often operating on remote hosts and our upload
+  # bandwidth would make this slower than using the official download servers
+  ansible.builtin.get_url:
+    dest: "{{ libvirt_pool_base_images_path }}/{{ libvirt_os_base_image_name }}"
+    checksum: sha512:{{ libvirt_os_cloud_image_sha512sums_url }}
+    group: libvirt-qemu
+    mode: "0660"
+    owner: libvirt-qemu
+    timeout: 30
+    url: "{{ libvirt_os_cloud_image_url }}"
+  notify: Refresh list of volumes in base-images pool
+- name: Flush handlers (ensure list of volumes is up to date)
+  ansible.builtin.meta: flush_handlers
+- name: Prepare a libvirt guest
+  include_tasks: create_instance.yml
+  loop: "{{ libvirt_guest_definitions }}"
+  loop_control:
+    loop_var: instance_item
+  vars:
+    ddata: "{{ libvirt_env_default_userdata[instance_item.envname] }}"
+    edata: "{{ libvirt_env_definitions[instance_item.envname] }}"
+    idata: "{{ libvirt_guest_userdata[instance_item.name] }}"
+...

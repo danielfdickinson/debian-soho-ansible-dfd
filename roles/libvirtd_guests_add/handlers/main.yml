@@ -1,0 +1,18 @@
+---
+- name: Refresh list of volumes in base-images pool
+  become: yes
+  ansible.builtin.command: virsh pool-refresh {{ libvirt_pool_base_images | quote }}
+  changed_when: false
+- name: Refresh list of volumes in fast pool
+  become: yes
+  ansible.builtin.command: virsh pool-refresh fast
+  changed_when: false
+- name: Refresh list of volumes in slow pool
+  become: yes
+  ansible.builtin.command: virsh pool-refresh slow
+  changed_when: false
+- name: Refresh list of volumes in pool containing cloud-init images
+  become: yes
+  ansible.builtin.command: virsh pool-refresh {{ libvirt_pool_cloud_init | quote }}
+  changed_when: false
+...

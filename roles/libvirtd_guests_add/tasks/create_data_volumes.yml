@@ -1,0 +1,7 @@
+---
+- name: Create data volume {{ item.name }} for instance {{ instance_item.name }} in {{ instance_item.envname }}
+  ansible.builtin.command: virsh vol-create-as {{ item.pool }} {{ item.name }} {{ item.vol_size }} --format qcow2 --prealloc-metadata
+  register: datavol_create_out
+  changed_when: datavol_os_create_out.rc == 0
+  failed_when: "'already exists' not in datavol_create_out.stderr and datavol_create_out.rc != 0"
+...
