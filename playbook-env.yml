@@ -37,7 +37,7 @@
 
 - hosts: backup_clients_ovh
   roles:
-  - packages_backup_ovh
+  - backup_ovh
 
 - hosts: cert_private_ssl_servers
   roles:

@@ -2,14 +2,6 @@
 - name: Add and configure bastion user
   become: yes
   block:
-  - name: Ensure homedir is recognized by apparmor
-    ansible.builtin.copy:
-      dest: /etc/apparmor.d/tunables/home.d/local-home.site.local
-      group: root
-      mode: "0644"
-      owner: root
-      src: local-home.site.local
-    notify: Reload apparmor
   - name: Add bastion user
     ansible.builtin.user:
       name: "{{ vault_bastion_user }}"

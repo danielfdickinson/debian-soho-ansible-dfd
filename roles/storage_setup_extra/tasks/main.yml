@@ -1,10 +1,11 @@
 ---
-- name: Install lvm2 (we'll also use it for RAID when applicable)
+- name: Install lvm2 (we'll also use it for RAID if applicable)
   become: yes
   ansible.builtin.apt:
     name:
     - lvm2
     state: present
+  when: storage_extra_use_lvm2
 - name: Add physical volumes and volume groups to lvm2
   become: yes
   community.general.lvg:
@@ -12,7 +13,7 @@
     pvs: "{{ item.pvs }}"
     state: present
   loop: "{{ storage_volume_groups }}"
-  when: storage_volume_groups is defined
+  when: storage_volume_groups is defined and storage_extra_use_lvm2
 - name: Add logical volumes via lvm2
   become: yes
   community.general.lvol:
@@ -24,7 +25,7 @@
     size: "{{ item.size }}"
     vg: "{{ item.vgname }}"
   loop: "{{ storage_logical_volumes }}"
-  when: storage_logical_volumes is defined
+  when: storage_logical_volumes is defined and storage_extra_use_lvm2
 - name: Add filesystems
   become: yes
   community.general.filesystem:

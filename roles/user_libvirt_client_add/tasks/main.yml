@@ -2,43 +2,35 @@
 - name: Add and configure libvirt client user
   become: yes
   block:
-  - name: Ensure homedir is recognized by apparmor
-    ansible.builtin.copy:
-      dest: /etc/apparmor.d/tunables/home.d/local-home.site.local
-      group: root
-      mode: "0644"
-      owner: root
-      src: local-home.site.local
-    notify: Reload apparmor
   - name: Add libvirt client user
     ansible.builtin.user:
-      name: "{{ vault_libvirt_client_user }}"
+      name: "{{ libvirt_client_user }}"
       groups:
       - libvirt
-      home: /local-home/{{ vault_libvirt_client_user }}
+      home: "{{ admin_base_homedir }}/{{ libvirt_client_user }}"
       password_lock: true
       shell: /bin/bash
       state: present
     notify: Restart SSH server
   - name: Lockdown libvirt client user home dir
     ansible.builtin.file:
-      path: /local-home/{{ vault_libvirt_client_user }}
-      group: "{{ vault_libvirt_client_user }}"
+      path: "{{ admin_base_homedir }}/{{ libvirt_client_user }}"
+      group: "{{ libvirt_client_user }}"
       mode: "0700"
-      owner: "{{ vault_libvirt_client_user }}"
+      owner: "{{ libvirt_client_user }}"
       state: directory
   - name: Lockdown libvirt client user ssh dir
     ansible.builtin.file:
-      path: /local-home/{{ vault_libvirt_client_user }}/.ssh
-      group: "{{ vault_libvirt_client_user }}"
+      path: "{{ admin_base_homedir }}/{{ libvirt_client_user }}/.ssh"
+      group: "{{ libvirt_client_user }}"
       mode: "0700"
-      owner: "{{ vault_libvirt_client_user }}"
+      owner: "{{ libvirt_client_user }}"
       state: directory
   - name: Add libvirt client user incoming public key
     ansible.builtin.template:
-      dest: /local-home/{{ vault_libvirt_client_user }}/.ssh/authorized_keys
-      content: "{{ vault_libvirt_client_ssh_key }}"
-      group: "{{ vault_libvirt_client_user }}"
+      dest: "{{ admin_base_homedir }}/{{ libvirt_client_user }}/.ssh/authorized_keys"
+      group: "{{ libvirt_client_user }}"
       mode: "0600"
-      owner: "{{ vault_libvirt_client_user }}"
+      owner: "{{ libvirt_client_user }}"
+      src: authorized_keys.j2
 ...

@@ -1,12 +1,7 @@
 ---
 - name: Restart SSH server
   become: yes
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: ssh
     state: restarted
-- name: Reload apparmor
-  become: yes
-  ansible.builtin.service:
-    name: apparmor
-    state: reloaded
 ...

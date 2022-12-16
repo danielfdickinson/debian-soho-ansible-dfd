@@ -1,5 +1,15 @@
 ---
 - hosts: bare_metal
+  gather_facts: false
+  pre_tasks:
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      quiet: true
+      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+
+- hosts: bare_metal
   gather_facts: true
   roles:
   - network_dns_use_resolved
@@ -8,13 +18,13 @@
   roles:
   - network_local_ipv6
 
-- hosts: bare_metal:&dual_interface
+- hosts: bare_metal:&bridge_second_interface
   roles:
-  - network_bare_metal_dual_interface
+  - network_bridge_second_interface
 
 - hosts: bare_metal:&storage_extra
   roles:
-  - storage_setup_extra_bare_metal
+  - storage_setup_extra
 
 - hosts: bare_metal
   roles:
@@ -22,9 +32,14 @@
   - packages_bare_metal
   - packages_firmware
 
-- hosts: bare_metal:&backup_clients_ovh
+- hosts: bare_metal:&backup_clients:&dfd_local
   roles:
-  - packages_backup_ovh
+  - backup_restic
+
+- hosts: bare_metal:&backup_clients:&ovh_bhs
+  roles:
+  - backup_ovh
+  - backup_restic
 
 - hosts: bare_metal:&libvirtd_hosts
   roles:
@@ -33,5 +48,4 @@
   - fail2ban
   - fail2ban_ssh
   - postfix_sender_internal
-  - user_bastion_user_add
 ...

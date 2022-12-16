@@ -1,10 +1,12 @@
 ---
 dependencies:
-- role: packages_apt_non_free
+- role: apparmor_admin_homedir
+  vars:
+    new_admin_base_homedir: "{{ admin_base_homedir }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Ensure firmware is present
+  description: Add libvirt client user
   license: MIT
   min_ansible_version: "6.0"
   platforms:

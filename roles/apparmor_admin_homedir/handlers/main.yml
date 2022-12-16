@@ -1,7 +1,7 @@
 ---
-- name: Reload fail2ban
+- name: Reload apparmor
   become: yes
   ansible.builtin.systemd:
-    name: fail2ban
+    name: apparmor
     state: reloaded
 ...

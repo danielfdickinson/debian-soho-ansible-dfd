@@ -1,0 +1,8 @@
+---
+- name: Ensure restic
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - restic
+    state: present
+...

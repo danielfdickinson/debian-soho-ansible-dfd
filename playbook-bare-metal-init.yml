@@ -17,7 +17,6 @@
       - bare_metal_env in group_names
       quiet: true
       fail_msg: "{{ bare_metal_env | quote }} is not a valid bare_metal_env (environment)"
-
 - hosts: bare_metal
   gather_facts: true
   roles:

@@ -115,7 +115,9 @@ nodev
 noexec
 noninteractive
 nosuid
+numad
 oqmgr
+ovmf
 passdb
 passdbs
 passwdfile
