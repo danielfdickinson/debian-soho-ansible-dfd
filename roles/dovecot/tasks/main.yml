@@ -61,7 +61,7 @@
   - name: Allow health check from OVH RTM
     community.general.ufw:
       rule: allow
-      interface: ens3
+      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
       direction: in
       proto: tcp
       src: "{{ item }}"
@@ -71,7 +71,7 @@
   - name: Allow IMAP from anywhere
     community.general.ufw:
       rule: allow
-      interface: ens3
+      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
       direction: in
       proto: tcp
       src: any

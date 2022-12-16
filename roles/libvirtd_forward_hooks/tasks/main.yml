@@ -33,7 +33,7 @@
     src: hooks-qemu.j2
   loop: "{{ libvirt_domain_forwards_map }}"
   vars:
-    item_guest_ip: "{{ item.guest_ip | default( hostvars[item.name  + '.' + internal_domain]['ansible_facts']['ens3']['ipv4']['address'] | default('')) }}"
+    item_guest_ip: "{{ item.guest_ip | default( hostvars[item.name  + '.' + internal_domain]['ansible_facts']['default_ipv4']['address'] | default('')) }}"
     item_guest_ip6: "{{ item.guest_ip6 | default( hostvars[item.name  + '.' + internal_domain]['ansible_facts']['default_ipv6']['address'] | default('')) }}"
   register: hooks_qemu_result
   notify: Restart libvirtd

@@ -1,5 +1,5 @@
 # Allow ProxyProtocol from HAProxy
-haproxy_trusted_networks = {% for proxy_host in groups['rproxy_external'] %} {{ hostvars[proxy_host]['ansible_facts']['ens3']['ipv4']['address'] }}{% endfor %}
+haproxy_trusted_networks = {% for proxy_host in groups['rproxy_external'] %} {{ hostvars[proxy_host]['ansible_facts']['default_ipv4']['address'] }}{% endfor %}
 
 haproxy_timeout = 3s
 mail_location = sdbox:~/mail

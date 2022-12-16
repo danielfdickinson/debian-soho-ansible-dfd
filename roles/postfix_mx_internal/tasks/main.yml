@@ -58,20 +58,22 @@
   become: yes
   community.general.ufw:
     rule: allow
-    interface: ens3
+    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
     src: "{{ v4natnet_gwcidr | ansible.utils.ipaddr('net') }}"
     dest: "{{ ansible_facts['default_ipv4']['address'] }}"
     to_port: "{{ internal_relay_port }}"
+  when: ansible_facts['default_ipv4'] is defined
 - name: Allow localnet6 SMTP (alternate port)
   become: yes
   community.general.ufw:
     rule: allow
-    interface: ens3
+    interface: "{{ ansible_facts['default_ipv6']['interface'] }}"
     direction: in
     proto: tcp
     src: "{{ v6natnet_cidr }}"
     dest: "{{ ansible_facts['default_ipv6']['address'] }}"
     to_port: "{{ internal_relay_port }}"
+  when: ansible_facts['default_ipv6'] is defined
 ...
