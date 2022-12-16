@@ -15,7 +15,6 @@ UFW
 Winbind
 addrtype
 adminaddr
-airlockddev
 airlockldev
 apic
 apop
@@ -52,8 +51,8 @@ envname
 errorfile
 forwardfor
 fstype
-gateddev
-gdavddev
+gateldev
+gdavldev
 gecos
 gethostname
 gitleaks
@@ -70,7 +69,7 @@ iface
 ifup
 ignoreip
 imapd
-imapddev
+imapldev
 imaps
 inet
 keytab
@@ -177,4 +176,4 @@ virusalert
 vmail
 vmailbox
 winbind
-wwwddev
+wwwldev
