@@ -26,7 +26,7 @@
   roles:
   - packages_backup_ovh
 
-- hosts: libvirtd_hosts
+- hosts: bare_metal:&libvirtd_hosts
   roles:
   - libvirtd
   - user_libvirt_client_add

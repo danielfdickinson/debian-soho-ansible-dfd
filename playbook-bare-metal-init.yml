@@ -9,6 +9,7 @@
       - initial_ssh_port is defined
       - initial_password is defined
       - initial_ssh_user is defined
+      - bare_metal_env in group_names
       quiet: true
       fail_msg: bare_metal_env, initial_ssh_port, initial_password, and initial_ssh_user must be defined
 
