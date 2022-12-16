@@ -2,27 +2,32 @@
 - hosts: bare_metal
   gather_facts: false
   tasks:
-  - name: Ensure needed variables are defined
+  - name: Ensure needed initialization variables are defined
     ansible.builtin.assert:
       that:
       - bare_metal_env is defined
       - initial_ssh_port is defined
       - initial_password is defined
       - initial_ssh_user is defined
-      - bare_metal_env in group_names
       quiet: true
       fail_msg: bare_metal_env, initial_ssh_port, initial_password, and initial_ssh_user must be defined
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - bare_metal_env in group_names
+      quiet: true
+      fail_msg: "{{ bare_metal_env | quote }} is not a valid bare_metal_env (environment)"
 
 - hosts: bare_metal
   gather_facts: true
   roles:
   - user_admin_add
   vars:
-    new_admin_base_homedir: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_base_homedir'] }}"
-    new_admin_gecos: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_gecos'] }}"
-    new_admin_password: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_password'] }}"
-    new_admin_ssh_key: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_ssh_key'] }}"
-    new_admin_user: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['admin_user'] }}"
+    new_admin_base_homedir: "{{ env_conn_admin[bare_metal_env]['admin_base_homedir'] }}"
+    new_admin_gecos: "{{ env_conn_admin[bare_metal_env]['admin_gecos'] }}"
+    new_admin_password: "{{ env_conn_admin[bare_metal_env]['admin_password'] }}"
+    new_admin_ssh_key: "{{ env_conn_admin[bare_metal_env]['admin_ssh_key'] }}"
+    new_admin_user: "{{ env_conn_admin[bare_metal_env]['admin_user'] }}"
     ansible_ssh_port: "{{ initial_ssh_port }}"
     ansible_become_password: "{{ initial_password }}"
     ansible_ssh_user: "{{ initial_ssh_user }}"
@@ -33,7 +38,7 @@
   - sshd_port_set
   vars:
     ansible_ssh_port: "{{ initial_ssh_port }}"
-    ansible_become_password: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_become_password'] }}"
-    ansible_ssh_user: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_ssh_user'] }}"
-    new_ansible_port: "{{ env_conn_admin['bare_metal_' + bare_metal_env]['ansible_ssh_port'] }}"
+    ansible_become_password: "{{ env_conn_admin[bare_metal_env]['ansible_become_password'] }}"
+    ansible_ssh_user: "{{ env_conn_admin[bare_metal_env]['ansible_ssh_user'] }}"
+    new_ansible_port: "{{ env_conn_admin[bare_metal_env]['ansible_ssh_port'] }}"
 ...
