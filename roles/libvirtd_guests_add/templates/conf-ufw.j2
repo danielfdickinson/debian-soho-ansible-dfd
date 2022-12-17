@@ -1,4 +1,4 @@
 #!/bin/bash
 
-ufw allow in proto tcp from any to any port {{ instance_item['sshd_port'] is defined | ternary(instance_item['sshd_port'], edata.sshd_port) }}
+ufw allow in on ens2 proto tcp from any to any port {{ instance_item['ansible_ssh_port'] is defined | ternary(instance_item['ansible_ssh_port'], edata.ansible_ssh_port) }}
 ufw enable

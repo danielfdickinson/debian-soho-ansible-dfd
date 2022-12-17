@@ -41,6 +41,18 @@
     v6nat_prefix: "{{ env_conn_admin[guest_envname]['v6nat_prefix'] }}"
 
 - hosts: libvirtd_hosts:&{{ envname | default([]) }}
+  gather_facts: true
+  any_errors_fatal: true
+  # Note that roles here must not interfere with other environments on the same
+  # libvirtd_host
+  roles:
+  - libvirtd_forward_hooks
+  vars:
+    guest_data: "{{ libvirt_guest_definitions | selectattr('envname', 'equalto', guest_envname) }}"
+    libvirt_domain_forwards_map: "{{ libvirt_domain_ssh_forwards }}"
+    vbridge: "{{ env_conn_admin[guest_envname]['vbridge'] }}"
+
+- hosts: libvirtd_hosts:&{{ envname | default([]) }}
   any_errors_fatal: true
   roles:
   - libvirtd_guests_add

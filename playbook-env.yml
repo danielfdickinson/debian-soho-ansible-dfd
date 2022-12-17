@@ -1,14 +1,4 @@
 ---
-- hosts: libvirtd_hosts
-  gather_facts: true
-  any_errors_fatal: true
-  # Note that roles here must not interfere with other environments on the same
-  # libvirtd_host
-  roles:
-  - libvirtd_forward_hooks
-  vars:
-    libvirt_domain_forwards_map: "{{ libvirt_domain_ssh_forwards }}"
-
 - hosts: bastions
   gather_facts: true
   any_errors_fatal: true

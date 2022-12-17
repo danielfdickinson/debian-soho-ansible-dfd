@@ -2,24 +2,24 @@
 
 # Modified from https://wiki.libvirt.org/page/Networking#Forwarding_Incoming_Connections
 
-GUEST_IP="{{ item_guest_ip }}"
-GUEST_IP6="{{ item_guest_ip6 }}"
+GUEST_IP={{ item_guest_ip | quote }}
+GUEST_IP6={{ item_guest_ip6 | quote }}
 
-if [ "${1}" = "{{ item.name }}" ]; then
+if [ "${1}" = "{{ item.0.libvirt_domain_name }}" ]; then
 	if [ "${2}" = "stopped" ] || [ "${2}" = "reconnect" ]; then
-		/usr/sbin/iptables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP --dport {{ item.guest_port }} -j ACCEPT
-		/usr/sbin/iptables -t nat -D PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to $GUEST_IP:{{ item.guest_port }}
+		/usr/sbin/iptables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP --dport {{ item.1.guest_port }} -j ACCEPT
+		/usr/sbin/iptables -t nat -D PREROUTING -p tcp --dport {{ item.1.host_port }} -j DNAT --to $GUEST_IP:{{ item.1.guest_port }}
 		if [ -n "${GUEST_IP6}" ]; then
-			/usr/sbin/ip6tables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.guest_port }} -j ACCEPT
-			/usr/sbin/ip6tables -t nat -D PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to []$GUEST_IP6]:{{ item.guest_port }}
+			/usr/sbin/ip6tables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.1.guest_port }} -j ACCEPT
+			/usr/sbin/ip6tables -t nat -D PREROUTING -p tcp --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
 		fi
 	fi
 	if [ "${2}" = "start" ] || [ "${2}" = "reconnect" ]; then
-		/usr/sbin/iptables -I FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP --dport {{ item.guest_port }} -j ACCEPT
-		/usr/sbin/iptables -t nat -I PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to $GUEST_IP:{{ item.guest_port }}
+		/usr/sbin/iptables -I FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP --dport {{ item.1.guest_port }} -j ACCEPT
+		/usr/sbin/iptables -t nat -I PREROUTING -p tcp --dport {{ item.1.host_port }} -j DNAT --to $GUEST_IP:{{ item.1.guest_port }}
 		if [ -n "${GUEST_IP6}" ]; then
-			/usr/sbin/ip6tables -I FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.guest_port }} -j ACCEPT
-			/usr/sbin/ip6tables -t nat -I PREROUTING -p tcp --dport {{ item.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.guest_port }}
+			/usr/sbin/ip6tables -I FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.1.guest_port }} -j ACCEPT
+			/usr/sbin/ip6tables -t nat -I PREROUTING -p tcp --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
 		fi
 	fi
 fi
