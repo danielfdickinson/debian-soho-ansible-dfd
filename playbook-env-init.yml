@@ -1,19 +1,46 @@
 ---
-- hosts: dlcicl01.internal.dfd
+- hosts: libvirtd_hosts
+  gather_facts: false
+  tasks:
+  - name: Ensure given environments are valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      - guest_envname is defined
+      quiet: true
+
+- hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   any_errors_fatal: true
   roles:
   - libvirtd_network_add
+  vars:
+    internal_domain: "{{ env_conn_admin[guest_envname]['internal_domain'] }}"
+    v4nat_addr: "{{ env_conn_admin[guest_envname]['v4nat_addr'] }}"
+    v4nat_cidr: "{{ env_conn_admin[guest_envname]['v4nat_addr'] + '/' + ( env_conn_admin[guest_envname]['v4nat_prefix'] | string ) }}"
+    v4nat_prefix: "{{ env_conn_admin[guest_envname]['v4nat_prefix'] }}"
+    v6nat_addr: "{{ env_conn_admin[guest_envname]['v6nat_addr'] }}"
+    v6nat_cidr: "{{ env_conn_admin[guest_envname]['v6nat_addr'] }}/64"
+    v6nat_net: "{{ env_conn_admin[guest_envname]['v6nat_net'] }}"
+    v6nat_prefix: "64"
+    vbridge: "{{ env_conn_admin[guest_envname]['vbridge'] }}"
 
 # After creating the network we need to gather facts again to pick-up the new
 # network(s)
-- hosts: libvirtd_hosts
+- hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   any_errors_fatal: true
   roles:
   - chronyd_libvirtd
+  vars:
+    v4nat_addr: "{{ env_conn_admin[guest_envname]['v4nat_addr'] }}"
+    v4nat_net: "{{ env_conn_admin[guest_envname]['v4nat_net'] }}"
+    v4nat_prefix: "{{ env_conn_admin[guest_envname]['v4nat_prefix'] }}"
+    v6nat_addr: "{{ env_conn_admin[guest_envname]['v6nat_addr'] }}"
+    v6nat_net: "{{ env_conn_admin[guest_envname]['v6nat_net'] }}"
+    v6nat_prefix: "{{ env_conn_admin[guest_envname]['v6nat_prefix'] }}"
 
-- hosts: dlcicl01.internal.dfd
+- hosts: libvirtd_hosts:&{{ envname | default([]) }}
   any_errors_fatal: true
   roles:
   - libvirtd_guests_add
