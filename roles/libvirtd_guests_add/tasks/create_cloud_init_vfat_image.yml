@@ -1,18 +1,4 @@
 ---
-- name: Create instance meta-data
-  ansible.builtin.template:
-    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/meta-data
-    mode: "0640"
-    src: meta-data.j2
-  register: meta_data_out
-  notify: Create nocloud image
-- name: Create instance user-data
-  ansible.builtin.template:
-    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/user-data
-    mode: "0640"
-    src: user-data.j2
-  register: user_data_out
-  notify: Create nocloud image
 - name: Ensure mtools is available
   become: yes
   ansible.builtin.apt:
@@ -20,6 +6,20 @@
     - dosfstools
     - mtools
     state: present
+- name: Create instance meta-data
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/meta-data
+    mode: "0640"
+    src: meta-data.j2
+  register: meta_data_out
+  notify: Copy cloud init data to nocloud image
+- name: Create instance user-data
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/user-data
+    mode: "0640"
+    src: user-data.j2
+  register: user_data_out
+  notify: Copy cloud init data to nocloud image
 - name: Ensure image file for vfat exists
   community.general.filesize:
     path: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/nocloud.img
@@ -27,7 +27,7 @@
     size: 2M
     sparse: true
   register: nocloud_img_size
-  notify: Create nocloud image
+  notify: Copy cloud init data to nocloud image
 - name: Flush handlers (make sure cloudinit image is ready)
   ansible.builtin.meta: flush_handlers
 - name: Copy nocloud data to a pool

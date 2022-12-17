@@ -1,7 +1,13 @@
 ---
+- name: List all volumes in libvirtd pool for desired volume
+  become: yes
+  ansible.builtin.shell:
+    cmd: virsh vol-list --pool {{ item.pool | quote }} | tail -n+3 | awk '{ print $1 }'
+  register: libvirt_data_vol_list
+  changed_when: false
 - name: Create data volume {{ item.name }} for instance {{ instance_item.name }} in {{ instance_item.envname }}
   ansible.builtin.command: virsh vol-create-as {{ item.pool }} {{ item.name }} {{ item.vol_size }} --format qcow2 --prealloc-metadata
   register: datavol_create_out
   changed_when: datavol_os_create_out.rc == 0
-  failed_when: "'already exists' not in datavol_create_out.stderr and datavol_create_out.rc != 0"
+  when: item.name not in libvirt_data_vol_list.stdout_lines
 ...

@@ -2,6 +2,9 @@
 - name: Refresh list of volumes in base-images pool
   become: yes
   ansible.builtin.command: virsh pool-refresh {{ libvirt_pool_base_images | quote }}
+- name: Refresh list of volumes in default pool
+  become: yes
+  ansible.builtin.command: virsh pool-refresh default
 - name: Refresh list of volumes in fast pool
   become: yes
   ansible.builtin.command: virsh pool-refresh fast
@@ -11,7 +14,16 @@
 - name: Refresh list of volumes in pool containing cloud-init images
   become: yes
   ansible.builtin.command: virsh pool-refresh {{ libvirt_pool_cloud_init | quote }}
-- name: Create nocloud image
+- name: Format nocloud image
+  listen: Copy cloud init data to nocloud image
+  community.general.filesystem:
+    dev: "{{ nocloud_img_size.path }}"
+    force: true
+    fstype: vfat
+    opts: -n CIDATA
+    state: present
+- name: Copy files to nocloud image
+  listen: Copy cloud init data to nocloud image
   ansible.builtin.command:
     argv:
     - mcopy

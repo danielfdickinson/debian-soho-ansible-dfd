@@ -1,4 +1,9 @@
 #cloud-config
+{% if idata['apt'] is defined %}
+apt: {{ idata['apt'] | to_json }}
+{% elif ddata['apt'] is defined %}
+apt: {{ ddata['apt'] | to_json }}
+{% endif %}
 {% if (ddata['bootcmd'] is defined) or (idata['bootcmd'] is defined) %}
 bootcmd:
 {{ [ddata['bootcmd'] is defined | ternary(ddata['bootcmd'], None), idata['bootcmd'] is defined | ternary(ddata['bootcmd'], None)] | flatten(1) | to_yaml }}
@@ -67,6 +72,9 @@ users:
 {% endif %}
 {% if user['lock_passwd'] is defined %}
   lock_passwd: {{ user['lock_passwd'] }}
+{% endif %}
+{% if user['plain_text_passwd'] is defined %}
+  plain_text_passwd: {{ user['plain_text_passwd'] }}
 {% endif %}
 {% if user['shell'] is defined %}
   shell: {{ user['shell'] }}

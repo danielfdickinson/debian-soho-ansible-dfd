@@ -1,13 +1,19 @@
 ---
+- name: List all volumes in libvirtd pool for os volume
+  become: yes
+  ansible.builtin.shell:
+    cmd: virsh vol-list --pool {{ edata['pool_os'] | quote }} | tail -n+3 | awk '{ print $1 }'
+  register: libvirt_os_pool_vol_list
+  changed_when: false
 - name: Create OS volume for instance {{ instance_item.name }} in {{ instance_item.envname }}
   become: yes
   ansible.builtin.command:
     cmd: virsh vol-create-as {{ edata['pool_os'] | quote }}  {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
-    creates: /var/lib/libvirt/images/{{ edata['pool_os'] }}/{{ instance_item.vol_name_os }}
   register: vol_os_create_out
-  changed_when: vol_os_create_out.rc == 0 and not ('skipped, since' in vol_os_create_out.stdout and 'exists' in vol_os_create_out.stdout)
+  changed_when: vol_os_create_out.rc == 0
   failed_when: vol_os_create_out.rc != 0
   notify: Refresh list of volumes in {{ edata['pool_os'] }} pool
+  when: instance_item.vol_name_os not in libvirt_os_pool_vol_list.stdout_lines
 - name: Create data volumes for instance
   include_tasks: create_data_volumes.yml
   loop: "{{ instance_item.data_volumes }}"
@@ -37,6 +43,13 @@
     dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/domain.xml
     mode: "0640"
     src: domain.xml.j2
+  register: create_domain_xml_out
+- name: List all system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name --all
+  register: libvirt_all_domain_list
+  changed_when: false
 - name: Define libvirt domain
   become: yes
   ansible.builtin.command:
@@ -45,11 +58,56 @@
     - define
     - /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/domain.xml
     - --validate
-    creates: /etc/libvirt/qemu/{{ instance_item.libvirt_domain_name }}.xml
+  when: not instance_item.libvirt_domain_name in libvirt_all_domain_list.stdout_lines
   register: domain_define_out
   changed_when: domain_define_out.rc == 0
+  failed_when: domain_define_out.rc != 0 or (instance_item.libvirt_domain_name in libvirt_all_domain_list.stdout_lines and create_domain_xml_out.changed)
 - name: Flush handlers (make sure images are available)
   ansible.builtin.meta: flush_handlers
+- name: Dump network XML (to check for existing DNS record)
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh net-dumpxml {{ instance_item.envname }}
+  register: libvirt_network_xml
+  changed_when: false
+- name: Add v4 DHCP entry for instance
+  become: yes
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - net-update
+    - "{{ instance_item.envname }}"
+    - add
+    - ip-dhcp-host
+    - <host ip='{{ instance_item.v4addr }}' mac='{{ instance_item.mac }}' name="{{ idata['hostname'] }}" />
+    - --parent-index
+    - 0
+    - --live
+    - --config
+  register: dhcpv4_add_out
+  when: instance_item.v4addr not in libvirt_network_xml.stdout
+  changed_when: dhcpv4_add_out.rc == 0
+- name: Add v6 DNS entry for instance
+  become: yes
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - net-update
+    - "{{ instance_item.envname }}"
+    - add
+    - dns-host
+    - <host ip='{{ instance_item.v6addr }}'><hostname>{{ idata['hostname'] }}</hostname></host>
+    - --live
+    - --config
+  register: dnsv6_add_out
+  when: instance_item.v6addr not in libvirt_network_xml.stdout
+  changed_when: dnsv6_add_out.rc == 0
+- name: List active system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name
+  register: libvirt_active_domain_list
+  changed_when: false
 - name: Start libvirt domain
   become: yes
   ansible.builtin.command:
@@ -58,6 +116,7 @@
     - start
     - "{{ instance_item.libvirt_domain_name }}"
   register: domain_start_out
+  when: instance_item.libvirt_domain_name not in libvirt_active_domain_list.stdout_lines
   changed_when: domain_start_out.rc == 0
   failed_when: "'already exists' not in domain_start_out.stderr and domain_start_out.rc != 0"
 - name: Set libvirt domain as autostarted
