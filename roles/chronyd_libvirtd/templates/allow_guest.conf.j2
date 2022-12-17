@@ -1,0 +1,6 @@
+{% if v4nat_net is defined %}
+allow {{ v4nat_net }}/{{ v4nat_prefix }}
+{% endif %}
+{% if v6nat_net is defined %}
+allow {{ v6nat_net }}/{{ v4nat_prefix }}
+{% endif %}
