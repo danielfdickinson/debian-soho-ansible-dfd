@@ -14,13 +14,21 @@
   notify: Refresh list of volumes in base-images pool
 - name: Flush handlers (ensure list of volumes is up to date)
   ansible.builtin.meta: flush_handlers
+- name: List all system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name --all
+  register: libvirt_domain_list
+  changed_when: false
 - name: Prepare a libvirt guest
   include_tasks: create_instance.yml
   loop: "{{ libvirt_guest_definitions }}"
   loop_control:
     loop_var: instance_item
   vars:
-    ddata: "{{ libvirt_env_default_userdata[instance_item.envname] }}"
-    edata: "{{ libvirt_env_definitions[instance_item.envname] }}"
-    idata: "{{ libvirt_guest_userdata[instance_item.name] }}"
+    ddata: "{{ env_default_userdata[instance_item.envname] }}"
+    edata: "{{ env_conn_admin[instance_item.envname] }}"
+    eddata: "{{ env_depends_conn_admin[instance_item.envname] }}"
+    idata: "{{ env_guest_userdata[instance_item.name] }}"
+  when: instance_item.name not in libvirt_domain_list.stdout_lines
 ...

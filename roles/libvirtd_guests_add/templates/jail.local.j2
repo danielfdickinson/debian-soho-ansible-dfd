@@ -1,2 +1,2 @@
 [DEFAULT]
-ignoreip = 127.0.0.1/8 ::1 {{ instance_item['remote_ignore_ip'] is defined | ternary(instance_item['remote_ignore_ip'], edata.remote_ignore_ip) }}
+ignoreip = 127.0.0.1/8 ::1 {{ instance_item['remote_ignore_ips'] is defined | ternary(instance_item['remote_ignore_ips'], eddata.remote_ignore_ips ) }}

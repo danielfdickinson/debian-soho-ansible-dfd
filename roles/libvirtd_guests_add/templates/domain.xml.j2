@@ -39,7 +39,8 @@
 {% endfor %}
 {% endif %}
 		<interface type='network'>
-			<source network='{{ instance_item.envname }}' bridge='{{ instance_item.vbridge }}'/>
+			<mac address='{{ instance_item.mac }}' />
+			<source network='{{ instance_item.envname }}' bridge='{{ edata.vbridge }}'/>
 			<model type='virtio'/>
 		</interface>
 		<serial type='pty'>
