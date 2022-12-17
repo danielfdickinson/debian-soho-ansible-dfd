@@ -1,21 +1,17 @@
 <network>
-	<name>{{ envname }}</name>
+	<name>{{ guest_envname }}</name>
 	<bridge name="{{ vbridge }}" stp="off" delay="0" />
 	<forward mode="nat">
-		<nat ipv6='yes'>
+		<nat ipv6="yes">
 			<port start='1024' end='65535' />
 		</nat>
 	</forward>
 	<domain name="{{ internal_domain }}" />
 	<dns enable="yes" />
-	<ip family="ipv4" address="{{ v4natnet_gwcidr | ansible.utils.ipaddr('address') }}" prefix="{{ v4natnet_gwcidr | ansible.utils.ipaddr('prefix') }}">
+	<ip family="ipv4" address="{{ v4nat_addr }}" prefix="{{ v4nat_prefix }}">
 		<dhcp>
-			<range start="{{ v4natnet_gwcidr | ansible.utils.ipaddr('next_usable') }}" end="{{ v4natnet_gwcidr | ansible.utils.ipaddr('last_usable') }}" />
+			<range start="{{ v4nat_cidr | ansible.utils.next_nth_usable(31) }}" end="{{ v4nat_cidr | ansible.utils.ipaddr('last_usable') }}" />
 		</dhcp>
 	</ip>
-	<ip family="ipv6" address="{{ v6natnet_ula | ansible.utils.ipaddr('address') }}" prefix="64">
-		<dhcp>
-			<range start="{{ v6natnet_ula | ansible.utils.ipaddr('next_usable') }}" end="{{ v6natnet_ula | ansible.utils.next_nth_usable(200) }}" />
-		</dhcp>
-	</ip>
+	<ip family="ipv6" address="{{ v6nat_addr }}" prefix="64" />
 </network>
