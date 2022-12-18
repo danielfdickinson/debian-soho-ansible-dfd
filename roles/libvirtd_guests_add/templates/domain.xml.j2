@@ -20,7 +20,7 @@
 		<disk type='volume'>
 			<boot order='1' />
 			<driver name='qemu' type='qcow2'/>
-			<source pool='{{ edata['pool_os'] }}' volume='{{ instance_item.vol_name_os }}' index='1' />
+			<source pool='{{ instance_item['pool_os'] }}' volume='{{ instance_item.vol_name_os }}' index='1' />
 			<target dev='vda' bus='virtio'/>
 			<alias name='virtio-disk0'/>
 		</disk>

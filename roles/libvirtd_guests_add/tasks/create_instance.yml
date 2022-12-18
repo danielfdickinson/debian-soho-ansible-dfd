@@ -2,17 +2,17 @@
 - name: List all volumes in libvirtd pool for os volume
   become: yes
   ansible.builtin.shell:
-    cmd: virsh vol-list --pool {{ edata['pool_os'] | quote }} | tail -n+3 | awk '{ print $1 }'
+    cmd: virsh vol-list --pool {{ instance_item['pool_os'] | quote }} | tail -n+3 | awk '{ print $1 }'
   register: libvirt_os_pool_vol_list
   changed_when: false
 - name: Create OS volume for instance {{ instance_item.name }} in {{ instance_item.envname }}
   become: yes
   ansible.builtin.command:
-    cmd: virsh vol-create-as {{ edata['pool_os'] | quote }} {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
+    cmd: virsh vol-create-as {{ instance_item['pool_os'] | quote }} {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
   register: vol_os_create_out
   changed_when: vol_os_create_out.rc == 0
   failed_when: vol_os_create_out.rc != 0
-  notify: Refresh list of volumes in {{ edata['pool_os'] }} pool
+  notify: Refresh list of volumes in {{ instance_item['pool_os'] }} pool
   when: instance_item.vol_name_os not in libvirt_os_pool_vol_list.stdout_lines
 - name: Create data volumes for instance
   include_tasks: create_data_volumes.yml
@@ -128,5 +128,5 @@
     - "{{ instance_item.libvirt_domain_name }}"
     creates: /etc/libvirt/qemu/autostart/{{ instance_item.libvirt_domain_name }}.xml
   register: domain_autostart_out
-  changed_when: domain_autostart_out.rc == 0
+  changed_when: false
 ...
