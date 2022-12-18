@@ -89,7 +89,7 @@ repos:
   rev: b72c70351d1a9e32a75db505fcb3aa414f3282f8
   hooks:
   - id: dansabel
-    exclude: ^(roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$) # yamllint disable-line
+    exclude: ^(roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$) # yamllint disable-line
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
   rev: v6.14.1

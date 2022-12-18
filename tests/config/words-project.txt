@@ -58,6 +58,7 @@ env
 envname
 equalto
 errorfile
+fdbc
 forwardfor
 fstype
 gateldev
@@ -68,6 +69,7 @@ gitleaks
 gitlint
 gssapi
 gsub
+guestenv
 gwcidr
 helo
 hostvars
