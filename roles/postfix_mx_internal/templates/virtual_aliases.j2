@@ -7,7 +7,7 @@ postmaster@{{ vdomain }} postmaster@{{ central_local_domain }}
 {{ adminaddr }}@{{ vdomain }} {{ central_local_email }}
 {% endfor %}
 {% endfor %}
-{% for adminaddr in well_known_admin_aliases | unique | difference( [ local_admin_user ] ) %}
+{% for adminaddr in well_known_admin_aliases | unique | difference( [ admin_user ] ) %}
 {{ adminaddr }}@{{ central_local_domain }} {{ central_local_email }}
 {% endfor %}
 # Note that we don't include regular users' emails; they'll come in on the
