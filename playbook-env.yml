@@ -1,5 +1,15 @@
 ---
 - hosts: bastions
+  gather_facts: false
+  pre_tasks:
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      quiet: true
+      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+
+- hosts: bastions
   gather_facts: true
   any_errors_fatal: true
   roles:
@@ -52,15 +62,4 @@
 - hosts: website_servers:rproxy_internal
   roles:
   - apache2_proxy_protocol
-
-  # Must happen after an 'all' with gather_facts
-  # We want this *after* configuring the instances since it's allowing traffic
-  # to the instances
-- hosts: libvirtd_hosts
-  # Note that roles here must not interfere with other environments on the same
-  # libvirtd_host
-  roles:
-  - libvirtd_forward_hooks
-  vars:
-    libvirt_domain_forwards_map: "{{ libvirt_domain_forwards }}"
 ...

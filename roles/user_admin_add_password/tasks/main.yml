@@ -4,12 +4,12 @@
   block:
   - name: Set admin user password
     ansible.builtin.user:
-      name: "{{ local_admin_user }}"
-      password: "{{ vault_admin_password }}"
+      name: "{{ admin_user }}"
+      password: "{{ admin_password }}"
       password_lock: false
   - name: Remove admin user from sudonp group
     ansible.builtin.user:
-      name: "{{ local_admin_user }}"
+      name: "{{ admin_user }}"
       groups:
       - adm
       - sudo

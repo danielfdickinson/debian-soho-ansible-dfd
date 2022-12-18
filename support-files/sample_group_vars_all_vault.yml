@@ -30,8 +30,8 @@ vault_env_conn_admin:
     internal_relay_port: &main_internal_relay_port 12345
     libvirt_client_ssh_key: libvirt-client-ssh-public-key
     libvirt_client_user: libvirt-client
-    local_ipv6_cidr: "{{ host_local_ipv6_cidr }}"
-    local_ipv6_gateway: "{{ host_local_ipv6_gateway }}"
+    local_ipv6_cidr: "{{ host_local_ipv6_cidr | default(omit) }}"
+    local_ipv6_gateway: "{{ host_local_ipv6_gateway | default(omit) }}"
     remote_admin_ip: &main_remote_admin_ip 192.168.1.0/24
     remote_monitoring_ips:
     v6natnet_ula: fdbc:8b5d:95d9::/48
@@ -52,8 +52,8 @@ vault_env_conn_admin:
     guest_ansible_ssh_port: &default_guest_ssh_port 22
     internal_domain: *main_internal_domain
     internal_relay_port: *main_internal_relay_port
-    local_ipv6_cidr: "{{ host_local_ipv6_cidr }}"
-    local_ipv6_gateway: "{{ host_local_ipv6_gateway }}"
+    local_ipv6_cidr: omit
+    local_ipv6_gateway: omit
     remote_admin_ip: *main_remote_admin_ip
     remote_monitoring_ips:
     pool_os: default

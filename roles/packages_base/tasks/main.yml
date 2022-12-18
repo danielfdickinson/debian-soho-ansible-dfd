@@ -13,6 +13,7 @@
     # Note that restic and rsyslog have their own roles
     block:
     - name: Configure unattended-upgrades
+      # Note that unattended-upgrades is not already configured for bare-metal
       ansible.builtin.copy:
         dest: /etc/apt/apt.conf.d/50unattended-upgrades
         group: root
@@ -27,6 +28,7 @@
         owner: root
         src: .tmux.conf
     - name: Configure tmux for local admin
+      # Note that admin_user is assumed to be added by userdata
       become: no
       ansible.builtin.copy:
         dest: "{{ admin_base_homedir }}/{{ admin_user }}/.tmux.conf"
