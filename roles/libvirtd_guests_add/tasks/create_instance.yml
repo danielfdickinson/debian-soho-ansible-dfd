@@ -8,7 +8,7 @@
 - name: Create OS volume for instance {{ instance_item.name }} in {{ instance_item.envname }}
   become: yes
   ansible.builtin.command:
-    cmd: virsh vol-create-as {{ edata['pool_os'] | quote }}  {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
+    cmd: virsh vol-create-as {{ edata['pool_os'] | quote }} {{ instance_item.vol_name_os | quote }} {{ instance_item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
   register: vol_os_create_out
   changed_when: vol_os_create_out.rc == 0
   failed_when: vol_os_create_out.rc != 0
