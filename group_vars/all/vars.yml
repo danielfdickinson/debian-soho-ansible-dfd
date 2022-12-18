@@ -57,6 +57,6 @@ storage_volume_groups: "{{ host_storage_volume_groups }}"
 submission_port: "{{ vault_submission_port }}"
 submission_relay_host: "{{ vault_submission_relay_host }}"
 submission_relay_port: "{{ vault_submission_relay_port }}"
-v6natnet_ula: "{{ vault_v6natnet_ula }}"
+v6natnet_ula: "{{ env_conn_admin[envname]['v6natnet_ula'] }}"
 well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
 ...

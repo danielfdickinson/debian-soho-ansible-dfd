@@ -1,4 +1,4 @@
 ---
-ansible_port: "{{ vault_ansible_port }}"
 ansible_ssh_host: "{{ vault_ansible_ssh_host }}"
+host_ansible_port: "{{ vault_ansible_port }}"
 ...
