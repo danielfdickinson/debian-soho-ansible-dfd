@@ -1,7 +1,7 @@
 <domain type="kvm">
-	<name>{{ instance_item.libvirt_domain_name }}</name>
-	<memory unit='M'>{{ instance_item.memory }}</memory>
-	<vcpu>{{ instance_item.vcpu }}</vcpu>
+	<name>{{ instance_item.value.libvirt_domain_name }}</name>
+	<memory unit='M'>{{ instance_item.value.memory }}</memory>
+	<vcpu>{{ instance_item.value.vcpu }}</vcpu>
 	<os>
 		<type arch='x86_64' machine='pc-i440fx-5.2'>hvm</type>
 	</os>
@@ -20,17 +20,17 @@
 		<disk type='volume'>
 			<boot order='1' />
 			<driver name='qemu' type='qcow2'/>
-			<source pool='{{ instance_item['pool_os'] }}' volume='{{ instance_item.vol_name_os }}' index='1' />
+			<source pool='{{ instance_item.value['pool_os'] }}' volume='{{ instance_item.value.vol_name_os }}' index='1' />
 			<target dev='vda' bus='virtio'/>
 			<alias name='virtio-disk0'/>
 		</disk>
 		<disk type='volume'>
 			<driver name='qemu' type='raw'/>
-			<source pool='{{ libvirt_pool_cloud_init }}' volume='{{ instance_item.envname }}-{{ instance_item.name }}-nocloud.img' index='2'/>
+			<source pool='{{ libvirt_pool_cloud_init }}' volume='{{ guest_envname }}-{{ instance_item.key }}-nocloud.img' index='2'/>
 			<target dev='vdb' bus='virtio'/>
 			<alias name='virtio-disk1'/>
 		</disk>
-{% if instance_item.data_volumes is defined %}
+{% if instance_item.value.data_volumes is defined %}
 {% for data_volume in instance.data_volumes %}
 		<disk type='volume'>
 			<driver name='qemu' type='qcow2'/>
@@ -39,8 +39,8 @@
 {% endfor %}
 {% endif %}
 		<interface type='network'>
-			<mac address='{{ instance_item.mac }}' />
-			<source network='{{ instance_item.envname }}' bridge='{{ edata.vbridge }}'/>
+			<mac address='{{ instance_item.value.mac }}' />
+			<source network='{{ guest_envname }}' bridge='{{ edata.vbridge }}'/>
 			<model type='virtio'/>
 		</interface>
 		<serial type='pty'>

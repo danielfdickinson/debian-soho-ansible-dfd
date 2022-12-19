@@ -22,13 +22,13 @@
   changed_when: false
 - name: Prepare a libvirt guest
   include_tasks: create_instance.yml
-  loop: "{{ libvirt_guest_definitions }}"
+  loop: "{{ libvirt_guest_definitions[guest_envname] | dict2items }}"
   loop_control:
     loop_var: instance_item
   vars:
-    ddata: "{{ env_default_userdata[instance_item.envname] }}"
-    edata: "{{ env_conn_admin[instance_item.envname] }}"
-    eddata: "{{ env_depends_conn_admin[instance_item.envname] }}"
-    idata: "{{ env_guest_userdata[instance_item.name] }}"
-  when: instance_item.name not in libvirt_domain_list.stdout_lines
+    ddata: "{{ env_default_userdata[guest_envname] }}"
+    edata: "{{ env_conn_admin[guest_envname] }}"
+    eddata: "{{ env_depends_conn_admin[guest_envname] }}"
+    idata: "{{ env_guest_userdata[guest_envname][instance_item.key] }}"
+  when: instance_item.key not in libvirt_domain_list.stdout_lines
 ...

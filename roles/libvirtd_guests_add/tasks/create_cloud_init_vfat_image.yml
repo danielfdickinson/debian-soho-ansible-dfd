@@ -8,21 +8,21 @@
     state: present
 - name: Create instance meta-data
   ansible.builtin.template:
-    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/meta-data
+    dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/meta-data
     mode: "0640"
     src: meta-data.j2
   register: meta_data_out
   notify: Copy cloud init data to nocloud image
 - name: Create instance user-data
   ansible.builtin.template:
-    dest: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/user-data
+    dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/user-data
     mode: "0640"
     src: user-data.j2
   register: user_data_out
   notify: Copy cloud init data to nocloud image
 - name: Ensure image file for vfat exists
   community.general.filesize:
-    path: /var/local/cloud_init_data/{{ instance_item.envname }}/{{ instance_item.name }}/nocloud.img
+    path: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/nocloud.img
     mode: "0640"
     size: 2M
     sparse: true
@@ -33,7 +33,7 @@
 - name: Copy nocloud data to a pool
   become: yes
   ansible.builtin.copy:
-    dest: "{{ libvirt_pool_cloud_init_path }}/{{ instance_item.envname }}-{{ instance_item.name }}-nocloud.img"
+    dest: "{{ libvirt_pool_cloud_init_path }}/{{ guest_envname }}-{{ instance_item.key }}-nocloud.img"
     group: kvm
     mode: "0600"
     owner: libvirt-qemu

@@ -1,7 +1,7 @@
 [sshd]
 #mode = normal
-{% if (instance_item['ansible_sshd_port'] is defined | ternary(instance_item['ansible_ssh_port'], edata.ansible_ssh_port)) != 22 %}
-port = ssh,{{ instance_item['ansible_ssh_port'] is defined | ternary(instance_item['ansible_ssh_port'], edata.ansible_ssh_port) }}
+{% if (instance_item.value['ansible_sshd_port'] is defined | ternary(instance_item.value['ansible_ssh_port'], edata.ansible_ssh_port)) != 22 %}
+port = ssh,{{ instance_item.value['ansible_ssh_port'] is defined | ternary(instance_item.value['ansible_ssh_port'], edata.ansible_ssh_port) }}
 {% else %}
 port = ssh
 {% endif %}

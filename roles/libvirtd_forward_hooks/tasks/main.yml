@@ -25,17 +25,17 @@
 - name: Add ipv4 and ipv6 port forward hooks
   become: yes
   ansible.builtin.template:
-    dest: /etc/libvirt-forward-hooks.d/{{ item.0.libvirt_domain_name }}_{{ item.1.host_port }}to{{ item.1.guest_port }}.hook
+    dest: /etc/libvirt-forward-hooks.d/{{ item.0.value.libvirt_domain_name }}_{{ item.1.host_port }}to{{ item.1.guest_port }}.hook
     group: root
     mode: "0755"
     owner: root
     src: hooks-qemu.j2
   vars:
-    item_guest_ip: "{{ item[0]['v4addr'] }}"
-    item_guest_ip6: "{{ item[0]['v6addr'] }}"
+    item_guest_ip: "{{ item[0]['value']['v4addr'] }}"
+    item_guest_ip6: "{{ item[0]['value']['v6addr'] }}"
   register: hooks_qemu_result
   notify: Restart libvirtd
-  loop: "{{ vault_libvirt_guest_definitions | subelements('domain_forwards', skip_missing=True) }}"
+  loop: "{{ libvirt_guest_definitions[guest_envname] | dict2items | subelements('value.domain_forwards', skip_missing=True) }}"
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 ...

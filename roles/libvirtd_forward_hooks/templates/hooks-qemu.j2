@@ -5,7 +5,7 @@
 GUEST_IP={{ item_guest_ip | quote }}
 GUEST_IP6={{ item_guest_ip6 | quote }}
 
-if [ "${1}" = "{{ item.0.libvirt_domain_name }}" ]; then
+if [ "${1}" = "{{ item.0.value.libvirt_domain_name }}" ]; then
 	if [ "${2}" = "stopped" ] || [ "${2}" = "reconnect" ]; then
 		/usr/sbin/iptables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP --dport {{ item.1.guest_port }} -j ACCEPT
 		/usr/sbin/iptables -t nat -D PREROUTING -p tcp --dport {{ item.1.host_port }} -j DNAT --to $GUEST_IP:{{ item.1.guest_port }}
