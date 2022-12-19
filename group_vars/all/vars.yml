@@ -181,7 +181,9 @@ libvirt_client_ssh_key: "{{ env_conn_admin[envname]['libvirt_client_ssh_key'] }}
 libvirt_client_user: "{{ env_conn_admin[envname]['libvirt_client_user'] }}"
 libvirt_env_definitions: "{{ vault_libvirt_env_definitions }}"
 libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
-libvirtd_pool_list: "{{ host_libvirtd_pool_list }}"
+libvirt_os_base_image_name: debian-11-generic-amd64-20221205-1220.qcow2
+libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221205-1220/SHA512SUMS"
+libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221205-1220/debian-11-generic-amd64-20221205-1220.qcow2"
 local_ipv6_cidr: "{{ env_conn_admin[envname]['local_ipv6_cidr'] }}"
 local_ipv6_gateway: "{{ env_conn_admin[envname]['local_ipv6_gateway'] }}"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"

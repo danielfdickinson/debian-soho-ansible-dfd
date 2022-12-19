@@ -1,11 +1,7 @@
 ---
-libvirt_domain_forwards: "{{ vault_libvirt_domain_forwards }}"
-libvirt_domain_ssh_forwards: "{{ vault_libvirt_domain_ssh_forwards }}"
-libvirt_os_base_image_name: "{{ vault_libvirt_os_base_image_name }}"
-libvirt_os_cloud_image_sha512sums_url: "{{ vault_libvirt_os_cloud_image_sha512sums_url }}"
-libvirt_os_cloud_image_url: "{{ vault_libvirt_os_cloud_image_url }}"
 libvirt_pool_base_images: "{{ host_libvirt_pool_base_images }}"
 libvirt_pool_base_images_path: "{{ host_libvirt_pool_base_images_path }}"
 libvirt_pool_cloud_init: "{{ host_libvirt_pool_cloud_init }}"
 libvirt_pool_cloud_init_path: "{{ host_libvirt_pool_cloud_init_path }}"
+libvirtd_pool_list: "{{ host_libvirtd_pool_list }}"
 ...

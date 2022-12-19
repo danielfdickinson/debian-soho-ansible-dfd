@@ -49,7 +49,6 @@
   - libvirtd_forward_hooks
   vars:
     guest_data: "{{ libvirt_guest_definitions | selectattr('envname', 'equalto', guest_envname) }}"
-    libvirt_domain_forwards_map: "{{ libvirt_domain_ssh_forwards }}"
     vbridge: "{{ env_conn_admin[guest_envname]['vbridge'] }}"
 
 - hosts: libvirtd_hosts:&{{ envname | default([]) }}
