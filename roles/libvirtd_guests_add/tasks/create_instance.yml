@@ -1,5 +1,5 @@
 ---
-- name: List all volumes in libvirtd pool for os volume
+- name: List all volumes in libvirtd pool for os volumes
   become: yes
   ansible.builtin.shell:
     cmd: virsh vol-list --pool {{ instance_item.value['pool_os'] | quote }} | tail -n+3 | awk '{ print $1 }'
@@ -93,7 +93,7 @@
     argv:
     - virsh
     - net-update
-    - "{{ instance_item.value.envname }}"
+    - "{{ guest_envname }}"
     - add
     - dns-host
     - <host ip='{{ instance_item.value.v6addr }}'><hostname>{{ idata['hostname'] }}</hostname></host>
