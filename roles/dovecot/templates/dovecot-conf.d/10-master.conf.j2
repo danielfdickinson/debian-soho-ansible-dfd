@@ -16,21 +16,17 @@
 
 service imap-login {
 	inet_listener imap {
-		port = 0
-		#port = 143
+		# port = 0
+		# port = 143
+		port = {{ imap_port }}
 	}
 
 	inet_listener imaps {
 		port = 0
-		#port = 993
-		#ssl = yes
+		# port = 993
+		# ssl = yes
 	}
 
-	inet_listener imap_haproxy {
-		haproxy = yes
-		port = {{ proxied_imap_port }}
-		ssl = yes
-	}
 
 	# Number of connections to handle before starting a new process. Typically
 	# the only useful values are 0 (unlimited) or 1. 1 is more secure, but 0
@@ -58,14 +54,9 @@ service pop3-login {
 
 service submission-login {
 	inet_listener submission {
-		port = 0
-		#port = 587
+		# port = 587
+		port = {{ submission_port }}
 	}
-
-#	inet_listener submission_haproxy {
-#		haproxy = yes
-#		port = {{ proxied_submission_port }}
-#	}
 }
 
 service lmtp {

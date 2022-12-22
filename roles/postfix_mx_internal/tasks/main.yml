@@ -61,8 +61,7 @@
     interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
-    src: "{{ v4natnet_gwcidr | ansible.utils.ipaddr('net') }}"
-    dest: "{{ ansible_facts['default_ipv4']['address'] }}"
+    src: "{{ env_conn_admin[envname]['v4nat_net'] }}/{{ env_conn_admin[envname]['v4nat_prefix'] }}"
     to_port: "{{ internal_relay_port }}"
   when: ansible_facts['default_ipv4'] is defined
 - name: Allow localnet6 SMTP (alternate port)
@@ -72,8 +71,7 @@
     interface: "{{ ansible_facts['default_ipv6']['interface'] }}"
     direction: in
     proto: tcp
-    src: "{{ v6natnet_cidr }}"
-    dest: "{{ ansible_facts['default_ipv6']['address'] }}"
+    src: "{{ env_conn_admin[envname]['v6nat_net'] }}/{{ env_conn_admin[envname]['v6nat_prefix'] }}"
     to_port: "{{ internal_relay_port }}"
   when: ansible_facts['default_ipv6'] is defined
 ...

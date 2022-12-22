@@ -65,9 +65,8 @@
       direction: in
       proto: tcp
       src: "{{ item }}"
-      dest: "{{ ansible_facts['default_ipv4']['address'] }}"
-      to_port: "{{ dovecot_health_check_port }}"
-    loop: "{{ ovh_rtm_hosts }}"
+      to_port: "{{ health_check_port_dovecot }}"
+    loop: "{{ remote_monitoring_ips }}"
   - name: Allow IMAP from anywhere
     community.general.ufw:
       rule: allow
