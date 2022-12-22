@@ -34,9 +34,13 @@
   - packages_base
   - packages_firmware
 
-- hosts: backup_clients_ovh
+- hosts: backup_clients:&ovh_bhs
   roles:
   - backup_ovh
+
+- hosts: backup_clients
+  roles:
+  - backup_restic
 
 - hosts: cert_private_ssl_servers
   roles:
