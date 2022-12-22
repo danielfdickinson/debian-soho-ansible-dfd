@@ -1,6 +1,0 @@
----
-email_interfaces: "{{ email_interfaces_map[envname] }}"
-email_interfaces_map: "{{ vault_email_interfaces_map }}"
-email_relayhost: "{{ email_relayhost_map[envname] }}"
-email_relayhost_map: "{{ vault_email_relayhost_map }}"
-...

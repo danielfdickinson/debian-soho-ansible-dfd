@@ -1,4 +1,0 @@
----
-lmtp_port: "{{ vault_lmtp_port }}"
-mailbox_users: "{{ vault_mailbox_users }}"
-...
