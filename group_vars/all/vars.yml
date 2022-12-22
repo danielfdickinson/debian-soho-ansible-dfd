@@ -75,6 +75,8 @@ env_conn_admin:
     libvirt_client_user: omit
     local_ipv6_cidr: omit
     local_ipv6_gateway: omit
+    private_ca_cert_certificate: "{{ vault_env_conn_admin['ldev']['private_ca_cert_certificate'] }}"
+    private_ca_cert_file: "{{ vault_env_conn_admin['ldev']['private_ca_cert_file'] }}"
     remote_admin_ip: "{{ vault_env_conn_admin['ldev']['remote_admin_ip'] }}"
     remote_monitoring_ips: "{{ vault_env_conn_admin['ldev']['remote_monitoring_ips'] }}"
     v4nat_addr: "{{ vault_env_conn_admin['ldev']['v4nat_addr'] }}"

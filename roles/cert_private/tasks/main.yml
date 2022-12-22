@@ -4,11 +4,11 @@
   block:
   - name: Add private CA as file
     ansible.builtin.template:
-      content: "{{ private_ca_cert_certificate }}"
-      dest: "{{ private_ca_cert_file }}"
+      dest: "{{ env_conn_admin[envname]['private_ca_cert_file'] }}"
       group: root
       mode: "0644"
       owner: root
+      src: private_ca_cert.crt.j2
     notify: Add CA certificate to system
   - name: Add directory for private certificate and key
     ansible.builtin.file:
@@ -19,16 +19,16 @@
       state: directory
   - name: Add private certificate as file
     ansible.builtin.template:
-      content: "{{ private_cert_cert_content }}"
-      dest: "{{ private_cert_cert_file }}"
+      dest: "{{ host_private_cert_cert_file }}"
       group: root
       mode: "0644"
       owner: root
+      src: private_cert-cert.pem.j2
   - name: Add private key for private cert as file
     ansible.builtin.template:
-      content: "{{ private_cert_key_content }}"
-      dest: "{{ private_cert_key_file }}"
+      dest: "{{ host_private_cert_key_file }}"
       group: root
       mode: "0600"
       owner: root
+      src: private_cert-key.pem.j2
 ...
