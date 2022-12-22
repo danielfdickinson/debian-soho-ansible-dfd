@@ -14,11 +14,11 @@
   failed_when: vol_os_create_out.rc != 0
   notify: Refresh list of volumes in {{ instance_item.value['pool_os'] }} pool
   when: instance_item.value.vol_name_os not in libvirt_os_pool_vol_list.stdout_lines
-- name: Create data volumes for instance
+- name: Create data volumes for instance {{ instance_item.key }}
   include_tasks: create_data_volumes.yml
   loop: "{{ instance_item.value.data_volumes }}"
-  when: instance_item.value.value.data_volumes is defined
-- name: Create base directory for instance working data
+  when: instance_item.value.data_volumes is defined
+- name: Create base directory for instance {{ instance_item.key }} working data
   become: yes
   ansible.builtin.file:
     dest: /var/local/cloud_init_data
@@ -26,19 +26,19 @@
     mode: "0750"
     owner: "{{ ansible_user }}"
     state: directory
-- name: Create environment directory for instance working data
+- name: Create environment directory for instance {{ instance_item.key }} working data
   ansible.builtin.file:
     dest: /var/local/cloud_init_data/{{ guest_envname }}
     mode: "0750"
     state: directory
-- name: Create instance directory for instance working data
+- name: Create instance directory for instance {{ instance_item.key }} working data
   ansible.builtin.file:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}
     mode: "0750"
     state: directory
-- name: Create cloudinit vfat image
+- name: Create cloudinit vfat image for {{ instance_item.key }}
   include_tasks: create_cloud_init_vfat_image.yml
-- name: Create domain xml
+- name: Create domain xml for {{ instance_item.key }}
   ansible.builtin.template:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/domain.xml
     mode: "0640"
@@ -50,7 +50,7 @@
     cmd: virsh list --name --all
   register: libvirt_all_domain_list
   changed_when: false
-- name: Define libvirt domain
+- name: Define libvirt domain for {{ instance_item.key }}
   become: yes
   ansible.builtin.command:
     argv:
@@ -70,7 +70,7 @@
     cmd: virsh net-dumpxml {{ guest_envname }}
   register: libvirt_network_xml
   changed_when: false
-- name: Add v4 DHCP entry for instance
+- name: Add v4 DHCP entry for instance {{ instance_item.key }}
   become: yes
   ansible.builtin.command:
     argv:
@@ -87,7 +87,7 @@
   register: dhcpv4_add_out
   when: instance_item.value.v4addr not in libvirt_network_xml.stdout
   changed_when: dhcpv4_add_out.rc == 0
-- name: Add v6 DNS entry for instance
+- name: Add v6 DNS entry for instance {{ instance_item.key }}
   become: yes
   ansible.builtin.command:
     argv:
@@ -108,7 +108,7 @@
     cmd: virsh list --name
   register: libvirt_active_domain_list
   changed_when: false
-- name: Start libvirt domain
+- name: Start libvirt domain for {{ instance_item.key }}
   become: yes
   ansible.builtin.command:
     argv:
@@ -119,7 +119,7 @@
   when: instance_item.value.libvirt_domain_name not in libvirt_active_domain_list.stdout_lines
   changed_when: domain_start_out.rc == 0
   failed_when: "'already exists' not in domain_start_out.stderr and domain_start_out.rc != 0"
-- name: Set libvirt domain as autostarted
+- name: Set libvirt domain for {{ instance_item.key }} as autostarted
   become: yes
   ansible.builtin.command:
     argv:

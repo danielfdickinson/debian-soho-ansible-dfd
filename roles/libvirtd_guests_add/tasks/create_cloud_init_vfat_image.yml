@@ -6,21 +6,21 @@
     - dosfstools
     - mtools
     state: present
-- name: Create instance meta-data
+- name: Create instance meta-data for {{ instance_item.key }}
   ansible.builtin.template:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/meta-data
     mode: "0640"
     src: meta-data.j2
   register: meta_data_out
   notify: Copy cloud init data to nocloud image
-- name: Create instance user-data
+- name: Create instance user-data for {{ instance_item.key }}
   ansible.builtin.template:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/user-data
     mode: "0640"
     src: user-data.j2
   register: user_data_out
   notify: Copy cloud init data to nocloud image
-- name: Ensure image file for vfat exists
+- name: Ensure image file for vfat exists for {{ instance_item.key }}
   community.general.filesize:
     path: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}/nocloud.img
     mode: "0640"
@@ -30,7 +30,7 @@
   notify: Copy cloud init data to nocloud image
 - name: Flush handlers (make sure cloudinit image is ready)
   ansible.builtin.meta: flush_handlers
-- name: Copy nocloud data to a pool
+- name: Copy nocloud data for {{ instance_item.key }} to a pool
   become: yes
   ansible.builtin.copy:
     dest: "{{ libvirt_pool_cloud_init_path }}/{{ guest_envname }}-{{ instance_item.key }}-nocloud.img"
