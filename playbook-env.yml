@@ -20,7 +20,6 @@
   - packages_firmware
 
 - hosts: all
-  any_errors_fatal: true
   gather_facts: true
   roles:
   - user_admin_add_password
@@ -30,7 +29,7 @@
   - fail2ban
 
 - hosts: all:!libvirtd_hosts:!bastions
-  any_errors_fatal: true
+  # Avoid connectivity issues by not rebooting vm host or bastion
   roles:
   - packages_base
   - packages_firmware
