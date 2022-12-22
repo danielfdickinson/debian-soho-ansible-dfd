@@ -75,6 +75,5 @@
       direction: in
       proto: tcp
       src: any
-      dest: "{{ ansible_facts['default_ipv4']['address'] }}"
-      to_port: "{{ proxied_imap_port }}"
+      to_port: "{{ imap_port }}"
 ...

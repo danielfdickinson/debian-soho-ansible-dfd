@@ -5,8 +5,8 @@ haproxy_timeout = 3s
 mail_location = sdbox:~/mail
 mail_server_admin = mailto:{{ central_local_email }}
 ssl = required
-ssl_cert = <{{ private_cert_cert_file }}
-ssl_key = <{{ private_cert_key_file }}
+ssl_cert = <{{ host_private_cert_cert_file }}
+ssl_key = <{{ host_private_cert_key_file }}
 # For Dovecot acting as client (e.g. submission)
 #ssl_client_ca_dir = /etc/ssl/certs
 #ssl_client_ca_file =

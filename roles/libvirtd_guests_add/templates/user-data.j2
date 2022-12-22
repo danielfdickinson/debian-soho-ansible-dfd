@@ -6,7 +6,7 @@ apt: {{ ddata['apt'] | to_json }}
 {% endif %}
 {% if (ddata['bootcmd'] is defined) or (idata['bootcmd'] is defined) %}
 bootcmd:
-{{ [ddata['bootcmd'] is defined | ternary(ddata['bootcmd'], None), idata['bootcmd'] is defined | ternary(ddata['bootcmd'], None)] | flatten(1) | to_yaml }}
+{{ [ddata['bootcmd'] is defined | ternary(ddata['bootcmd'], None), idata['bootcmd'] is defined | ternary(idata['bootcmd'], None)] | flatten(1) | to_yaml }}
 {% endif %}
 {% if idata['disk_setups'] is defined %}
 disk_setup:
@@ -33,7 +33,7 @@ fs_setup:
 {% endif %}
 fqdn: {{ idata['fqdn'] }}
 {% if ( ddata['groups'] is defined ) or ( idata['groups'] is defined ) %}
-groups: {{ [ddata['groups'] is defined | ternary(ddata['groups'], None), idata['groups'] is defined | ternary(ddata['groups'], None)] | flatten(1) | unique | to_json }}
+groups: {{ [ddata['groups'] is defined | ternary(ddata['groups'], None), idata['groups'] is defined | ternary(idata['groups'], None)] | flatten(1) | unique | to_json }}
 {% endif %}
 hostname: {{ idata.hostname }}
 {% if idata['mounts'] is defined %}
