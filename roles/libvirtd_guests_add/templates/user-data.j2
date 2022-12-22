@@ -10,19 +10,16 @@ bootcmd:
 {% endif %}
 {% if idata['disk_setups'] is defined %}
 disk_setup:
-{% for disk, layout in idata['disk_setups'] %}
+{% for disk, layout in idata['disk_setups'] | dictsort %}
   {{ disk }}:
     table_type: gpt
-    layout:
-{% for part_size in layout %}
-    - "{{ part_size }}"
-{% endfor %}
+    layout: {{ layout | to_json }}
     overwrite: false
 {% endfor %}
 {% endif %}
 {% if idata['fs_setups'] is defined %}
 fs_setup:
-{% for disk, partitions in idata['fs_setups'] %}
+{% for disk, partitions in idata['fs_setups'] | dictsort %}
 {% for partition in partitions %}
 - device: {{ disk }}
   filesystem: ext4
@@ -37,10 +34,7 @@ groups: {{ [ddata['groups'] is defined | ternary(ddata['groups'], None), idata['
 {% endif %}
 hostname: {{ idata.hostname }}
 {% if idata['mounts'] is defined %}
-mounts:
-{% for mount in idata['mounts'] %}
-- {{ mount | to_json }}
-{% endfor %}
+mounts: {{ idata['mounts'] | to_json }}
 {% endif %}
 {% if idata['ntp_servers'] is defined %}
 ntp:
