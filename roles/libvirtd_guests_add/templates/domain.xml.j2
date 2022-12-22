@@ -30,11 +30,12 @@
 			<target dev='vdb' bus='virtio'/>
 			<alias name='virtio-disk1'/>
 		</disk>
-{% if instance_item.value.data_volumes is defined %}
-{% for data_volume in instance.data_volumes %}
+{% if instance_item.value['data_volumes'] is defined %}
+{% for data_volume in instance_item.value.data_volumes %}
 		<disk type='volume'>
 			<driver name='qemu' type='qcow2'/>
-			<source pool='{{ data_volume.pool }}' volume='{{ data_volume.name }} '/>
+			<source pool='{{ data_volume.pool }}' volume='{{ data_volume.name }}' index='{{ 2 + loop.index }}'/>
+			<target dev='vd{{ 'abcdefghijklmnopqrstuvwxyz'[2 + loop.index0] }}' bus='virtio' />
 		</disk>
 {% endfor %}
 {% endif %}

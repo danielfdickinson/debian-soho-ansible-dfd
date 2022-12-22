@@ -6,8 +6,9 @@
   register: libvirt_data_vol_list
   changed_when: false
 - name: Create data volume {{ item.name }} for instance {{ instance_item.key }} in {{ guest_envname }}
-  ansible.builtin.command: virsh vol-create-as {{ item.pool }} {{ item.name }} {{ item.vol_size }} --format qcow2 --prealloc-metadata
+  become: yes
+  ansible.builtin.command: virsh vol-create-as {{ item.pool | quote }} {{ item.name | quote }} {{ item.vol_size | quote }} --format qcow2 --prealloc-metadata
   register: datavol_create_out
-  changed_when: datavol_os_create_out.rc == 0
+  changed_when: datavol_create_out.rc == 0
   when: item.name not in libvirt_data_vol_list.stdout_lines
 ...
