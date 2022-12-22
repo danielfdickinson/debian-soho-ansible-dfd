@@ -30,5 +30,32 @@
     edata: "{{ env_conn_admin[guest_envname] }}"
     eddata: "{{ env_depends_conn_admin[guest_envname] }}"
     idata: "{{ env_guest_userdata[guest_envname][instance_item.key] }}"
+    role_write_files:
+    - content: "{{ '%sudonp ALL=(ALL) NOPASSWD: ALL' | b64encode }}"
+      encoding: b64
+      path: /etc/sudoers.d/sudonp
+      permissions: "0400"
+    - content: "{{ lookup('file', '50unattended-upgrades') | b64encode }}"
+      encoding: b64
+      path: /etc/apt/apt.conf.d/50unattended-upgrades
+    - content: "{{ lookup('template', 'conf-ufw.j2') | b64encode }}"
+      encoding: b64
+      path: /run/ci-files/conf-ufw
+      permissions: "0755"
+    - content: "{{ lookup('template', 'jail.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/fail2ban/jail.local
+    - content: "{{ lookup('template', 'interfaces-ipv6.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/network/interfaces.d/60-ens2-ipv6
+    - content: "{{ lookup('template', 'local-home.site.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/apparmor.d/tunables/home.d/local-home.site.local
+    - content: "{{ lookup('template', 'sshd_custom.conf.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/ssh/sshd_config.d/sshd_custom.conf
+    - content: "{{ lookup('template', 'sshd_jail.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/fail2ban/jail.d/ssh.local
   when: instance_item.key not in libvirt_domain_list.stdout_lines
 ...

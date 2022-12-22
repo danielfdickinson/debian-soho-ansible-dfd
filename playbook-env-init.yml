@@ -55,4 +55,9 @@
   any_errors_fatal: true
   roles:
   - libvirtd_guests_add
+  vars:
+    libvirt_pool_base_images: "{{ host_libvirt_pool_base_images }}"
+    libvirt_pool_base_images_path: "{{ host_libvirt_pool_base_images_path }}"
+    libvirt_pool_cloud_init: "{{ host_libvirt_pool_cloud_init }}"
+    libvirt_pool_cloud_init_path: "{{ host_libvirt_pool_cloud_init_path }}"
 ...

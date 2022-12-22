@@ -60,4 +60,6 @@
       changed_when: pdefout.rc == 0
       failed_when: "'already exists' not in pdefout.stderr and pdefout.rc != 0"
       notify: start and autostart pools
+  vars:
+    libvirtd_pool_list: "{{ host_libvirtd_pool_list }}"
 ...
