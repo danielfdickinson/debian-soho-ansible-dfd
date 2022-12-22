@@ -151,6 +151,29 @@ env_guest_userdata:
         shell: /bin/bash
         ssh_authorized_keys:
         - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
+    imap:
+      bootcmd:
+      - [mkdir, -p, /var/vmail]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['imap']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: imapldev
+      mounts:
+      - [/dev/vdc1, /var/vmail]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+      users:
+      - name: "{{ env_conn_admin['ldev']['bastion_user'] }}"
+        homedir: "{{ admin_base_homedir }}/{{ env_conn_admin['ldev']['bastion_user'] }}"
+        lock_passwd: true
+        shell: /bin/bash
+        ssh_authorized_keys:
+        - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
 external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
 fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
 internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"
