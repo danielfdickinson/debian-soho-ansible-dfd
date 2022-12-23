@@ -174,6 +174,70 @@ env_guest_userdata:
         shell: /bin/bash
         ssh_authorized_keys:
         - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
+    gate:
+      bootcmd:
+      - [mkdir, -p, /etc/letsencrypt]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['gate']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: gateldev
+      mounts:
+      - [/dev/vdc1, /etc/letsencrypt]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+    gdav:
+      bootcmd:
+      - [mkdir, -p, /var/lib/radicale]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['gdav']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: gdavldev
+      mounts:
+      - [/dev/vdc1, /var/lib/radicale]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+    smtp01:
+      bootcmd:
+      - [mkdir, -p, /var/spool/postfix]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: smtp01ldev
+      mounts:
+      - [/dev/vdc1, /var/spool/postfix]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
+    www:
+      bootcmd:
+      - [mkdir, -p, /var/www]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['www']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: wwwldev
+      mounts:
+      - [/dev/vdc1, /var/www]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
 external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
 fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
 internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"

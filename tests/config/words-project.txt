@@ -62,6 +62,7 @@ fdbc
 forwardfor
 fstype
 gateldev
+gdav
 gdavldev
 gecos
 gethostname
@@ -145,6 +146,7 @@ proxywrite
 qcow2
 qmgr
 qmqpd
+radicale
 realtek
 redispatch
 relatime
