@@ -24,7 +24,7 @@
     owner: root
     src: libvirt-guests
 - name: Add/split Libvirt storage pools
-  when: pool_list is defined
+  when: host_libvirtd_pool_list is defined
   become: yes
   block:
   - name: Workaround '#1' for Apparmor issue with Libvirt extra pools under images

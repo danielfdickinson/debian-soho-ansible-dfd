@@ -7,7 +7,7 @@
 - name: Start pools
   ansible.builtin.command: virsh pool-start {{ item | quote }}
   become: yes
-  loop: "{{ libvirtd_pool_list }}"
+  loop: "{{ host_libvirtd_pool_list }}"
   register: pstartout
   changed_when: pstartout.rc == 0
   failed_when: "'already active' not in pstartout.stderr and pstartout.rc != 0"
@@ -22,7 +22,7 @@
   become: yes
   ansible.builtin.command: virsh pool-autostart {{ item | quote }}
   register: pautoout
-  loop: "{{ libvirtd_pool_list }}"
+  loop: "{{ host_libvirtd_pool_list }}"
   when: item not in pool_autostarts.stdout
   changed_when: pautoout.rc == 0
   listen: start and autostart pools
