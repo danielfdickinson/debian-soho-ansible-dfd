@@ -51,9 +51,9 @@ runcmd: {{ [ddata.runcmd_before, idata['runcmd'] is defined | ternary(idata['run
 {% if idata['ssh_keys'] is defined %}
 ssh_keys: {{ idata['ssh_keys'] | to_json }}
 {% endif %}
-{% if idata['users'] is defined %}
+{% if ddata['users'] is defined or idata['users'] is defined %}
 users:
-{% for user in [ddata.users, idata['users']] | flatten(1) %}
+{% for user in [ddata['users'] is defined | ternary(ddata['users'], None), idata['users'] is defined | ternary(idata['users'], None)] | flatten(1) %}
 - name: {{ user.name }}
 {% if user['gecos'] is defined %}
   gecos: {{ user['gecos'] }}
