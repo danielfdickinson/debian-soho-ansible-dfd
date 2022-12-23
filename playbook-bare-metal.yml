@@ -48,4 +48,8 @@
   - fail2ban
   - fail2ban_ssh
   - postfix_sender_internal
+
+- hosts: bare_metal:&bare_metal_local
+  roles:
+  - upsd
 ...

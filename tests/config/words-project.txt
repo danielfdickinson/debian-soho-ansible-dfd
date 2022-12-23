@@ -7,7 +7,9 @@ HEREDOCS
 LLMNR
 LMTP
 LOGINDISABLED
+NOCOMMWARNTIME
 NOPASSWD
+RBWARNTIME
 Referer
 SASL
 SPNEGO
@@ -175,6 +177,7 @@ tlsmgr
 tlsproxy
 unauth
 unpriv
+upsd
 urandom
 userdb
 userdbs
