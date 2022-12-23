@@ -20,10 +20,11 @@
     cmd: virsh list --name --all
   register: libvirt_domain_list
   changed_when: false
-- name: Prepare libvirt guest {{ instance_item.key }}
+- name: Prepare libvirt guests
   include_tasks: create_instance.yml
   loop: "{{ libvirt_guest_definitions[guest_envname] | dict2items }}"
   loop_control:
+    label: "{{ instance_item.key }}"
     loop_var: instance_item
   vars:
     ddata: "{{ env_default_userdata[guest_envname] }}"

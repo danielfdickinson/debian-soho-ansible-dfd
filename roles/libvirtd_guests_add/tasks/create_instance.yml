@@ -17,6 +17,8 @@
 - name: Create data volumes for instance {{ instance_item.key }}
   include_tasks: create_data_volumes.yml
   loop: "{{ instance_item.value.data_volumes }}"
+  loop_control:
+    label: "{{ instance_item.key }}: {{ item.name }} in {{ item.pool }}"
   when: instance_item.value.data_volumes is defined
 - name: Create base directory for instance {{ instance_item.key }} working data
   become: yes

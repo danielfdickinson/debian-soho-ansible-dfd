@@ -36,6 +36,8 @@
   register: hooks_qemu_result
   notify: Restart libvirtd
   loop: "{{ libvirt_guest_definitions[guest_envname] | dict2items | subelements('value.domain_forwards', skip_missing=True) }}"
+  loop_control:
+    label: host:{{ item.1.host_port }} => {{ item.0.value.libvirt_domain_name }}:{{ item.1.guest_port }}
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 ...
