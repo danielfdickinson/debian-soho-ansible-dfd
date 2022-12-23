@@ -11,12 +11,20 @@
       - initial_ssh_user is defined
       quiet: true
       fail_msg: bare_metal_env, initial_ssh_port, initial_password, and initial_ssh_user must be defined
+    vars:
+      ansible_ssh_port: "{{ initial_ssh_port }}"
+      ansible_become_password: "{{ initial_password }}"
+      ansible_ssh_user: "{{ initial_ssh_user }}"
   - name: Ensure given environment is valid
     ansible.builtin.assert:
       that:
       - bare_metal_env in group_names
       quiet: true
       fail_msg: "{{ bare_metal_env | quote }} is not a valid bare_metal_env (environment)"
+    vars:
+      ansible_ssh_port: "{{ initial_ssh_port }}"
+      ansible_become_password: "{{ initial_password }}"
+      ansible_ssh_user: "{{ initial_ssh_user }}"
 - hosts: bare_metal
   gather_facts: true
   roles:
