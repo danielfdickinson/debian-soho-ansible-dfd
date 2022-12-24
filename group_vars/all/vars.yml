@@ -45,8 +45,8 @@ env_conn_admin:
     internal_relay_port: "{{ vault_env_conn_admin['bare_metal_local']['internal_relay_port'] }}"
     libvirt_client_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_ssh_key'] }}"
     libvirt_client_user: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_user'] }}"
-    local_ipv6_cidr: "{{ host_local_ipv6_cidr | default(omit) }}"
-    local_ipv6_gateway: "{{ host_local_ipv6_gateway | default(omit) }}"
+    local_ipv6_cidr: "{{ host_local_ipv6_cidr }}"
+    local_ipv6_gateway: "{{ host_local_ipv6_gateway }}"
     remote_admin_ip: "{{ vault_env_conn_admin['bare_metal_local']['remote_admin_ip'] }}"
     remote_monitoring_ips: "{{ vault_env_conn_admin['bare_metal_local']['remote_monitoring_ips'] }}"
     v6natnet_ula: "{{ vault_env_conn_admin['bare_metal_local']['v6natnet_ula'] }}"
@@ -73,8 +73,6 @@ env_conn_admin:
     internal_relay_port: "{{ vault_env_conn_admin['ldev']['internal_relay_port'] }}"
     libvirt_client_ssh_key: omit
     libvirt_client_user: omit
-    local_ipv6_cidr: omit
-    local_ipv6_gateway: omit
     private_ca_cert_certificate: "{{ vault_env_conn_admin['ldev']['private_ca_cert_certificate'] }}"
     private_ca_cert_file: "{{ vault_env_conn_admin['ldev']['private_ca_cert_file'] }}"
     remote_admin_ip: "{{ vault_env_conn_admin['ldev']['remote_admin_ip'] }}"
@@ -249,8 +247,6 @@ libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
 libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
-local_ipv6_cidr: "{{ env_conn_admin[envname]['local_ipv6_cidr'] }}"
-local_ipv6_gateway: "{{ env_conn_admin[envname]['local_ipv6_gateway'] }}"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
 mailbox_users: "{{ vault_mailbox_users }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
