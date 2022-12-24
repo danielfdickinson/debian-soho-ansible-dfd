@@ -79,6 +79,7 @@ service lmtp {
 
 	inet_listener lmtp_localnet {
 		port = {{ lmtp_port }}
+		ssl = yes
 	}
 }
 
