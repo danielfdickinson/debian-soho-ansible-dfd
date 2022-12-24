@@ -42,9 +42,13 @@
   roles:
   - backup_restic
 
-- hosts: cert_private_ssl_servers
+- hosts: cert_private:&ssl_private_clients
   roles:
-  - cert_private
+  - cert_private_client
+
+- hosts: cert_private:&ssl_private_servers
+  roles:
+  - cert_private_server
 
 - hosts: internal_mxes
   roles:

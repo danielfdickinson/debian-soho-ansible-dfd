@@ -1,0 +1,11 @@
+---
+- name: Add private CA as file
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ env_conn_admin[envname]['private_ca_cert_file'] }}"
+    group: root
+    mode: "0644"
+    owner: root
+    src: private_ca_cert.crt.j2
+  notify: Add CA certificate to system
+...

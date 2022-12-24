@@ -1,30 +1,22 @@
 ---
-- name: Add private certificates (and CA) to system
+- name: Add private server certificates to system
   become: yes
   block:
-  - name: Add private CA as file
-    ansible.builtin.template:
-      dest: "{{ env_conn_admin[envname]['private_ca_cert_file'] }}"
-      group: root
-      mode: "0644"
-      owner: root
-      src: private_ca_cert.crt.j2
-    notify: Add CA certificate to system
-  - name: Add directory for private certificate and key
+  - name: Add directory for private certificates and keys
     ansible.builtin.file:
       group: root
       mode: "0755"
       owner: root
       path: /etc/ssl/privcert
       state: directory
-  - name: Add private certificate as file
+  - name: Add private server certificate as file
     ansible.builtin.template:
       dest: "{{ host_private_cert_cert_file }}"
       group: root
       mode: "0644"
       owner: root
       src: private_cert-cert.pem.j2
-  - name: Add private key for private cert as file
+  - name: Add private key for private server cert as file
     ansible.builtin.template:
       dest: "{{ host_private_cert_key_file }}"
       group: root

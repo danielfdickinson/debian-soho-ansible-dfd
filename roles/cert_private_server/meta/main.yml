@@ -1,0 +1,14 @@
+---
+dependencies:
+- role: cert_private_ca
+# Because ansible-lint complains otherwise
+galaxy_info:
+  author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
+  description: Add private server certificates
+  license: MIT
+  min_ansible_version: "6.0"
+  platforms:
+  - name: Debian
+    versions:
+    - all
+...

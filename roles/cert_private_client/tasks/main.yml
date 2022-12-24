@@ -1,0 +1,26 @@
+---
+- name: Add private client certificates to system
+  become: yes
+  block:
+  - name: Add directory for private certificates and keys
+    ansible.builtin.file:
+      group: root
+      mode: "0755"
+      owner: root
+      path: /etc/ssl/privcert
+      state: directory
+  - name: Add private client certificate as file
+    ansible.builtin.template:
+      dest: "{{ host_private_client_cert_cert_file }}"
+      group: root
+      mode: "0644"
+      owner: root
+      src: private_client_cert-cert.pem.j2
+  - name: Add private key for private client cert as file
+    ansible.builtin.template:
+      dest: "{{ host_private_client_cert_key_file }}"
+      group: root
+      mode: "0600"
+      owner: root
+      src: private_client_cert-key.pem.j2
+...
