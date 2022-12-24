@@ -47,6 +47,7 @@ dnsblog
 dnsmasq
 dnsv4
 dnsv6
+doci
 dontlognull
 dosfstools
 doveadm
