@@ -15,16 +15,24 @@ myhostname = {{ ansible_facts['fqdn'] }}
 mynetworks = 127.0.0.0/8
 readme_directory = no
 recipient_delimiter = +
-relayhost = {{ email_relayhost }}
+{% if email_relayhost != "localhost" %}
+relayhost = [{{ email_relayhost }}]:{{ internal_relay_port }}
+{% else %}
+relayhost = [localhost]
+{% endif %}
 smtpd_banner = $myhostname ESMTP $mail_name
 smtpd_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient
 smtpd_relay_restrictions = permit_mynetworks reject_unauth_destination
 smtpd_sasl_auth_enable=no
 smtpd_tls_fingerprint_digest = sha256
 smtpd_tls_security_level=may
-smtp_tls_CApath=/etc/ssl/certs
+smtp_tls_CAfile = {{ env_conn_admin[envname]['private_ca_cert_file'] }}
+smtp_tls_cert_file = {{ host_private_client_cert_cert_file }}
 smtp_tls_fingerprint_digest = sha256
-smtp_tls_security_level=may
+smtp_tls_key_file = {{ host_private_client_cert_key_file }}
+smtp_tls_security_level=verify
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_verify_cert_match={{ host_email_tls_verify_match | default('hostname') }}
+tls_append_default_CA=no
 unknown_local_recipient_reject_code = 550
 

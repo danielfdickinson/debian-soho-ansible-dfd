@@ -7,7 +7,11 @@
 		</nat>
 	</forward>
 	<domain name="{{ internal_domain }}" />
-	<dns enable="yes" />
+	<dns enable="yes">
+		<host ip="{{ v4nat_addr }}">
+			<hostname>{{ ansible_facts['hostname'] }}</hostname>
+		</host>
+	</dns>
 	<ip family="ipv4" address="{{ v4nat_addr }}" prefix="{{ v4nat_prefix }}">
 		<dhcp>
 			<range start="{{ v4nat_cidr | ansible.utils.next_nth_usable(31) }}" end="{{ v4nat_cidr | ansible.utils.ipaddr('last_usable') }}" />

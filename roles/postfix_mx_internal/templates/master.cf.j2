@@ -29,18 +29,23 @@
   -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
   -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
   -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
+  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
+  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
+  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
   -o smtpd_tls_security_level=$lsmtpd_tls_security_level
+#  -o milter_macro_daemon_name=LSMTPD
 [{{ ansible_facts['default_ipv6']['address'] }}]:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
   -o syslog_name=postfix/lsmtpd
   -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
   -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
   -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
   -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
+  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
+  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
+  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
   -o smtpd_tls_security_level=$lsmtpd_tls_security_level
-#  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
-#  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
-#  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
-#  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
 #  -o milter_macro_daemon_name=LSMTPD
 #628       inet  n       -       y       -       -       qmqpd
 pickup    unix  n       -       y       60      1       pickup
