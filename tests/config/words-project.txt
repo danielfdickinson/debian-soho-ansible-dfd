@@ -4,6 +4,7 @@ DNAT
 ESMTP
 GSSAPI
 HEREDOCS
+HSTS
 LLMNR
 LMTP
 LOGINDISABLED
@@ -19,6 +20,7 @@ Winbind
 addrtype
 adminaddr
 airlockldev
+alpn
 apic
 apop
 autocreation
@@ -169,6 +171,7 @@ showq
 skel
 smtpd
 spampolice
+sslv
 starttls
 submissiond
 sudonp
@@ -176,6 +179,7 @@ tcplog
 tfvars
 tlsmgr
 tlsproxy
+tlsv
 unauth
 unpriv
 upsd
