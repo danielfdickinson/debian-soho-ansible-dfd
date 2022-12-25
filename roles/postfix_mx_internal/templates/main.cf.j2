@@ -32,19 +32,25 @@ notify_classes = resource, software, 2bounce
 readme_directory = no
 relayhost = [localhost] # No outgoing non-local mail
 sender_dependent_default_transport_maps = hash:/etc/postfix/sender_default_transport_map
+smtp_tls_CApath=/etc/ssl/certs
+smtp_tls_fingerprint_digest = sha256
+smtp_tls_security_level=may
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_banner = $myhostname ESMTP $mail_name
 smtpd_client_restrictions = reject_unauth_pipelining
 smtpd_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient
 smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
 smtpd_sasl_auth_enable=no
-smtpd_tls_cert_file = {{ public_cert_cert_file }}
+# smtpd config:
+# generated 2022-12-25, Mozilla Guideline v5.6, Postfix 3.5.17, OpenSSL 1.1.1n, modern configuration
+# https://ssl-config.mozilla.org/#server=postfix&version=3.5.17&config=modern&openssl=1.1.1n&guideline=5.6smtpd_tls_cert_file = {{ public_cert_cert_file }}
+smtpd_tls_auth_only = yes
 smtpd_tls_fingerprint_digest = sha256
 smtpd_tls_key_file = {{ public_cert_key_file }}
 smtpd_tls_security_level=may
-smtp_tls_CApath=/etc/ssl/certs
-smtp_tls_fingerprint_digest = sha256
-smtp_tls_security_level=may
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+tls_preempt_cipherlist = no
 unknown_local_recipient_reject_code = 550
 unverified_recipient_reject_reason = Address lookup failed
 virtual_alias_domains = {{ virtual_alias_domains | join(' ') }}

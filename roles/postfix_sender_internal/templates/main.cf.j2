@@ -30,9 +30,12 @@ smtp_tls_CAfile = {{ env_conn_admin[envname]['private_ca_cert_file'] }}
 smtp_tls_cert_file = {{ host_private_client_cert_cert_file }}
 smtp_tls_fingerprint_digest = sha256
 smtp_tls_key_file = {{ host_private_client_cert_key_file }}
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
 smtp_tls_security_level=verify
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtp_tls_verify_cert_match={{ host_email_tls_verify_match | default('hostname') }}
 tls_append_default_CA=no
+tls_preempt_cipherlist = no
 unknown_local_recipient_reject_code = 550
 
