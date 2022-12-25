@@ -1,0 +1,4 @@
+---
+ha_dhparam: "{{ vault_ha_dhparam }}"
+ha_stats_users: "{{ vault_ha_stats_users }}"
+...

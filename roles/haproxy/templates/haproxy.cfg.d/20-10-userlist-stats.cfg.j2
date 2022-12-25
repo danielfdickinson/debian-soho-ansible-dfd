@@ -1,0 +1,6 @@
+userlist stats-auth
+	group readonly
+	group admin
+{% for hauser in ha_stats_users %}
+	user {{ hauser.name }} {{ hauser.password_type }} {{ hauser.password }} groups {{ hausers.groups | join(',') }}
+{% endfor %}
