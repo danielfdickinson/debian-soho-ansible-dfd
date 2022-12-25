@@ -30,6 +30,38 @@
       owner: root
       src: haproxy.cfg.d/
     notify: Restart haproxy
+  - name: Create HAProxy DHParam file
+    ansible.builtin.template:
+      dest: "{{ ha_dhparam_file }}"
+      group: haproxy
+      mode: "0640"
+      owner: root
+      src: dhparam.j2
+    notify: Restart haproxy
+  - name: Create/Update HAProxy DHParam configuration
+    ansible.builtin.template:
+      dest: /etc/haproxy/haproxy.cfg.d/10-20-global-dhparam.cfg
+      group: root
+      mode: "0640"
+      owner: root
+      src: 10-20-global-dh-param.cfg.j2
+    notify: Restart haproxy
+  - name: Create/Update HAProxy stats userlist configuration
+    ansible.builtin.template:
+      dest: /etc/haproxy/haproxy.cfg.d/20-10-userlist-stats.cfg
+      group: root
+      mode: "0640"
+      owner: root
+      src: haproxy.cfg.d/20-10-userlist-stats.cfg.j2
+    notify: Restart haproxy
+  - name: Create/Update HAProxy http_s frontend main configuration
+    ansible.builtin.template:
+      dest: /etc/haproxy/haproxy.cfg.d/50-10-frontends-http_s-main.cfg
+      group: root
+      mode: "0640"
+      owner: root
+      src: 50-10-frontends-http_s-main.cfg.j2
+    notify: Restart haproxy
 - name: Configure firewall
   become: yes
   block:
