@@ -1,12 +1,13 @@
 ---
 - name: Create temporary file
+  become: yes
   ansible.builtin.tempfile:
     state: file
-    suffix: tmp
   register: snakeoil_full_temp
   changed_when: false
 - name: Copy snakeoil cert and key to temporary file
-  ansible.builtin.shell: cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key >> "{{ snakeoil_full_temp.path }}"
+  become: yes
+  ansible.builtin.shell: cat /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key >> {{ snakeoil_full_temp.path }}
   when: snakeoil_full_temp.path is defined
   changed_when: false
 - name: Copy combined file to final destination
@@ -16,11 +17,14 @@
     group: root
     mode: "0640"
     owner: root
-    remote_src: "{{ snakeoil_full_temp.path }}"
+    remote_src: true
+    src: "{{ snakeoil_full_temp.path }}"
   when: snakeoil_full_temp.path is defined
 - name: Remove temporary file
+  become: yes
   ansible.builtin.file:
     path: "{{ snakeoil_full_temp.path }}"
     state: absent
   when: snakeoil_full_temp.path is defined
+  changed_when: false
 ...
