@@ -250,6 +250,7 @@ libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/2022
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
 mailbox_users: "{{ vault_mailbox_users }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
+public_cert_full_file: "{{ host_public_cert_full_file }}"
 public_cert_key_file: "{{ host_public_cert_key_file }}"
 public_cert_key_private_key: "{{ host_public_cert_private_key }}"
 remote_admin_ip: "{{ env_conn_admin[envname]['remote_admin_ip'] }}"

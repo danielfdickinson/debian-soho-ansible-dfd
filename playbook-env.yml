@@ -50,6 +50,10 @@
   roles:
   - cert_private_server
 
+- hosts: non_public_env:&cert_public:&public_full
+  roles:
+  - cert_public_snakeoil_full
+
 - hosts: internal_mxes
   roles:
   - postfix_mx_internal
