@@ -44,7 +44,7 @@
       group: root
       mode: "0640"
       owner: root
-      src: 10-20-global-dh-param.cfg.j2
+      src: haproxy.cfg.d/10-20-global-dh-param.cfg.j2
     notify: Restart haproxy
   - name: Create/Update HAProxy stats userlist configuration
     ansible.builtin.template:
@@ -60,7 +60,7 @@
       group: root
       mode: "0640"
       owner: root
-      src: 50-10-frontends-http_s-main.cfg.j2
+      src: haproxy.cfg.d/50-10-frontends-http_s-main.cfg.j2
     notify: Restart haproxy
 - name: Configure firewall
   become: yes
@@ -72,5 +72,13 @@
       direction: in
       proto: tcp
       to_port: 80
+    when: ansible_facts['default_ipv4'] is defined
+  - name: Allow HTTPS in on external interface
+    community.general.ufw:
+      rule: allow
+      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
+      direction: in
+      proto: tcp
+      to_port: 443
     when: ansible_facts['default_ipv4'] is defined
 ...

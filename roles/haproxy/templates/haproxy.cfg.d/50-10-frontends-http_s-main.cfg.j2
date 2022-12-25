@@ -1,15 +1,15 @@
 frontend http
-	bind 0.0.0.0:443,[::]:443 {{ public_cert_full_file }} alpn h2,http/1.1
+	bind 0.0.0.0:443,[::]:443 ssl crt {{ public_cert_full_file }} alpn h2,http/1.1
 	bind 0.0.0.0:80,[::]:80
 
 	redirect scheme https code 301 if !{ ssl_fc }
 
 	option forwardfor except 127.0.0.0/8
 
-	acl site_dead nbsrv lt 1
+	acl stats_backend_down nbsrv(server_stats) lt 1
 
 	monitor-uri /http-health
-	monitor fail if site_dead
+	monitor fail if stats_backend_down
 
 	log-format "%{+Q}o %{-Q}ci %{-Q}[capture.req.hdr(0)] - [%trg] %r %ST %B %[capture.req.hdr(1)] %[capture.req.hdr(2)] %cp %ms %ft %b %s"
 	capture request header Host len 64
