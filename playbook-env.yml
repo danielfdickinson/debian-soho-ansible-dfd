@@ -44,7 +44,7 @@
   roles:
   - backup_ovh
 
-- name: Configure backups on all guests and bare-metal hosts we can
+- name: Configure backups on all guests and bare-metal hosts were we can
   hosts: backup_clients
   roles:
   - backup_restic
@@ -59,10 +59,12 @@
   roles:
   - cert_private_server
 
-- name: For non-public environments combine 'snakeoil' cert and key into full bundle
-  hosts: non_public_env:&cert_public:&public_full
+- name: Use cert+key from certbot dns-01 (via local)
+  # This avoids the need to do have/use certbot on the remote hosts
+  # but we do need to push the renewed certificates from time to time
+  hosts: cert_public
   roles:
-  - cert_public_snakeoil_full
+  - cert_public_local_full
 
 - name: Configure internal MXes
   hosts: internal_mxes

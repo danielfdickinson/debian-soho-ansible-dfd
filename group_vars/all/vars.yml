@@ -210,22 +210,22 @@ env_guest_userdata:
         shell: /bin/bash
         ssh_authorized_keys:
         - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
-    smtp01:
-      bootcmd:
-      - [mkdir, -p, /var/spool/postfix]
-      disk_setups:
-        /dev/vdc: ["100"]
-      fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
-      hostname: smtp01ldev
-      mounts:
-      - [/dev/vdc1, /var/spool/postfix]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
+        # smtp01:
+        #   bootcmd:
+        #   - [mkdir, -p, /var/spool/postfix]
+        #   disk_setups:
+        #     /dev/vdc: ["100"]
+        #   fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
+        #   fs_setups:
+        #     "/dev/vdc":
+        #     - "1"
+        #   hostname: smtp01ldev
+        #   mounts:
+        #   - [/dev/vdc1, /var/spool/postfix]
+        #   packages:
+        #   - fail2ban
+        #   runcmd:
+        #   - [systemctl, restart, fail2ban]
     www:
       bootcmd:
       - [mkdir, -p, /var/www]
@@ -258,8 +258,10 @@ mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destina
 mailbox_users: "{{ vault_mailbox_users }}"
 private_client_cert_full_file: "{{ host_private_client_cert_cert_file | replace('-cert', '-full') | default(None) }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
+public_cert_cert_file_src: "{{ host_public_cert_cert_file_src }}"
 public_cert_full_file: "{{ host_public_cert_full_file }}"
 public_cert_key_file: "{{ host_public_cert_key_file }}"
+public_cert_key_file_src: "{{ host_public_cert_key_file_src }}"
 public_cert_key_private_key: "{{ host_public_cert_private_key }}"
 remote_admin_ip: "{{ env_conn_admin[envname]['remote_admin_ip'] }}"
 remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"

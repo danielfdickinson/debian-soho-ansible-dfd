@@ -192,6 +192,7 @@ submissiond
 sudonp
 tcplog
 tfvars
+thecshore
 tlsmgr
 tlsproxy
 tlsv
