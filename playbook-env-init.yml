@@ -1,5 +1,6 @@
 ---
-- hosts: libvirtd_hosts
+- name: Ensure required variables are supplied on the command line
+  hosts: libvirtd_hosts
   gather_facts: false
   tasks:
   - name: Ensure given environments are valid
@@ -9,7 +10,8 @@
       - guest_envname is defined
       quiet: true
 
-- hosts: libvirtd_hosts:&{{ envname | default([]) }}
+- name: Add network for environment {{ envname | default([]) }}
+  hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   any_errors_fatal: true
   roles:
@@ -27,7 +29,8 @@
 
 # After creating the network we need to gather facts again to pick-up the new
 # network(s)
-- hosts: libvirtd_hosts:&{{ envname | default([]) }}
+- name: Add access to libvirtd host chrony from guests
+  hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   any_errors_fatal: true
   roles:
@@ -40,7 +43,8 @@
     v6nat_net: "{{ env_conn_admin[guest_envname]['v6nat_net'] }}"
     v6nat_prefix: "{{ env_conn_admin[guest_envname]['v6nat_prefix'] }}"
 
-- hosts: libvirtd_hosts:&{{ envname | default([]) }}
+- name: Add port forwarding hooks for {{ envname | default([]) }}
+  hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   any_errors_fatal: true
   # Note that roles here must not interfere with other environments on the same
@@ -51,7 +55,8 @@
     guest_data: "{{ libvirt_guest_definitions | selectattr('envname', 'equalto', guest_envname) }}"
     vbridge: "{{ env_conn_admin[guest_envname]['vbridge'] }}"
 
-- hosts: libvirtd_hosts:&{{ envname | default([]) }}
+- name: Add guests for {{ envname | default([]) }}
+  hosts: libvirtd_hosts:&{{ envname | default([]) }}
   any_errors_fatal: true
   roles:
   - libvirtd_guests_add

@@ -1,5 +1,6 @@
 ---
-- hosts: bastions
+- name: Ensure required variables are supplied on command line
+  hosts: bastions
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid
@@ -9,7 +10,8 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
-- hosts: bastions
+- name: Configure bastions in order to access other guests
+  hosts: bastions
   gather_facts: true
   any_errors_fatal: true
   roles:
@@ -19,46 +21,56 @@
   - fail2ban_ssh
   - packages_firmware
 
-- hosts: all
+- name: For all guests, add a password to admin user
+  hosts: all
   gather_facts: true
   roles:
   - user_admin_add_password
 
-- hosts: edge_hosts
+- name: For externally-exposed (edge) hosts, enable Fail2Ban
+  hosts: edge_hosts
   roles:
   - fail2ban
 
-- hosts: all:!libvirtd_hosts:!bastions
+- name: Except bastions, install base packages and fireware, and reboot guests
+  hosts: all:!libvirtd_hosts:!bastions
   # Avoid connectivity issues by not rebooting vm host or bastion
   roles:
   - packages_base
   - packages_firmware
 
-- hosts: backup_clients:&ovh_bhs
+- name: Configure OVH (BHS) clients for backups
+  hosts: backup_clients:&ovh_bhs
   roles:
   - backup_ovh
 
-- hosts: backup_clients
+- name: Configure backups on all guests and bare-metal hosts we can
+  hosts: backup_clients
   roles:
   - backup_restic
 
-- hosts: cert_private:&ssl_private_clients
+- name: Add SSL private client certificate
+  hosts: cert_private:&ssl_private_clients
   roles:
   - cert_private_client
 
-- hosts: cert_private:&ssl_private_servers
+- name: Add SSL private server certificate
+  hosts: cert_private:&ssl_private_servers
   roles:
   - cert_private_server
 
-- hosts: non_public_env:&cert_public:&public_full
+- name: For non-public environments combine 'snakeoil' cert and key into full bundle
+  hosts: non_public_env:&cert_public:&public_full
   roles:
   - cert_public_snakeoil_full
 
-- hosts: internal_mxes
+- name: Configure internal MXes
+  hosts: internal_mxes
   roles:
   - postfix_mx_internal
 
-- hosts: mailbox_servers
+- name: Configure IMAP (mailbox) servers
+  hosts: mailbox_servers
   roles:
   - dovecot
   vars:
@@ -69,15 +81,18 @@
     remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
     submission_port: "{{ libvirt_guest_definitions[envname][instance_name]['submission_port_public'] }}"
 
-- hosts: email_internal_senders:!internal_mxes
+- name: Configure internal email senders
+  hosts: email_internal_senders:!internal_mxes
   roles:
   - postfix_sender_internal
 
-- hosts: rproxy_external
+- name: Configure external (edge) reverse proxy
+  hosts: rproxy_external
   roles:
   - haproxy
 
-- hosts: website_servers:rproxy_internal
+- name: Configure website and internal reverse proxies to use PROXY protocol
+  hosts: website_servers:rproxy_internal
   roles:
   - apache2_proxy_protocol
 ...

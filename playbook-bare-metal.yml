@@ -1,5 +1,6 @@
 ---
-- hosts: bare_metal
+- name: Ensure required variables are supplied on the command line
+  hosts: bare_metal
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid
@@ -9,46 +10,55 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
-- hosts: bare_metal
+- name: Use systemd-resolved exclusively for name resolution
+  hosts: bare_metal
   gather_facts: true
   roles:
   - network_dns_use_resolved
 
-- hosts: bare_metal:&local_ipv6
+- name: Add local ipv6 when no internet-ipv6 available
+  hosts: bare_metal:&local_ipv6
   roles:
   - network_local_ipv6
 
-- hosts: bare_metal:&bridge_second_interface
+- name: Make second interface a bridge
+  hosts: bare_metal:&bridge_second_interface
   roles:
   - network_bridge_second_interface
 
-- hosts: bare_metal:&storage_extra
+- name: Setup additional storage
+  hosts: bare_metal:&storage_extra
   roles:
   - storage_setup_extra
 
-- hosts: bare_metal
+- name: Add base and hardware packages
+  hosts: bare_metal
   roles:
   - packages_base
   - packages_bare_metal
   - packages_firmware
 
-- hosts: bare_metal:&backup_clients:&dfd_local
+- name: Configure restic backup for local instances
+  hosts: bare_metal:&backup_clients:&dfd_local
   roles:
   - backup_restic
 
-- hosts: bare_metal:&backup_clients:&ovh_bhs
+- name: Configure restic backup for OVH (BHS) instances
+  hosts: bare_metal:&backup_clients:&ovh_bhs
   roles:
   - backup_ovh
   - backup_restic
 
-- hosts: bare_metal:&libvirtd_hosts
+- name: Add Libvirt, guests, and enable Fail2Ban
+  hosts: bare_metal:&libvirtd_hosts
   roles:
   - libvirtd
   - user_libvirt_client_add
   - fail2ban
   - fail2ban_ssh
 
-- hosts: bare_metal:&bare_metal_local
+- name: Add NUT to local bare-metal
+  hosts: bare_metal:&bare_metal_local
   roles:
   - upsd
 ...

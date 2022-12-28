@@ -1,5 +1,6 @@
 ---
-- gather_facts: true
+- name: Gather facts and output resulting variables
+  gather_facts: true
   hosts: all
   tasks:
   - name: Print all facts

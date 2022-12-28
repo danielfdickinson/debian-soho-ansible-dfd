@@ -1,5 +1,6 @@
 ---
-- hosts: bare_metal
+- name: Ensure required variables are supplied on the command line
+  hosts: bare_metal
   gather_facts: false
   tasks:
   - name: Ensure needed initialization variables are defined
@@ -25,7 +26,8 @@
       ansible_ssh_port: "{{ initial_ssh_port }}"
       ansible_become_password: "{{ initial_password }}"
       ansible_ssh_user: "{{ initial_ssh_user }}"
-- hosts: bare_metal
+- name: Add admin user
+  hosts: bare_metal
   gather_facts: true
   roles:
   - user_admin_add
@@ -39,7 +41,8 @@
     ansible_become_password: "{{ initial_password }}"
     ansible_ssh_user: "{{ initial_ssh_user }}"
 
-- hosts: bare_metal
+- name: Removed user 'debian'
+  hosts: bare_metal
   roles:
   - user_debian_remove
   - sshd_port_set
