@@ -1,0 +1,36 @@
+{
+	SOGoProfileURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_user_profile";
+	OCSFolderInfoURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_folder_info";
+	OCSSessionsFolderURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_sessions_folder";
+	OCSEMailAlarmsFolderURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_alarms_folder";
+	SOGoLanguage = English;
+	SOGoAppointmentSendEMailNotifications = YES;
+	SOGoMailingMechanism = smtp;
+	SOGoSMTPServer = "smtp://imapldev.ldev:587/?tls=YES";
+	SOGoTimeZone = UTC;
+	SOGoSentFolderName = Sent;
+	SOGoTrashFolderName = Trash;
+	SOGoDraftsFolderName = Drafts;
+	SOGoIMAPServer = "imaps://imapldev.ldev:143/?tls=YES&tlsVerifyMode=none"; // FIXME
+	SOGoSieveServer = "sieve://imapldev.ldev:4190/?tls=YES&tlsVerifyMode=none"; // FIXME
+	SOGoIMAPAclConformsToIMAPExt = YES;
+	SOGoVacationEnabled = NO;
+	SOGoForwardEnabled = NO;
+	SOGoSieveScriptsEnabled = NO;
+	SOGoFirstDayOfWeek = 0;
+	SOGoMailMessageCheck = manually;
+	SOGoMailAuxiliaryUserAccountsEnabled = YES;
+	SOGoMemcachedHost = 127.0.0.1;
+	SOGoUserSources =
+	(
+		{
+			type = sql;
+			id = directory;
+			viewURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_users";
+			canAuthenticate = YES;
+			isAddressBook = NO;
+			userPasswordAlgorithm = argon2id;
+		}
+	);
+}
+

@@ -68,6 +68,7 @@ env_conn_admin:
     central_local_email: "{{ vault_env_conn_admin['ldev']['central_local_email'] }}"
     external_rfc1618_domain: "{{ vault_env_conn_admin['ldev']['external_rfc1618_domain'] }}"
     fallback_dns: "{{ vault_env_conn_admin['ldev']['fallback_dns'] }}"
+    gdav_server_name_external: "{{ vault_env_conn_admin['ldev']['gdav_server_name_external'] }}"
     guest_ansible_ssh_port: "{{ vault_env_conn_admin['ldev']['guest_ansible_ssh_port'] }}"
     internal_domain: *main_internal_domain
     internal_relay_port: "{{ vault_env_conn_admin['ldev']['internal_relay_port'] }}"
@@ -167,16 +168,21 @@ env_guest_userdata:
       - [systemctl, restart, fail2ban]
     gdav:
       bootcmd:
-      - [mkdir, -p, /var/lib/radicale]
+      - [mkdir, -p, /var/lib/postgresql]
+      - [mkdir, -p, /var/spool/sogo]
       disk_setups:
         /dev/vdc: ["100"]
+        /dev/vdd: ["100"]
       fqdn: "{{ vault_env_guest_userdata['ldev']['gdav']['fqdn'] }}"
       fs_setups:
         "/dev/vdc":
         - "1"
+        "/dev/vdd":
+        - "1"
       hostname: gdavldev
       mounts:
-      - [/dev/vdc1, /var/lib/radicale]
+      - [/dev/vdc1, /var/lib/postgresql]
+      - [/dev/vdd1, /var/spool/sogo]
       packages:
       - fail2ban
       runcmd:
@@ -238,6 +244,7 @@ env_guest_userdata:
       - [systemctl, restart, fail2ban]
 external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
 fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
+gdav_server_name_external: "{{ env_conn_admin[envname]['gdav_server_name_external'] }}"
 internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"
 internal_fqdn: "{{ ansible_facts['hostname'] }}.{{ internal_domain }}"
 internal_relay_port: "{{ env_conn_admin[envname]['internal_relay_port'] }}"

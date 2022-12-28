@@ -69,6 +69,14 @@
       owner: root
       src: haproxy.cfg.d/50-10-frontends-http_s-main.cfg.j2
     notify: Restart haproxy
+  - name: Create/Update HAProxy sogo backend configuration
+    ansible.builtin.template:
+      dest: /etc/haproxy/haproxy.cfg.d/70-14-backends-sogo.cfg
+      group: root
+      mode: "0640"
+      owner: root
+      src: haproxy.cfg.d/70-14-backends-sogo.cfg.j2
+    notify: Restart haproxy
   - name: Create/Update HAProxy mal beginnings ACL file
     ansible.builtin.template:
       dest: /etc/haproxy/acl-files/mal_beg.txt

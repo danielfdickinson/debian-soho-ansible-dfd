@@ -1,0 +1,17 @@
+---
+- name: Restart PostgreSQL
+  become: yes
+  ansible.builtin.systemd:
+    name: postgresql
+    state: restarted
+- name: Restart SOGo
+  become: yes
+  ansible.builtin.systemd:
+    name: sogo
+    state: restarted
+- name: Restart Apache2
+  become: yes
+  ansible.builtin.systemd:
+    name: apache2
+    state: restarted
+...

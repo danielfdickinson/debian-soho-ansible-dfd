@@ -1,0 +1,175 @@
+---
+- name: Install SOGo package and its requirements
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - libpq-dev
+    - memcached
+    - postgresql
+    - python3-psycopg2
+    - sogo
+- name: Add a hostname alias for DB use
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/hosts
+    group: root
+    mode: "0644"
+    owner: root
+    src: hosts.j2
+- name: Persist hostname alias for DB use
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/cloud/templates/hosts.debian.tmpl
+    group: root
+    mode: "0644"
+    owner: root
+    src: hosts.debian.tmpl
+- name: Add sogo DB user
+  become_user: postgres
+  become: yes
+  community.postgresql.postgresql_user:
+    name: sogo
+    no_password_changes: true
+    password: "{{ sogodb_password }}"
+    role_attr_flags: NOCREATEDB,NOCREATEROLE,NOSUPERUSER
+    state: present
+- name: Add sogo DB
+  become_user: postgres
+  become: yes
+  community.postgresql.postgresql_db:
+    name: sogo
+    owner: sogo
+    state: present
+- name: Add sogo users table
+  become_user: postgres
+  become: yes
+  community.postgresql.postgresql_table:
+    columns:
+    - c_uid varchar(255) primary key not null
+    - c_name varchar unique not null
+    - c_password varchar not null
+    - c_cn varchar
+    - mail varchar
+    db: sogo
+    owner: sogo
+    state: present
+    table: sogo_users
+- name: Add sogo users to sogo_users table
+  become_user: postgres
+  become: yes
+  community.postgresql.postgresql_query:
+    db: sogo
+    query: INSERT INTO sogo_users (c_uid, c_name, c_password, c_cn, mail) VALUES (%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING
+    positional_args:
+    - "{{ item.uid }}"
+    - "{{ item.name }}"
+    - "{{ item.password }}"
+    - "{{ item.cn }}"
+    - "{{ item.mail }}"
+  loop: "{{ sogo_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+- name: Update sogo users in sogo_users table
+  become_user: postgres
+  become: yes
+  community.postgresql.postgresql_query:
+    db: sogo
+    query: UPDATE sogo_users SET (c_name, c_password, c_cn, mail) = (%s, %s, %s, %s) WHERE c_uid = %s
+    positional_args:
+    - "{{ item.name }}"
+    - "{{ item.password }}"
+    - "{{ item.cn }}"
+    - "{{ item.mail }}"
+    - "{{ item.uid }}"
+  loop: "{{ sogo_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  changed_when: false
+- name: Allow localhost access to sogo database
+  become: yes
+  notify: Restart PostgreSQL
+  community.postgresql.postgresql_pg_hba:
+    address: 127.0.0.1/32
+    contype: host
+    databases: sogo
+    dest: /etc/postgresql/13/main/pg_hba.conf
+    state: present
+    users: sogo
+- name: Add SOGo configuration for Apache2
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/sites-available/sogo.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: sogo-site.conf.j2
+  notify: Restart Apache2
+- name: Enable Apache2 modules needed by SOGo
+  become: yes
+  community.general.apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - ssl
+  - headers
+  - proxy
+  - proxy_http
+  - rewrite
+  notify: Restart Apache2
+- name: Update port on which apache listens
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/ports.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: ports.conf.j2
+  notify: Restart Apache2
+- name: Disable Apache2 autoindex module
+  become: yes
+  community.general.apache2_module:
+    name: autoindex
+    force: true
+    state: absent
+  notify: Restart Apache2
+- name: Disable Debian default site for Apache2
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify: Restart Apache2
+- name: Disable CGI serving
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apache2/conf-enabled/serve-cgi-bin.conf
+    state: absent
+  notify: Restart Apache2
+- name: Configure SOGo
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/sogo/sogo.conf
+    group: sogo
+    mode: "0640"
+    owner: sogo
+    src: sogo.conf.j2
+  notify: Restart SOGo
+- name: Enable SOGo site for Apache2
+  become: yes
+  ansible.builtin.file:
+    path: /etc/apache2/sites-enabled/sogo.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: /etc/apache2/sites-available/sogo.conf
+    state: link
+  notify: Restart Apache2
+- name: Allow HTTPS traffic from proxy to 4443 (Apache2 for SOGo)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
+    direction: in
+    proto: tcp
+    to_port: 4443
+  when: ansible_facts['default_ipv4'] is defined
+...

@@ -1,0 +1,14 @@
+---
+dependencies:
+- role: apache2
+# Because ansible-lint complains otherwise
+galaxy_info:
+  author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
+  description: Add SoGo and its requirements
+  license: MIT
+  min_ansible_version: "6.0"
+  platforms:
+  - name: Debian
+    versions:
+    - all
+...

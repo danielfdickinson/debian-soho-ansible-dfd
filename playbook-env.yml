@@ -80,6 +80,7 @@
     lmtp_port: "{{ libvirt_guest_definitions[envname][instance_name]['lmtp_port'] }}"
     remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
     submission_port: "{{ libvirt_guest_definitions[envname][instance_name]['submission_port_public'] }}"
+    sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
 
 - name: Configure internal email senders
   hosts: email_internal_senders:!internal_mxes
@@ -90,6 +91,14 @@
   hosts: rproxy_external
   roles:
   - haproxy
+
+- name: Configure groupware
+  hosts: groupware
+  roles:
+  - sogo
+  vars:
+    instance_name: "{{ (env_guest_userdata[envname] | dict2items | selectattr('value.fqdn', 'equalto', inventory_hostname)).0.key }}"
+    gdav_port: "{{ libvirt_guest_definitions[envname][instance_name]['gdav_port'] }}"
 
 - name: Configure website and internal reverse proxies to use PROXY protocol
   hosts: website_servers:rproxy_internal

@@ -1,0 +1,4 @@
+---
+sogo_users: "{{ vault_sogo_users[envname] }}"
+sogodb_password: "{{ vault_sogodb_password[envname] }}"
+...
