@@ -1,5 +1,10 @@
 ---
 ha_dhparam: "{{ vault_ha_dhparam }}"
 ha_dhparam_file: "{{ vault_ha_dhparam_file }}"
+ha_mal_beginnings: "{{ vault_ha_mal_beginnings }}"
+ha_mal_endings: "{{ vault_ha_mal_endings }}"
+ha_mal_host_doms: "{{ vault_ha_mal_host_doms }}"
+ha_mal_query_substrings: "{{ vault_ha_mal_query_substrings }}"
+ha_mal_substrings: "{{ vault_ha_mal_substrings }}"
 ha_stats_users: "{{ vault_ha_stats_users }}"
 ...

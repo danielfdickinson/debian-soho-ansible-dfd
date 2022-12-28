@@ -1,15 +1,11 @@
-frontend http
+frontend fe_http_s
 	bind 0.0.0.0:443,[::]:443 ssl crt {{ public_cert_full_file }} alpn h2,http/1.1
 	bind 0.0.0.0:80,[::]:80
 
-	redirect scheme https code 301 if !{ ssl_fc }
+	monitor-uri /haproxy-health
 
 	option forwardfor except 127.0.0.0/8
-
-	acl stats_backend_down nbsrv(server_stats) lt 1
-
-	monitor-uri /http-health
-	monitor fail if stats_backend_down
+	option abortonclose
 
 	log-format "%{+Q}o %{-Q}ci %{-Q}[capture.req.hdr(0)] - [%trg] %r %ST %B %[capture.req.hdr(1)] %[capture.req.hdr(2)] %cp %ms %ft %b %s"
 	capture request header Host len 64
@@ -19,5 +15,23 @@ frontend http
 	filter cache main
 	filter compression
 
-	# Just for testing
-	use_backend server_stats
+	acl path_acme path_beg /.well-known/acme-challenge/
+	acl path_stats path /server-stats
+	acl path_root path /
+
+	acl dom_gate hdr(host) gateldev.ldev gateldev.internal.dfd
+
+	acl path_mal_beg path_beg -f /etc/haproxy/acl-files/mal_beg.txt
+	acl path_mal_sub path_sub -f /etc/haproxy/acl-files/mal_sub.txt
+	acl path_mal_end path_end -f /etc/haproxy/acl-files/mal_end.txt
+	acl path_mal_host_dom hdr(host) -m dom {{ ha_mal_host_doms | join(' ') }}
+	acl query_mal_sub query -m sub {{ ha_mal_query_substrings | join(' ') }}
+
+	http-request deny if path_mal_beg || path_mal_sub || path_mal_end || path_mal_host_dom || query_mal_sub
+	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gate
+	http-request allow if dom_gate
+
+	use_backend be_certbot if path_acme HTTP
+
+	use_backend be_server_stats if path_stats dom_gate
+

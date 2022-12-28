@@ -22,6 +22,13 @@
       mode: "0750"
       owner: root
       state: directory
+  - name: Ensure HAProxy ACL files directory exists
+    ansible.builtin.file:
+      path: /etc/haproxy/acl-files
+      group: root
+      mode: "0750"
+      owner: root
+      state: directory
   - name: Create/Update HAProxy configuration static files
     ansible.builtin.copy:
       dest: /etc/haproxy/haproxy.cfg.d/
@@ -37,7 +44,7 @@
       mode: "0640"
       owner: root
       src: dhparam.j2
-    notify: Restart haproxy
+    notify: Reload haproxy
   - name: Create/Update HAProxy DHParam configuration
     ansible.builtin.template:
       dest: /etc/haproxy/haproxy.cfg.d/10-20-global-dhparam.cfg
@@ -45,7 +52,7 @@
       mode: "0640"
       owner: root
       src: haproxy.cfg.d/10-20-global-dh-param.cfg.j2
-    notify: Restart haproxy
+    notify: Reload haproxy
   - name: Create/Update HAProxy stats userlist configuration
     ansible.builtin.template:
       dest: /etc/haproxy/haproxy.cfg.d/20-10-userlist-stats.cfg
@@ -62,6 +69,30 @@
       owner: root
       src: haproxy.cfg.d/50-10-frontends-http_s-main.cfg.j2
     notify: Restart haproxy
+  - name: Create/Update HAProxy mal beginnings ACL file
+    ansible.builtin.template:
+      dest: /etc/haproxy/acl-files/mal_beg.txt
+      group: root
+      mode: "0640"
+      owner: root
+      src: acl-files/mal_beg.txt.j2
+    notify: Reload haproxy
+  - name: Create/Update HAProxy mal endings ACL file
+    ansible.builtin.template:
+      dest: /etc/haproxy/acl-files/mal_end.txt
+      group: root
+      mode: "0640"
+      owner: root
+      src: acl-files/mal_end.txt.j2
+    notify: Reload haproxy
+  - name: Create/Update HAProxy mal substrings ACL file
+    ansible.builtin.template:
+      dest: /etc/haproxy/acl-files/mal_sub.txt
+      group: root
+      mode: "0640"
+      owner: root
+      src: acl-files/mal_sub.txt.j2
+    notify: Reload haproxy
 - name: Configure firewall
   become: yes
   block:

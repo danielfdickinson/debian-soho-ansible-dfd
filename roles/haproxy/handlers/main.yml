@@ -10,4 +10,9 @@
   ansible.builtin.systemd:
     daemon_reload: true
   listen: Restart haproxy service
+- name: Reload haproxy
+  become: yes
+  ansible.builtin.systemd:
+    name: haproxy
+    state: reloaded
 ...

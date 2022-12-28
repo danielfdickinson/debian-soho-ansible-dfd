@@ -249,6 +249,7 @@ libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bu
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
 mailbox_users: "{{ vault_mailbox_users }}"
+private_client_cert_full_file: "{{ host_private_client_cert_cert_file | replace('-cert', '-full') | default(None) }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
 public_cert_full_file: "{{ host_public_cert_full_file }}"
 public_cert_key_file: "{{ host_public_cert_key_file }}"
