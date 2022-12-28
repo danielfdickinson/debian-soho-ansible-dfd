@@ -5,7 +5,7 @@
     cmd: virsh vol-list --pool {{ instance_item.value['pool_os'] | quote }} | tail -n+3 | awk '{ print $1 }'
   register: libvirt_os_pool_vol_list
   changed_when: false
-- name: Create OS volume for instance {{ instance_item.key }} in {{ guest_envname }}
+- name: Create OS volume for instance {{ instance_item.key + 'in' + guest_envname }}
   become: yes
   ansible.builtin.command:
     cmd: virsh vol-create-as {{ instance_item.value.pool_os | quote }} {{ instance_item.value.vol_name_os | quote }} {{ instance_item.value.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
@@ -20,7 +20,7 @@
   loop_control:
     label: "{{ instance_item.key }}: {{ item.name }} in {{ item.pool }}"
   when: instance_item.value.data_volumes is defined
-- name: Create base directory for instance {{ instance_item.key }} working data
+- name: Create base directory for working data, instance {{ instance_item.key }}
   become: yes
   ansible.builtin.file:
     dest: /var/local/cloud_init_data
@@ -28,12 +28,12 @@
     mode: "0750"
     owner: "{{ ansible_user }}"
     state: directory
-- name: Create environment directory for instance {{ instance_item.key }} working data
+- name: Create environment directory for working data, instance {{ instance_item.key }}
   ansible.builtin.file:
     dest: /var/local/cloud_init_data/{{ guest_envname }}
     mode: "0750"
     state: directory
-- name: Create instance directory for instance {{ instance_item.key }} working data
+- name: Create instance directory for working data, instance {{ instance_item.key }}
   ansible.builtin.file:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ instance_item.key }}
     mode: "0750"
@@ -121,7 +121,7 @@
   when: instance_item.value.libvirt_domain_name not in libvirt_active_domain_list.stdout_lines
   changed_when: domain_start_out.rc == 0
   failed_when: "'already exists' not in domain_start_out.stderr and domain_start_out.rc != 0"
-- name: Set libvirt domain for {{ instance_item.key }} as autostarted
+- name: Set libvirt domain as autostarted for {{ instance_item.key }}
   become: yes
   ansible.builtin.command:
     argv:

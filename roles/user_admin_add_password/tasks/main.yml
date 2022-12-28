@@ -1,6 +1,7 @@
 ---
 - name: Require admin password for sudo
   become: yes
+  notify: Restart SSH
   block:
   - name: Set admin user password
     ansible.builtin.user:
@@ -14,5 +15,4 @@
       - adm
       - sudo
       - sys
-  notify: Restart SSH
 ...
