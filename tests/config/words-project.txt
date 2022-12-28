@@ -9,14 +9,21 @@ LLMNR
 LMTP
 LOGINDISABLED
 NOCOMMWARNTIME
+NOCREATEDB
+NOCREATEROLE
 NOPASSWD
+NOSUPERUSER
+OCSE
+OCSP
 RBWARNTIME
 Referer
 SASL
 SPNEGO
+SSLCA
 UFW
 ULA
 Winbind
+abortonclose
 addrtype
 adminaddr
 airlockldev
@@ -28,6 +35,8 @@ autofix
 backupmx
 brycewray
 bsdauth
+caldav
+carddav
 ccert
 chdir
 checkpassword
@@ -79,6 +88,7 @@ guestenv
 gwcidr
 helo
 hostvars
+htpasswd
 httplog
 httpv
 idata
@@ -93,6 +103,7 @@ keytab
 kvm
 ldev
 leastconn
+libpq
 libvirtd
 linebreak
 lmtp
@@ -148,6 +159,7 @@ prealloc
 privcert
 proxymap
 proxywrite
+psycopg2
 qcow2
 qmgr
 qmqpd
@@ -170,6 +182,8 @@ shfmt
 showq
 skel
 smtpd
+sogo
+sogodb
 spampolice
 sslv
 starttls
@@ -180,6 +194,7 @@ tfvars
 tlsmgr
 tlsproxy
 tlsv
+tmpl
 unauth
 unpriv
 upsd
