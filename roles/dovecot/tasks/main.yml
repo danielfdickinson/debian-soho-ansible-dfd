@@ -14,6 +14,8 @@
       - dovecot-core
       - dovecot-imapd
       - dovecot-lmtpd
+      - dovecot-managesieved
+      - dovecot-sieve
       - dovecot-submissiond
   - name: Create dovecot authentication config
     ansible.builtin.copy:
@@ -75,4 +77,12 @@
       proto: tcp
       src: any
       to_port: "{{ imap_port }}"
+  - name: Allow ManageSieve from anywhere
+    community.general.ufw:
+      rule: allow
+      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
+      direction: in
+      proto: tcp
+      src: any
+      to_port: "{{ sieve_port }}"
 ...

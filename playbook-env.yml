@@ -79,8 +79,8 @@
     imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
     lmtp_port: "{{ libvirt_guest_definitions[envname][instance_name]['lmtp_port'] }}"
     remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
-    submission_port: "{{ libvirt_guest_definitions[envname][instance_name]['submission_port_public'] }}"
     sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
+    submission_port: "{{ libvirt_guest_definitions[envname][instance_name]['submission_port'] }}"
 
 - name: Configure internal email senders
   hosts: email_internal_senders:!internal_mxes
