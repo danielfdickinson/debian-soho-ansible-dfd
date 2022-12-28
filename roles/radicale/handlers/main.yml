@@ -1,0 +1,15 @@
+---
+- name: Enable Radicale
+  listen: Enable and start Radicale
+  become: yes
+  ansible.builtin.systemd:
+    daemon_reload: true
+    enabled: true
+    name: radicale
+- name: Restart Radicale
+  become: yes
+  listen: Enable and start Radicale
+  ansible.builtin.systemd:
+    name: radicale
+    state: restarted
+...
