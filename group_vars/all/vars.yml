@@ -151,17 +151,8 @@ env_guest_userdata:
         ssh_authorized_keys:
         - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
     gate:
-      bootcmd:
-      - [mkdir, -p, /etc/letsencrypt]
-      disk_setups:
-        /dev/vdc: ["100"]
       fqdn: "{{ vault_env_guest_userdata['ldev']['gate']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
       hostname: gateldev
-      mounts:
-      - [/dev/vdc1, /etc/letsencrypt]
       packages:
       - fail2ban
       runcmd:
