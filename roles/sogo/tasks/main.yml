@@ -163,13 +163,13 @@
     src: /etc/apache2/sites-available/sogo.conf
     state: link
   notify: Restart Apache2
-- name: Allow HTTPS traffic from proxy to 4443 (Apache2 for SOGo)
+- name: Allow HTTPS traffic from proxy to Apache2 for SOGo
   become: yes
   community.general.ufw:
     rule: allow
     interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
-    to_port: 4443
+    to_port: "{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}"
   when: ansible_facts['default_ipv4'] is defined
 ...
