@@ -24,7 +24,7 @@ ENV PATH=/root/.local/bin:${PATH}
 
 RUN python3 -m pip install --user pre-commit
 
-RUN git clone https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd.git && \
+RUN git clone --depth 1 https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd.git && \
 	cd debian-libvirt-ansible-dfd && \
 	chmod 0700 . && \
 	pre-commit install --install-hooks && \
