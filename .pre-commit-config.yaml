@@ -63,7 +63,7 @@ repos:
   rev: v1.28.0
   hooks:
   - id: yamllint
-    args: [-c=./tests/config/yamllint.yaml]
+    args: [-c=./.yamllint]
     exclude: ^(_vendor|.*/vault.yml$)
 
 - repo: "https://github.com/zricethezav/gitleaks"
@@ -83,7 +83,7 @@ repos:
     alias: ec
     args:
     - -no-color
-    exclude: ^(LICENSE|.*/master\.cf(\.j2)?$|roles/.*/templates/(hosts\.debian\.tmpl|hosts)\.j2$)
+    exclude: ^(LICENSE|.*/master\.cf(\.j2)?$|roles/.*/templates/(hosts\.debian\.tmpl|hosts)\.j2|.yamllint$)
 
 - repo: "https://github.com/semaphor-dk/dansabel"
   rev: 0ce89b6009f628b1681a825519b683dc0f1a1392
