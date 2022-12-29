@@ -24,6 +24,7 @@
       owner: root
       src: private_cert-key.pem.j2
   - name: Add full private server cert as file
+    when: host_private_cert_full_file is defined
     ansible.builtin.template:
       dest: "{{ host_private_cert_full_file }}"
       group: root

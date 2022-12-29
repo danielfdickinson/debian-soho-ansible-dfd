@@ -1,5 +1,6 @@
 ---
 - name: Ensure apache2 present
+  become: yes
   ansible.builtin.apt:
     name:
     - apache2
