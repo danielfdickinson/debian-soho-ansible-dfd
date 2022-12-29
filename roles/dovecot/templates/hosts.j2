@@ -6,11 +6,11 @@
 #     /etc/cloud/cloud.cfg or cloud-config from user-data
 #
 127.0.1.1 {{ ansible_facts['fqdn'] }} {{ ansible_facts['hostname'] }}
-127.0.0.1 localhost sogodb
-{{ libvirt_guest_definitions['ldev']['imap']['v4addr'] }} imapldev.ldev.thecshore.ca
+127.0.0.1 localhost
+{{ libvirt_guest_definitions['ldev']['gdav']['v4addr'] }} gdavldev.ldev.thecshore.ca
 
 # The following lines are desirable for IPv6 capable hosts
-::1 ip6-localhost ip6-loopback sogodb
+::1 ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes

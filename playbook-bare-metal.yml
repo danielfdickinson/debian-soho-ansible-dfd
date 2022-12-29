@@ -10,10 +10,11 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
-- name: Use systemd-resolved exclusively for name resolution
+- name: Configure name resolution
   hosts: bare_metal
   gather_facts: true
   roles:
+  - network_hosts_fqdn_real_ip
   - network_dns_use_resolved
 
 - name: Add local ipv6 when no internet-ipv6 available
