@@ -19,8 +19,8 @@ frontend fe_http_s
 	acl path_stats path /server-stats
 	acl path_root path /
 
-	acl dom_gate hdr(host) gateldev.ldev gateldev.internal.dfd
-	acl dom_gdav hdr(host) gdavldev.ldev gdavldev.internal.dfd
+	acl dom_gate hdr(host) gateldev.ldev gateldev.ldev.thecshore.ca
+	acl dom_gdav hdr(host) gdavldev.ldev gdavldev.ldev.thecshore.ca
 
 	acl path_mal_beg path_beg -f /etc/haproxy/acl-files/mal_beg.txt
 	acl path_mal_sub path_sub -f /etc/haproxy/acl-files/mal_sub.txt
@@ -29,7 +29,7 @@ frontend fe_http_s
 	acl query_mal_sub query -m sub {{ ha_mal_query_substrings | join(' ') }}
 
 	http-request deny if path_mal_beg || path_mal_sub || path_mal_end || path_mal_host_dom || query_mal_sub
-	http-request redirect prefix https://gdavldev.internal.dfd/SOGo code 301 if path_root dom_gdav
+	http-request redirect prefix https://gdavldev.ldev.thecshore.ca/SOGo code 301 if path_root dom_gdav
 	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gate
 	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gdav
 	http-request allow if dom_gate || dom_gdav

@@ -71,8 +71,8 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 	# For Apple autoconfiguration
 	<IfModule rewrite_module>
 		RewriteEngine On
-		RewriteRule ^/.well-known/caldav/?$ /SOGo/dav [R=301]
-		RewriteRule ^/.well-known/carddav/?$ /SOGo/dav [R=301]
+		RewriteRule ^/.well-known/caldav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
+		RewriteRule ^/.well-known/carddav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
 
 		## We use mod_rewrite to pass remote address to the SOGo proxy.
 		# The remote address will appear in SOGo's log files and in the X-Forward
