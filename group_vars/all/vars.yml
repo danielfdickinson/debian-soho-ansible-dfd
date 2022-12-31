@@ -37,7 +37,7 @@ env_conn_admin:
     bastion_port: omit
     bastion_user: "{{ vault_env_conn_admin['bare_metal_local']['bastion_user'] }}"
     bastion_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['bastion_ssh_key'] }}"
-    central_local_domain: &main_central_local_domain ldev
+    central_local_domain: &main_central_local_domain ldev.thecshore.ca
     central_local_email: "{{ vault_env_conn_admin['bare_metal_local']['central_local_email'] }}"
     external_rfc1618_domain: "{{ vault_env_conn_admin['bare_metal_local']['external_rfc1618_domain'] }}"
     fallback_dns: "{{ vault_env_conn_admin['bare_metal_local']['fallback_dns'] }}"

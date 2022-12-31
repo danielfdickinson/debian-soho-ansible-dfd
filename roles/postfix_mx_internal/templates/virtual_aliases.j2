@@ -1,6 +1,6 @@
-postmaster@{{ central_local_domain }} postmaster@{{ ansible_facts['fqdn'] }}
-{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ central_local_domain ] )) %}
-postmaster@{{ vdomain }} postmaster@{{ central_local_domain }}
+postmaster@{{ internal_domain }} postmaster@{{ ansible_facts['fqdn'] }}
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ internal_domain, ansible_facts['fqdn'] ] )) %}
+postmaster@{{ vdomain }} postmaster@{{ internal_domain }}
 {% endfor %}
 {% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ central_local_domain ] )) %}
 {% for adminaddr in well_known_admin_aliases | unique %}

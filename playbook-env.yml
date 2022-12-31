@@ -81,7 +81,7 @@
     sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
 
 - name: Configure internal email senders
-  hosts: email_internal_senders:!internal_mxes
+  hosts: email_internal_senders:!internal_mxes:!external_mxes
   roles:
   - postfix_sender_internal
 
