@@ -1,0 +1,36 @@
+postmaster@{{ internal_domain }} postmaster@{{ ansible_facts['fqdn'] }}
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ internal_domain, ansible_facts['fqdn'] ] )) %}
+postmaster@{{ vdomain }} postmaster@{{ internal_domain }}
+{% endfor %}
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ central_local_domain ] )) %}
+{% for adminaddr in well_known_admin_aliases | unique %}
+{{ adminaddr }}@{{ vdomain }} {{ central_local_email }}
+{% endfor %}
+{% endfor %}
+{% for adminaddr in well_known_admin_aliases | unique | difference( [ admin_user ] ) %}
+{{ adminaddr }}@{{ central_local_domain }} {{ central_local_email }}
+{% endfor %}
+
+# Add virtual users' aliases for all but the virtual mailbox users
+{% for emailaddr in (private_email_user_aliases | unique | difference( [ admin_user, private_email_user ] )) %}
+{% for vdomain in ([virtual_mailbox_domains, virtual_alias_domains] | flatten | unique ) %}
+{{ emailaddr }}@{{ vdomain }} {{ private_email_user }}@{{ private_email_domain }}
+{% endfor %}
+{% endfor %}
+
+# Add virtual users' aliases for all but the virtual mailbox users
+{% for emailaddr in (public_email_user_aliases | unique | difference( [ admin_user, public_email_user ] )) %}
+{% for vdomain in ([virtual_mailbox_domains, virtual_alias_domains] | flatten | unique ) %}
+{{ emailaddr }}@{{ vdomain }} {{ public_email_user }}@{{ public_email_domain }}
+{% endfor %}
+{% endfor %}
+
+# Add private virtual mailbox user's aliases for all but the virtual mailbox domain
+{% for vdomain in virtual_alias_domains %}
+{{ private_email_user }}@{{ vdomain }} {{ private_email_user }}@{{ private_email_domain }}
+{% endfor %}
+
+# Add public virtual mailbox user's aliases for all but the virtual mailbox domain
+{% for vdomain in virtual_alias_domains %}
+{{ public_email_user }}@{{ vdomain }} {{ public_email_user }}@{{ public_email_domain }}
+{% endfor %}

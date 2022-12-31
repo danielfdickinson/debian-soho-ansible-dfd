@@ -93,6 +93,11 @@
   roles:
   - haproxy
 
+- name: Configure external MXes
+  hosts: external_mxes
+  roles:
+  - postfix_mx_external
+
 - name: Configure groupware
   hosts: groupware
   roles:

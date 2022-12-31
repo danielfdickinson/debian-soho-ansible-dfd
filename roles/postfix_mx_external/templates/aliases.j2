@@ -1,0 +1,8 @@
+root: {{ central_local_email }}
+
+# Basic system aliases
+MAILER-DAEMON: postmaster
+postmaster: {{ admin_user }}
+{% for admin_alias in ( well_known_admin_aliases | unique | difference( [ admin_user, "root" ]  )) %}
+{{ admin_alias }}: root
+{% endfor %}

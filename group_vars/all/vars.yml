@@ -45,6 +45,7 @@ env_conn_admin:
     internal_relay_port: "{{ vault_env_conn_admin['bare_metal_local']['internal_relay_port'] }}"
     libvirt_client_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_ssh_key'] }}"
     libvirt_client_user: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_user'] }}"
+    local_freshclam_mirror: "{{ vault_env_conn_admin['bare_metal_local']['local_freshclam_mirror'] | default(None) }}"
     local_ipv6_cidr: "{{ host_local_ipv6_cidr | default(None) }}"
     local_ipv6_gateway: "{{ host_local_ipv6_gateway | default(None) }}"
     remote_admin_ip: "{{ vault_env_conn_admin['bare_metal_local']['remote_admin_ip'] }}"
@@ -74,8 +75,13 @@ env_conn_admin:
     internal_relay_port: "{{ vault_env_conn_admin['ldev']['internal_relay_port'] }}"
     libvirt_client_ssh_key: omit
     libvirt_client_user: omit
+    local_freshclam_mirror: "{{ vault_env_conn_admin['ldev']['local_freshclam_mirror'] | default(None) }}"
     private_ca_cert_certificate: "{{ vault_env_conn_admin['ldev']['private_ca_cert_certificate'] }}"
     private_ca_cert_file: "{{ vault_env_conn_admin['ldev']['private_ca_cert_file'] }}"
+    private_email_domain: "{{ vault_env_conn_admin['ldev']['private_email_domain'] }}"
+    private_email_user: "{{ vault_env_conn_admin['ldev']['private_email_user'] }}"
+    public_email_domain: "{{ vault_env_conn_admin['ldev']['public_email_domain'] }}"
+    public_email_user: "{{ vault_env_conn_admin['ldev']['public_email_user'] }}"
     remote_admin_ip: "{{ vault_env_conn_admin['ldev']['remote_admin_ip'] }}"
     remote_monitoring_ips: "{{ vault_env_conn_admin['ldev']['remote_monitoring_ips'] }}"
     v4nat_addr: "{{ vault_env_conn_admin['ldev']['v4nat_addr'] }}"
@@ -202,22 +208,22 @@ env_guest_userdata:
         shell: /bin/bash
         ssh_authorized_keys:
         - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
-        # smtp01:
-        #   bootcmd:
-        #   - [mkdir, -p, /var/spool/postfix]
-        #   disk_setups:
-        #     /dev/vdc: ["100"]
-        #   fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
-        #   fs_setups:
-        #     "/dev/vdc":
-        #     - "1"
-        #   hostname: smtp01ldev
-        #   mounts:
-        #   - [/dev/vdc1, /var/spool/postfix]
-        #   packages:
-        #   - fail2ban
-        #   runcmd:
-        #   - [systemctl, restart, fail2ban]
+    smtp01:
+      bootcmd:
+      - [mkdir, -p, /var/spool/postfix]
+      disk_setups:
+        /dev/vdc: ["100"]
+      fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
+      fs_setups:
+        "/dev/vdc":
+        - "1"
+      hostname: smtp01ldev
+      mounts:
+      - [/dev/vdc1, /var/spool/postfix]
+      packages:
+      - fail2ban
+      runcmd:
+      - [systemctl, restart, fail2ban]
     www:
       bootcmd:
       - [mkdir, -p, /var/www]
@@ -237,6 +243,7 @@ env_guest_userdata:
 external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
 fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
 gdav_server_name_external: "{{ env_conn_admin[envname]['gdav_server_name_external'] }}"
+instance_name: "{{ (env_guest_userdata[envname] | dict2items | selectattr('value.fqdn', 'equalto', inventory_hostname)).0.key }}"
 internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"
 internal_fqdn: "{{ ansible_facts['hostname'] }}.{{ internal_domain }}"
 internal_relay_port: "{{ env_conn_admin[envname]['internal_relay_port'] }}"
@@ -246,6 +253,7 @@ libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
 libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
+local_freshclam_mirror: "{{ env_conn_admin[envname]['local_freshclam_mirror'] }}"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
 mailbox_server_address: "{{ vault_mailbox_server_address }}"
 mailbox_server_fqdn: "{{ vault_mailbox_server_fqdn }}"
@@ -260,6 +268,9 @@ public_cert_key_private_key: "{{ host_public_cert_private_key }}"
 remote_admin_ip: "{{ env_conn_admin[envname]['remote_admin_ip'] }}"
 remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
 second_interface: "{{ host_second_interface }}"
+smtp_port: "{{ vault_smtp_port }}"
+smtpd_dh_param: "{{ vault_smtpd_dh_param }}"
+smtpd_dh_param_file: "{{ vault_smtpd_dh_param_file }}"
 storage_extra_use_lvm2: "{{ host_storage_extra_use_lvm2 }}"
 storage_filesystems: "{{ host_storage_filesystems }}"
 storage_logical_volumes: "{{ host_storage_logical_volumes }}"
@@ -267,6 +278,7 @@ storage_mountpoints: "{{ host_storage_mountpoints }}"
 storage_mounts: "{{ host_storage_mounts }}"
 storage_volume_groups: "{{ host_storage_volume_groups }}"
 submission_port: "{{ vault_submission_port }}"
+submission_port_public: "{{ vault_submission_port_public }}"
 submission_relay_host: "{{ vault_submission_relay_host }}"
 submission_relay_port: "{{ vault_submission_relay_port }}"
 v6natnet_ula: "{{ env_conn_admin[envname]['v6natnet_ula'] }}"

@@ -1,0 +1,155 @@
+---
+
+- name: Use freshclam private mirror during testing to avoid rate limiting
+  become: yes
+  block:
+  - name: Prevent freshclam install from modifying our configuration
+    ansible.builtin.copy:
+      content: conf_force_conffold=YES
+      dest: /etc/ucf.conf
+      group: root
+      mode: "0644"
+      owner: root
+    when: local_freshclam_mirror is defined
+  - name: Ensure clamav directory exists
+    ansible.builtin.file:
+      path: /etc/clamav
+      group: root
+      mode: "0755"
+      owner: root
+      state: directory
+    when: local_freshclam_mirror is defined
+  - name: Create freshclam configuration that uses private mirror
+    # Note that use of a https://pypi.org/project/cvdupdate/ private
+    # mirror is recommended during testing to avoid being rate limited.
+    ansible.builtin.template:
+      dest: /etc/clamav/freshclam.conf
+      group: root
+      mode: "0644"
+      owner: root
+      src: freshclam.conf.j2
+    when: local_freshclam_mirror is defined
+- name: Ensure postfix and milters are installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - clamav-daemon
+    - clamav-milter
+    - fail2ban
+    - opendkim
+    - opendmarc
+    - postfix-policyd-spf-perl
+    - postfix
+    - spamass-milter
+    - spamassassin
+- name: Update freshclam service to fix systemd warning on start
+  become: yes
+  notify: Update clamav unit files and restart them
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/clamav-freshclam.service
+    group: root
+    mode: "0644"
+    owner: root
+    src: clamav-freshclam.service
+- name: Update clamav-daemon service to fix systemd warning on start
+  become: yes
+  notify: Update clamav unit files and restart them
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/clamav-daemon.service
+    group: root
+    mode: "0644"
+    owner: root
+    src: clamav-daemon.service
+- name: Ensure Postfix DH Param file is present (for SSL)
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ smtpd_dh_param_file }}"
+    group: postfix
+    mode: "0640"
+    owner: root
+    src: dhparam.j2
+- name: Configure postfix main.cf
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/main.cf
+    group: root
+    mode: "0644"
+    owner: root
+    src: main.cf.j2
+  notify: Restart postfix
+- name: Configure postfix master.cf
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/master.cf
+    group: root
+    mode: "0644"
+    owner: root
+    src: master.cf.j2
+  notify: Restart postfix
+- name: Configure sender addresses which should only deliver locally
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/sender_default_transport_map
+    group: root
+    mode: "0644"
+    owner: root
+    src: sender_default_transport_map.j2
+  notify: Rehash sender transport map
+- name: Configure virtual mailboxes
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/vmailbox
+    group: root
+    mode: "0644"
+    owner: root
+    src: vmailbox.j2
+  notify: Rehash virtual mailboxes
+- name: Configure virtual aliases
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/virtual_aliases
+    group: root
+    mode: "0644"
+    owner: root
+    src: virtual_aliases.j2
+  notify: Rehash virtual aliases
+- name: Configure system email aliases
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/aliases
+    group: root
+    mode: "0644"
+    owner: root
+    src: aliases.j2
+  notify: Apply email aliases
+- name: Add Fail2Ban configuration for Postfix
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/fail2ban/jail.d/mx.local
+    group: root
+    mode: "0644"
+    owner: root
+    src: mx_jail.local.j2
+  notify: Restart Fail2Ban
+- name: Allow SMTP from external sources
+  become: yes
+  community.general.ufw:
+    rule: allow
+    direction: in
+    proto: tcp
+    to_port: "{{ smtp_port }}"
+- name: Allow backup MX SMTP on alternate port
+  become: yes
+  community.general.ufw:
+    rule: allow
+    direction: in
+    proto: tcp
+    to_port: "{{ backupmx_port }}"
+- name: Allow Submission on alternate port
+  become: yes
+  community.general.ufw:
+    rule: allow
+    direction: in
+    proto: tcp
+    to_port: "{{ submission_relay_port }}"
+...
