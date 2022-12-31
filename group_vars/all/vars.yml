@@ -242,6 +242,7 @@ env_guest_userdata:
       - [systemctl, restart, fail2ban]
 external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
 fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
+gdav_port: "{{ libvirt_guest_definitions[envname][instance_name]['gdav_port'] }}"
 gdav_server_name_external: "{{ env_conn_admin[envname]['gdav_server_name_external'] }}"
 instance_name: "{{ (env_guest_userdata[envname] | dict2items | selectattr('value.fqdn', 'equalto', inventory_hostname)).0.key }}"
 internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"

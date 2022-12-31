@@ -5,9 +5,9 @@
 # Listen 80
 
 <IfModule ssl_module>
-	Listen {{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}
+	Listen {{ gdav_port }}
 </IfModule>
 
 <IfModule mod_gnutls.c>
-	Listen {{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}
+	Listen {{ gdav_port }}
 </IfModule>

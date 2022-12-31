@@ -25,7 +25,7 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 # https://ssl-config.mozilla.org/#server=apache&version=2.4.54&config=modern&openssl=1.1.1n&hsts=false&ocsp=false&guideline=5.6
 
 # this configuration requires mod_ssl
-<VirtualHost *:{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}>
+<VirtualHost *:{{ gdav_port }}>
 	# ServerName {{ gdav_server_name_external }}
 	SSLEngine On
 	SSLCACertificateFile {{ env_conn_admin[envname]['private_ca_cert_file'] }}
