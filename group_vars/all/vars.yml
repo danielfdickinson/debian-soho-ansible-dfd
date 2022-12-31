@@ -86,6 +86,7 @@ env_conn_admin:
     v6nat_prefix: "{{ vault_env_conn_admin['ldev']['v6nat_prefix'] }}"
     v6natnet_ula: "{{ vault_env_conn_admin['ldev']['v6natnet_ula'] }}"
     vbridge: "{{ vault_env_conn_admin['ldev']['vbridge'] }}"
+    virtual_alias_domains: "{{ vault_env_conn_admin['ldev']['virtual_alias_domains'] }}"
 env_default_userdata:
   ldev:
     apt:
@@ -246,6 +247,8 @@ libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
+mailbox_server_address: "{{ vault_mailbox_server_address }}"
+mailbox_server_fqdn: "{{ vault_mailbox_server_fqdn }}"
 mailbox_users: "{{ vault_mailbox_users }}"
 private_client_cert_full_file: "{{ host_private_client_cert_cert_file | replace('-cert', '-full') | default(None) }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
@@ -267,5 +270,9 @@ submission_port: "{{ vault_submission_port }}"
 submission_relay_host: "{{ vault_submission_relay_host }}"
 submission_relay_port: "{{ vault_submission_relay_port }}"
 v6natnet_ula: "{{ env_conn_admin[envname]['v6natnet_ula'] }}"
+virtual_alias_domains: "{{ [env_conn_admin[envname]['virtual_alias_domains'], virtual_alias_domains_hosts] | flatten | unique }}"
+virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ansible_facts') | reject('eq', {}) | map(attribute='fqdn'), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique }}"
+virtual_mailbox_domains:
+- "{{ central_local_domain }}"
 well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
 ...

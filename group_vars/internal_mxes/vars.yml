@@ -1,7 +1,0 @@
----
-mx_mail_users: "{{ vault_mx_mail_users }}"
-virtual_mailbox_domains:
-- "{{ central_local_domain }}"
-virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ansible_facts') | reject('eq', {}) | map(attribute='fqdn'), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique }}"
-virtual_alias_domains: "{{ [vault_virtual_alias_domains, virtual_alias_domains_hosts] | flatten | unique }}"
-...
