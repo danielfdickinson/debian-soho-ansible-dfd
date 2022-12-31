@@ -1,5 +1,5 @@
 ---
-- name: Configure postfix as an email sender (only to own server)
+- name: Configure postfix as an email receiver (internal only)
   become: yes
   block:
   - name: Ensure postfix is installed
@@ -22,7 +22,7 @@
       owner: root
       src: master.cf.j2
     notify: Restart postfix
-  - name: Configure sender addresses to only deliver locally
+  - name: Configure sender addresses which should only deliver locally
     ansible.builtin.template:
       dest: /etc/postfix/sender_default_transport_map
       group: root
