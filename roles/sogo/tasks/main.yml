@@ -163,13 +163,24 @@
     src: /etc/apache2/sites-available/sogo.conf
     state: link
   notify: Restart Apache2
-- name: Allow HTTPS traffic from proxy to Apache2 for SOGo
+- name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v4)
   become: yes
   community.general.ufw:
     rule: allow
     interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
-    to_port: "{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}"
+    src: "{{ libvirt_guest_definitions[envname]['gate']['v4addr'] }}"
+    to_port: "{{ gdav_port }}"
+  when: ansible_facts['default_ipv4'] is defined
+- name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v6)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
+    direction: in
+    proto: tcp
+    src: "{{ libvirt_guest_definitions[envname]['gate']['v6addr'] }}"
+    to_port: "{{ gdav_port }}"
   when: ansible_facts['default_ipv4'] is defined
 ...
