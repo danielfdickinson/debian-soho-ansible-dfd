@@ -14,13 +14,11 @@ ssl_min_protocol = TLSv1.2
 ssl_prefer_server_ciphers = no
 # For Dovecot acting as client (e.g. submission)
 imap_client_workarounds = tb-extra-mailbox-sep tb-lsub-flags
-{# TODO: Add once smtp01 is configured
 submission_max_recipients = 20
 submission_relay_host = {{ submission_relay_host }}
 submission_relay_port = {{ submission_relay_port }}
 submission_relay_trusted = yes
 submission_relay_ssl = starttls
-#}
 local 0.0.0.0 {
 	protocol lmtp {
 		ssl_cert = <{{ host_private_cert_cert_file }}
