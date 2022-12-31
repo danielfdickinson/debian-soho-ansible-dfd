@@ -34,6 +34,7 @@ apop
 autocreation
 autofix
 backupmx
+bkmx
 brycewray
 bsdauth
 caldav
@@ -45,6 +46,8 @@ chrony
 chronyd
 cifs
 ciphersuites
+clamav
+clamd
 danielfdickinson
 dansabel
 davidsneighbour
@@ -74,12 +77,15 @@ envname
 equalto
 errorfile
 fdbc
+ffdhe
 forwardfor
 fstype
 gateldev
 gdav
 gdavldev
 gecos
+genparam
+genpkey
 gethostname
 gitleaks
 gitlint
@@ -144,6 +150,7 @@ noexec
 noninteractive
 nosuid
 numad
+opendmarc
 oqmgr
 ovmf
 passdb
@@ -151,6 +158,8 @@ passdbs
 passwdfile
 pautoout
 pdefout
+pkeyopt
+policyd
 posix
 postlog
 postlogd
@@ -185,6 +194,7 @@ skel
 smtpd
 sogo
 sogodb
+spamhaus
 spampolice
 sslv
 starttls
@@ -218,3 +228,4 @@ vmail
 vmailbox
 winbind
 wwwldev
+xclient
