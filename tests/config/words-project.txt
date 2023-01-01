@@ -1,4 +1,6 @@
 CHACHA
+DKIM
+DMARC
 DN's
 DNAT
 ESMTP
@@ -15,6 +17,7 @@ NOPASSWD
 NOSUPERUSER
 OCSE
 OCSP
+OLEVB
 RBWARNTIME
 Referer
 SASL
@@ -111,6 +114,8 @@ keytab
 kvm
 ldev
 leastconn
+libarchive
+libio
 libpq
 libvirtd
 linebreak

@@ -76,6 +76,7 @@ env_conn_admin:
     libvirt_client_ssh_key: omit
     libvirt_client_user: omit
     local_freshclam_mirror: "{{ vault_env_conn_admin['ldev']['local_freshclam_mirror'] | default(None) }}"
+    opendkim_private_key: "{{ vault_env_conn_admin[envname]['opendkim_private_key'] }}"
     private_ca_cert_certificate: "{{ vault_env_conn_admin['ldev']['private_ca_cert_certificate'] }}"
     private_ca_cert_file: "{{ vault_env_conn_admin['ldev']['private_ca_cert_file'] }}"
     private_email_domain: "{{ vault_env_conn_admin['ldev']['private_email_domain'] }}"
@@ -260,6 +261,7 @@ mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destina
 mailbox_server_address: "{{ vault_mailbox_server_address }}"
 mailbox_server_fqdn: "{{ vault_mailbox_server_fqdn }}"
 mailbox_users: "{{ vault_mailbox_users }}"
+opendkim_private_key: "{{ env_conn_admin[envname]['opendkim_private_key'] }}"
 private_ca_cert_certificate: "{{ env_conn_admin[envname]['private_ca_cert_certificate'] }}"
 private_ca_cert_file: "{{ env_conn_admin[envname]['private_ca_cert_file'] }}"
 private_client_cert_cert_content: "{{ host_private_client_cert_cert_content }}"

@@ -37,31 +37,49 @@
       name: postfix
       state: present
       system: true
-  - name: Set milter log to syslog
+  - name: Set clamav milter log to syslog
     ansible.builtin.debconf:
       name: clamav-milter
       question: clamav-milter/LogSyslog
       value: "true"
       vtype: boolean
-  - name: Support multiple recipients
+  - name: Support multiple recipients (clamav)
     ansible.builtin.debconf:
       name: clamav-milter
       question: clamav-milter/SupportMultipleRecipients
       value: "true"
       vtype: boolean
-  - name: Set milter socket location
+  - name: Set clamav milter to reject infected messages
+    ansible.builtin.debconf:
+      name: clamav-milter
+      question: clamav-milter/OnInfected
+      value: Reject
+      vtype: select
+  - name: Set clamav milter to log infected messages
+    ansible.builtin.debconf:
+      name: clamav-milter
+      question: clamav-milter/LogInfected
+      value: Basic
+      vtype: select
+  - name: Set clamav milter rejection messages for infected email
+    ansible.builtin.debconf:
+      name: clamav-milter
+      question: clamav-milter/RejectMsg
+      value: Rejected - detected malicious content in message (%v)
+      vtype: string
+  - name: Set clamav milter socket location
     ansible.builtin.debconf:
       name: clamav-milter
       question: clamav-milter/MilterSocket
-      value: /var/spool/postfix/clamav-milter.ctl
+      value: /var/spool/postfix/clamav/clamav-milter.ctl
       vtype: string
-  - name: Set milter socket group
+  - name: Set clamav milter socket group
     ansible.builtin.debconf:
       name: clamav-milter
       question: clamav-milter/MilterSocketGroup
       value: postfix
       vtype: string
-  - name: Set milter socket mode
+  - name: Set clamav milter socket mode
     ansible.builtin.debconf:
       name: clamav-milter
       question: clamav-milter/MilterSocketMode
@@ -74,12 +92,71 @@
     - clamav-daemon
     - clamav-milter
     - fail2ban
+    - libarchive-zip-perl
+    - libio-string-perl
     - opendkim
     - opendmarc
-    - postfix-policyd-spf-perl
+    - postfix-policyd-spf-python
     - postfix
     - spamass-milter
     - spamassassin
+- name: Ensure postfix is a member of opendkim and opendmarc
+  become: yes
+  ansible.builtin.user:
+    name: postfix
+    append: true
+    home: /var/spool/postfix
+    groups:
+    - opendkim
+    - opendmarc
+    password_lock: true
+    shell: /usr/sbin/nologin
+    state: present
+    system: true
+  notify: Restart postfix
+- name: Ensure opendkim socket directory exists
+  become: yes
+  ansible.builtin.file:
+    dest: /var/spool/postfix/opendkim
+    group: postfix
+    mode: "0750"
+    owner: opendkim
+    state: directory
+- name: Configure OpenDKIM
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/opendkim.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: opendkim.conf.j2
+  notify: Restart opendkim
+- name: Copy opendkim private keys from local to remote
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/dkimkeys/{{ opendkim_private_key.selector }}.private
+    group: opendkim
+    mode: "0600"
+    owner: opendkim
+    src: "{{ opendkim_private_key.src_path }}/{{ opendkim_private_key.selector }}.private"
+  notify: Restart opendkim
+- name: Ensure opendmarc socket directory exists
+  become: yes
+  ansible.builtin.file:
+    dest: /var/spool/postfix/opendmarc
+    group: postfix
+    mode: "0750"
+    owner: opendmarc
+    state: directory
+- name: Configure OpenDMARC
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/opendmarc.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: opendmarc.conf.j2
+  notify: Restart opendmarc
 - name: Configure spamd startup
   become: yes
   ansible.builtin.copy:
@@ -113,6 +190,15 @@
     owner: root
     src: spamass-milter.default
   notify: Restart spamass-milter
+- name: Configure SPF policyd server
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/postfix-policyd-spf-python/policyd-spf.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: policyd-spf.conf
+  notify: Restart postfix
 - name: Update freshclam service to fix systemd warning on start
   become: yes
   notify: Update clamav unit files and restart them

@@ -19,7 +19,7 @@ OPTIONS="${OPTIONS} -r 12"
 OPTIONS="${OPTIONS} -m"
 
 # Set spamc options
-OPTIONS="${OPTIONS} -- --socket=/run/spamd.sock --username=spamass-milter"
+OPTIONS="${OPTIONS} -- --socket=/run/spamd.sock --username=spamass-milter --max-size=26214400"
 
 ######################################
 # If /usr/sbin/postfix is executable, the following are set by
