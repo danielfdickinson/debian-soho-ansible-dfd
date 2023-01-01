@@ -11,6 +11,7 @@
 # ==========================================================================
 smtp       inet  n       -       y       -       -       smtpd
   -o syslog_name=postfix/smtpd
+  -o smtpd_milters=$mta_milters
   -o smtpd_recipient_restrictions=$mta_recipient_restrictions
   -o smtpd_relay_restrictions=$mta_relay_restrictions
   -o smtpd_sasl_auth_enable=$mta_sasl_auth_enable
@@ -47,6 +48,9 @@ smtp       inet  n       -       y       -       -       smtpd
 0.0.0.0:{{  submission_relay_port }} inet n   -       y       -       -       smtpd
   -o syslog_name=postfix/submission
   -o smtpd_authorized_xclient_hosts=$mua_authorized_xclient_hosts
+  -o smtpd_milters=$mua_milters
+  -o smtpd_recipient_restrictions=$mua_recipient_restrictions
+  -o smtpd_relay_restrictions=$mua_relay_restrictions
   -o smtpd_sasl_auth_enable=$mua_sasl_auth_enable
   -o smtpd_sender_restrictions=$mua_sender_restrictions
   -o smtpd_tls_auth_only=$mua_tls_auth_only
@@ -106,6 +110,9 @@ postlog   unix-dgram n  -       n       -       1       postlogd
 # and other message envelope options.
 # ====================================================================
 #
+spfcheck  unix  -       n       n       -       0       spawn
+  user=policyd-spf argv=/usr/sbin/postfix-policyd-spf-perl
+
 #mailman   unix  -       n       n       -       -       pipe
 #  flags=FRX user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
 #  ${nexthop} ${user}

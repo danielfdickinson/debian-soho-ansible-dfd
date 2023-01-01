@@ -100,6 +100,7 @@ httplog
 httpv
 idata
 iface
+ifplugin
 ifup
 ignoreip
 imapd
@@ -149,6 +150,7 @@ nodev
 noexec
 noninteractive
 nosuid
+nouser
 numad
 opendmarc
 oqmgr
@@ -194,6 +196,8 @@ skel
 smtpd
 sogo
 sogodb
+spamc
+spamd
 spamhaus
 spampolice
 sslv
@@ -226,6 +230,7 @@ virtio
 virusalert
 vmail
 vmailbox
+vtype
 winbind
 wwwldev
 xclient

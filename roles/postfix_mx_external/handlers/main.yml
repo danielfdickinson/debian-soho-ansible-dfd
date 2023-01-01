@@ -38,4 +38,14 @@
   ansible.builtin.systemd:
     name: fail2ban
     state: restarted
+- name: Restart spamd
+  become: yes
+  ansible.builtin.systemd:
+    name: spamassassin
+    state: restarted
+- name: Restart spamass-milter
+  become: yes
+  ansible.builtin.systemd:
+    name: spamass-milter
+    state: restarted
 ...
