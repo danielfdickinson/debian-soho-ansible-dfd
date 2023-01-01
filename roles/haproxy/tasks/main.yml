@@ -1,106 +1,113 @@
 ---
-- name: Configure HAProxy
+- name: Ensure HAproxy present
   become: yes
-  block:
-  - name: Ensure HAproxy present
-    ansible.builtin.apt:
-      name:
-      - haproxy
-      state: present
-  - name: Create/Update HAProxy SystemD service file
-    ansible.builtin.copy:
-      dest: /etc/systemd/system/haproxy.service
-      group: root
-      mode: "0644"
-      owner: root
-      src: haproxy.service
-    notify: Restart haproxy service
-  - name: Ensure HAProxy configuration directory exists
-    ansible.builtin.file:
-      path: /etc/haproxy/haproxy.cfg.d
-      group: root
-      mode: "0750"
-      owner: root
-      state: directory
-  - name: Ensure HAProxy ACL files directory exists
-    ansible.builtin.file:
-      path: /etc/haproxy/acl-files
-      group: root
-      mode: "0750"
-      owner: root
-      state: directory
-  - name: Create/Update HAProxy configuration static files
-    ansible.builtin.copy:
-      dest: /etc/haproxy/haproxy.cfg.d/
-      group: root
-      mode: "0640"
-      owner: root
-      src: haproxy.cfg.d/
-    notify: Restart haproxy
-  - name: Create HAProxy DHParam file
-    ansible.builtin.template:
-      dest: "{{ ha_dhparam_file }}"
-      group: haproxy
-      mode: "0640"
-      owner: root
-      src: dhparam.j2
-    notify: Reload haproxy
-  - name: Create/Update HAProxy DHParam configuration
-    ansible.builtin.template:
-      dest: /etc/haproxy/haproxy.cfg.d/10-20-global-dhparam.cfg
-      group: root
-      mode: "0640"
-      owner: root
-      src: haproxy.cfg.d/10-20-global-dh-param.cfg.j2
-    notify: Reload haproxy
-  - name: Create/Update HAProxy stats userlist configuration
-    ansible.builtin.template:
-      dest: /etc/haproxy/haproxy.cfg.d/20-10-userlist-stats.cfg
-      group: root
-      mode: "0640"
-      owner: root
-      src: haproxy.cfg.d/20-10-userlist-stats.cfg.j2
-    notify: Restart haproxy
-  - name: Create/Update HAProxy http_s frontend main configuration
-    ansible.builtin.template:
-      dest: /etc/haproxy/haproxy.cfg.d/50-10-frontends-http_s-main.cfg
-      group: root
-      mode: "0640"
-      owner: root
-      src: haproxy.cfg.d/50-10-frontends-http_s-main.cfg.j2
-    notify: Restart haproxy
-  - name: Create/Update HAProxy sogo backend configuration
-    ansible.builtin.template:
-      dest: /etc/haproxy/haproxy.cfg.d/70-14-backends-sogo.cfg
-      group: root
-      mode: "0640"
-      owner: root
-      src: haproxy.cfg.d/70-14-backends-sogo.cfg.j2
-    notify: Restart haproxy
-  - name: Create/Update HAProxy mal beginnings ACL file
-    ansible.builtin.template:
-      dest: /etc/haproxy/acl-files/mal_beg.txt
-      group: root
-      mode: "0640"
-      owner: root
-      src: acl-files/mal_beg.txt.j2
-    notify: Reload haproxy
-  - name: Create/Update HAProxy mal endings ACL file
-    ansible.builtin.template:
-      dest: /etc/haproxy/acl-files/mal_end.txt
-      group: root
-      mode: "0640"
-      owner: root
-      src: acl-files/mal_end.txt.j2
-    notify: Reload haproxy
-  - name: Create/Update HAProxy mal substrings ACL file
-    ansible.builtin.template:
-      dest: /etc/haproxy/acl-files/mal_sub.txt
-      group: root
-      mode: "0640"
-      owner: root
-      src: acl-files/mal_sub.txt.j2
-    notify: Reload haproxy
+  ansible.builtin.apt:
+    name:
+    - haproxy
+    state: present
+- name: Create/Update HAProxy SystemD service file
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/haproxy.service
+    group: root
+    mode: "0644"
+    owner: root
+    src: haproxy.service
+  notify: Restart haproxy service
+- name: Ensure HAProxy configuration directory exists
+  become: yes
+  ansible.builtin.file:
+    path: /etc/haproxy/haproxy.cfg.d
+    group: root
+    mode: "0750"
+    owner: root
+    state: directory
+- name: Ensure HAProxy ACL files directory exists
+  become: yes
+  ansible.builtin.file:
+    path: /etc/haproxy/acl-files
+    group: root
+    mode: "0750"
+    owner: root
+    state: directory
+- name: Create/Update HAProxy configuration static files
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/haproxy/haproxy.cfg.d/
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/
+  notify: Restart haproxy
+- name: Create HAProxy DHParam file
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ ha_dhparam_file }}"
+    group: haproxy
+    mode: "0640"
+    owner: root
+    src: dhparam.j2
+  notify: Reload haproxy
+- name: Create/Update HAProxy DHParam configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/haproxy/haproxy.cfg.d/10-20-global-dhparam.cfg
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/10-20-global-dh-param.cfg.j2
+  notify: Reload haproxy
+- name: Create/Update HAProxy stats userlist configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/haproxy/haproxy.cfg.d/20-10-userlist-stats.cfg
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/20-10-userlist-stats.cfg.j2
+  notify: Restart haproxy
+- name: Create/Update HAProxy http_s frontend main configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/haproxy/haproxy.cfg.d/50-10-frontends-http_s-main.cfg
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/50-10-frontends-http_s-main.cfg.j2
+  notify: Restart haproxy
+- name: Create/Update HAProxy sogo backend configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/haproxy/haproxy.cfg.d/70-14-backends-sogo.cfg
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/70-14-backends-sogo.cfg.j2
+  notify: Restart haproxy
+- name: Create/Update HAProxy webhost backend configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/haproxy/haproxy.cfg.d/70-80-backends-webhost.cfg
+    group: root
+    mode: "0640"
+    owner: root
+    src: haproxy.cfg.d/70-80-backends-webhost.cfg.j2
+  notify: Restart haproxy
+- name: Create/Update HAProxy ACL files
+  become: yes
+  loop:
+  - mal_beg
+  - mal_end
+  - mal_sub
+  - web_nowww
+  - web_www
+  ansible.builtin.template:
+    dest: /etc/haproxy/acl-files/{{ item }}.txt
+    group: root
+    mode: "0640"
+    owner: root
+    src: acl-files/{{ item }}.txt.j2
+  notify: Reload haproxy
 - name: Configure firewall
   become: yes
   block:

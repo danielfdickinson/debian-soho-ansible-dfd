@@ -38,6 +38,7 @@ autocreation
 autofix
 backupmx
 bkmx
+brotli
 brycewray
 bsdauth
 caldav
@@ -149,6 +150,7 @@ netaddr
 netaddrs
 newaliases
 nexthop
+noadd
 nocloud
 nocows
 nodev
@@ -156,6 +158,7 @@ noexec
 noninteractive
 nosuid
 nouser
+nowww
 numad
 opendmarc
 oqmgr
@@ -190,6 +193,8 @@ remoteip
 resizefs
 resolv
 rproxy
+rsync
+rsyncd
 rsyslog
 rubygems
 scache
@@ -228,6 +233,7 @@ vcpu
 vdomain
 vfat
 vgname
+vhost
 virbr
 virsh
 virt

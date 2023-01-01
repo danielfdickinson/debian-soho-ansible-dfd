@@ -1,0 +1,10 @@
+{% if webhosts_add_www is defined %}
+{% for webhost_add_www in webhosts_add_www %}
+www.{{ webhost_add_www }}
+{% endfor %}
+{% endif %}
+{% if webhosts_noadd_www is defined %}
+{% for webhost_noadd_www in webhosts_noadd_www %}
+{{ webhost_noadd_www }}
+{% endfor %}
+{% endif %}

@@ -94,6 +94,9 @@ env_conn_admin:
     v6natnet_ula: "{{ vault_env_conn_admin['ldev']['v6natnet_ula'] }}"
     vbridge: "{{ vault_env_conn_admin['ldev']['vbridge'] }}"
     virtual_alias_domains: "{{ vault_env_conn_admin['ldev']['virtual_alias_domains'] }}"
+    webhosts_add_www: "{{ vault_env_conn_admin['ldev']['webhosts_add_www'] | default(None) }}"
+    webhosts_noadd_www: "{{ vault_env_conn_admin['ldev']['webhosts_noadd_www'] | default(None) }}"
+    websites_static: "{{ vault_env_conn_admin['ldev']['websites_static'] }}"
 env_default_userdata:
   ldev:
     apt:
@@ -308,4 +311,7 @@ virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ans
 virtual_mailbox_domains:
 - "{{ central_local_domain }}"
 well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
+webhosts_add_www: "{{ env_conn_admin[envname]['webhosts_add_www'] }}"
+webhosts_noadd_www: "{{ env_conn_admin[envname]['webhosts_noadd_www'] }}"
+websites_static: "{{ env_conn_admin[envname]['websites_static'] }}"
 ...

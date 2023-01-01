@@ -85,11 +85,6 @@
   roles:
   - postfix_sender_internal
 
-- name: Configure external (edge) reverse proxy
-  hosts: rproxy_external
-  roles:
-  - haproxy
-
 - name: Configure external MXes
   hosts: external_mxes
   roles:
@@ -104,4 +99,7 @@
   hosts: website_servers:rproxy_internal
   roles:
   - apache2_proxy_protocol
+
+- name: Include websites and reverse proxy playbook (which can also be standalone)
+  ansible.builtin.import_playbook: playbook-web-external.yml
 ...

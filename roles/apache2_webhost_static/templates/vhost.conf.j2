@@ -1,0 +1,12 @@
+<VirtualHost *:443>
+	# ServerName {{ item.fqdn }}
+
+	# enable HTTP/2, if available
+	Protocols h2 http/1.1
+	AddDefaultCharset UTF-8
+
+	DocumentRoot /var/www/{{ item.fqdn }}
+
+	ErrorLog ${APACHE_LOG_DIR}/error_{{ item.fqdn }}.log
+	Customlog ${APACHE_LOG_DIR}/access_{{ item.fqdn }}.log combined
+</VirtualHost>
