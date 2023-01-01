@@ -254,6 +254,7 @@ libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
 libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
+lmtp_port: "{{ vault_lmtp_port }}"
 local_freshclam_mirror: "{{ env_conn_admin[envname]['local_freshclam_mirror'] }}"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
 mailbox_server_address: "{{ vault_mailbox_server_address }}"
