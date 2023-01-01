@@ -111,7 +111,10 @@
     state: present
   loop:
   - ssl
+  - brotli
+  - expires
   - headers
+  - http2
   - proxy
   - proxy_http
   - rewrite
