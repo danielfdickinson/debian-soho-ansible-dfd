@@ -1,4 +1,10 @@
 backend be_webhost
 	balance roundrobin
 
+	stick-table type ip size 2m expire 10m store http_req_rate(10s)
+	acl suspect_scan sc2_http_req_rate gt 100
+	acl suspected_abuser sc0_inc_gpc0(fe_http_s) gt 0
+	tcp-request content track-sc2 src
+	tcp-request content reject if suspect_scan suspected_abuser
+
 	server webhost01 wwwldev.ldev:443 send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ env_conn_admin[envname]['private_ca_cert_file'] }} verify required

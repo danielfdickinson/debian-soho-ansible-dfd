@@ -15,6 +15,12 @@ frontend fe_http_s
 	filter cache main
 	filter compression
 
+	# Use General Purpose Counter 0 in SC0 as a global abuse counter
+	# protecting all our sites
+	stick-table type ip size 2m expire 10m store gpc0
+	tcp-request connection track-sc0 src
+	tcp-request connection reject if { sc0_get_gpc0 gt 0 }
+
 	acl path_acme path_beg /.well-known/acme-challenge/
 	acl path_stats path /server-stats
 	acl path_root path /
@@ -44,3 +50,5 @@ frontend fe_http_s
 	use_backend be_webhost if dom_web_nowww || dom_web_www
 	use_backend be_sogo if dom_gdav
 	use_backend be_server_stats if path_stats dom_gate
+
+	default_backend be_dummy
