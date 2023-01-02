@@ -83,6 +83,32 @@
     src: /etc/apache2/sites-available/{{ item.fqdn }}.conf
     state: link
   notify: Restart Apache2
+- name: Ensure VHost site operators exist
+  become: yes
+  loop: "{{ websites_static }}"
+  ansible.builtin.user:
+    name: "{{ item.operator }}"
+    password_lock: true
+    shell: /bin/bash
+    state: present
+- name: Ensure VHost webroots exist
+  become: yes
+  loop: "{{ websites_static }}"
+  ansible.builtin.file:
+    path: /var/www/{{ item.fqdn }}
+    group: "{{ item.operator }}"
+    mode: "0775"
+    owner: "{{ item.operator }}"
+    state: directory
+- name: Provide a default homepage if site is empty
+  become: yes
+  loop: "{{ websites_static }}"
+  ansible.builtin.copy:
+    dest: /var/www/{{ item.fqdn }}/index.html
+    group: "{{ item.operator }}"
+    mode: "0664"
+    owner: "{{ item.operator }}"
+    src: index.html
 - name: Allow HTTPS in
   become: yes
   community.general.ufw:
