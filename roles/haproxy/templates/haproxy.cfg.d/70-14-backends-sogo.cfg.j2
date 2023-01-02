@@ -7,4 +7,4 @@ backend be_sogo
 	tcp-request content track-sc1 src
 	tcp-request content reject if suspect_scan suspected_abuser
 
-	server sogo01 gdavldev.ldev:{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ env_conn_admin[envname]['private_ca_cert_file'] }} verify required
+	server sogo01 gdavldev.ldev:{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ env_conn_admin[envname]['private_ca_cert_file'] }} verify required alpn h2,http/1.1
