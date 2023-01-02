@@ -81,6 +81,8 @@
 - name: Configure VHosts
   become: yes
   loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
   ansible.builtin.template:
     dest: /etc/apache2/sites-available/{{ item.fqdn }}.conf
     group: root
@@ -91,6 +93,8 @@
 - name: Enable VHosts
   become: yes
   loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
   ansible.builtin.file:
     path: /etc/apache2/sites-enabled/{{ item.fqdn }}.conf
     src: /etc/apache2/sites-available/{{ item.fqdn }}.conf
@@ -99,6 +103,8 @@
 - name: Ensure VHost site operators exist
   become: yes
   loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
   ansible.builtin.user:
     name: "{{ item.operator }}"
     password_lock: true
@@ -107,21 +113,62 @@
 - name: Ensure VHost webroots exist
   become: yes
   loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
   ansible.builtin.file:
     path: /var/www/{{ item.fqdn }}
     group: "{{ item.operator }}"
     mode: "0775"
-    owner: "{{ item.operator }}"
+    owner: root
     state: directory
 - name: Provide a default homepage if site is empty
   become: yes
   loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
   ansible.builtin.copy:
     dest: /var/www/{{ item.fqdn }}/index.html
+    force: false
     group: "{{ item.operator }}"
-    mode: "0664"
+    mode: "0644"
     owner: "{{ item.operator }}"
     src: index.html
+- name: Ensure rsync is installed
+  become: yes
+  ansible.builtin.apt:
+    name: rsync
+    state: present
+- name: Setup admin access to site operator home (for rsyncd.conf)
+  become: yes
+  loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
+  ansible.builtin.file:
+    path: /home/{{ item.operator }}
+    group: "{{ admin_user }}"
+    mode: "0750"
+    owner: "{{ item.operator }}"
+    state: directory
+- name: Setup admin access to site operator rsyncd.conf
+  become: yes
+  loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
+  ansible.builtin.template:
+    dest: /home/{{ item.operator }}/rsyncd.conf
+    group: "{{ admin_user }}"
+    mode: "0664"
+    owner: root
+    src: rsyncd-website.conf.j2
+- name: Enable SSH (and therefore rsync)) for site operators
+  become: yes
+  loop: "{{ websites_static }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
+  ansible.posix.authorized_key:
+    key: "{{ item.ssh_key }}"
+    user: "{{ item.operator }}"
+    state: present
 - name: Allow HTTPS in
   become: yes
   community.general.ufw:
