@@ -108,6 +108,15 @@
     owner: root
     src: acl-files/{{ item }}.txt.j2
   notify: Reload haproxy
+- name: Add HAProxy AUTH Fail2Ban config
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/jail.d/haproxy.local
+    group: root
+    mode: "0644"
+    owner: root
+    src: haproxy_jail.local
+  notify: Restart Fail2Ban
 - name: Configure firewall
   become: yes
   block:

@@ -15,4 +15,9 @@
   ansible.builtin.systemd:
     name: haproxy
     state: reloaded
+- name: Restart Fail2Ban
+  become: yes
+  ansible.builtin.systemd:
+    name: fail2ban
+    state: restarted
 ...
