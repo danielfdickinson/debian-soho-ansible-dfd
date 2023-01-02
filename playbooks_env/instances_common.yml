@@ -1,0 +1,17 @@
+---
+- name: Ensure required variables are supplied on command line
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      quiet: true
+      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+
+- name: Configure internal email senders
+  hosts: email_internal_senders:!internal_mxes:!external_mxes
+  roles:
+  - postfix_sender_internal
+...

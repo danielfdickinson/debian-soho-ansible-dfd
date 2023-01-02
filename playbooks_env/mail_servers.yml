@@ -1,0 +1,32 @@
+---
+- name: Ensure required variables are supplied on command line
+  hosts: mail_servers:internal_mxes:external_mxes
+  gather_facts: false
+  pre_tasks:
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      quiet: true
+      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+
+- name: Configure IMAP (mailbox) servers
+  hosts: mailbox_servers
+  roles:
+  - dovecot
+  vars:
+    health_check_port_dovecot: "{{ libvirt_guest_definitions[envname][instance_name]['health_check_port_dovecot'] }}"
+    imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
+    remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
+    sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
+
+- name: Configure internal MXes
+  hosts: internal_mxes
+  roles:
+  - postfix_mx_internal
+
+- name: Configure external MXes
+  hosts: external_mxes
+  roles:
+  - postfix_mx_external
+...

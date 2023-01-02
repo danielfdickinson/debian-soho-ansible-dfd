@@ -1,105 +1,19 @@
 ---
-- name: Ensure required variables are supplied on command line
-  hosts: bastions
-  gather_facts: false
-  pre_tasks:
-  - name: Ensure given environment is valid
-    ansible.builtin.assert:
-      that:
-      - envname in group_names
-      quiet: true
-      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+- name: Include bastions playbook (which can also be standalone)
+  ansible.builtin.import_playbook: playbooks_env/bastions.yml
 
-- name: Configure bastions in order to access other guests
-  hosts: bastions
-  gather_facts: true
-  roles:
-  - packages_base
-  - user_bastion_user_add
-  - packages_ssh_proxy
-  - fail2ban_ssh
-  - packages_firmware
+- name: Include instances base playbook (which can also be standalone)
+  ansible.builtin.import_playbook: playbooks_env/instances_base.yml
 
-- name: For all guests, add a password to admin user
-  hosts: all
-  gather_facts: true
-  roles:
-  - user_admin_add_password
+- name: Include certificates playbook (which can also be standalone)
+  ansible.builtin.import_playbook: playbooks_env/certificates.yml
 
-- name: For externally-exposed (edge) hosts, enable Fail2Ban
-  hosts: edge_hosts
-  roles:
-  - fail2ban
-
-- name: Except bastions, install base packages and firmware, and reboot guests
-  hosts: all:!libvirtd_hosts:!bastions
-  # Avoid connectivity issues by not rebooting vm host or bastion
-  roles:
-  - packages_base
-  - packages_firmware
-
-- name: Configure OVH (BHS) clients for backups
-  hosts: backup_clients:&ovh_bhs
-  roles:
-  - backup_ovh
-
-- name: Configure backups on all guests and bare-metal hosts were we can
-  hosts: backup_clients
-  roles:
-  - backup_restic
-
-- name: Add SSL private client certificate
-  hosts: cert_private:&ssl_private_clients
-  roles:
-  - cert_private_client
-
-- name: Add SSL private server certificate
-  hosts: cert_private:&ssl_private_servers
-  roles:
-  - cert_private_server
-
-- name: Use cert+key from certbot dns-01 (via local)
-  # This avoids the need to do have/use certbot on the remote hosts
-  # but we do need to push the renewed certificates from time to time
-  hosts: cert_public
-  roles:
-  - cert_public_local_full
-
-- name: Configure internal MXes
-  hosts: internal_mxes
-  roles:
-  - postfix_mx_internal
-
-- name: Configure IMAP (mailbox) servers
-  hosts: mailbox_servers
-  roles:
-  - dovecot
-  vars:
-    health_check_port_dovecot: "{{ libvirt_guest_definitions[envname][instance_name]['health_check_port_dovecot'] }}"
-    imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
-    remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
-    sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
-
-- name: Configure internal email senders
-  hosts: email_internal_senders:!internal_mxes:!external_mxes
-  roles:
-  - postfix_sender_internal
-
-- name: Configure external MXes
-  hosts: external_mxes
-  roles:
-  - postfix_mx_external
-
-- name: Configure groupware
-  hosts: groupware
-  roles:
-  - sogo
-
-- name: Configure website and internal reverse proxies to use PROXY protocol
-  hosts: website_servers:rproxy_internal
-  roles:
-  - apache2_proxy_protocol
+- name: Include mail server plays (which can also be standalone)
+  ansible.builtin.import_playbook: playbooks_env/mail_servers.yml
 
 - name: Include websites and reverse proxy playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbook-web-external.yml
+  ansible.builtin.import_playbook: playbooks_env/web_external.yml
+
+- name: Include plays common to all instances (which can also be standalone)
+  ansible.builtin.import_playbook: playbooks_env/instances_common.yml
 ...

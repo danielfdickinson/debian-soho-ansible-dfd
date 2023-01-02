@@ -1,0 +1,40 @@
+---
+- name: Ensure required variables are supplied on command line
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+  - name: Ensure given environment is valid
+    ansible.builtin.assert:
+      that:
+      - envname in group_names
+      quiet: true
+      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+
+- name: For all guests, add a password to admin user
+  hosts: all
+  gather_facts: true
+  roles:
+  - user_admin_add_password
+
+- name: For externally-exposed (edge) hosts, enable Fail2Ban
+  hosts: edge_hosts
+  roles:
+  - fail2ban
+
+- name: Except bastions, install base packages and firmware, and reboot guests
+  hosts: all:!libvirtd_hosts:!bastions
+  # Avoid connectivity issues by not rebooting vm host or bastion
+  roles:
+  - packages_base
+  - packages_firmware
+
+- name: Configure OVH (BHS) clients for backups
+  hosts: backup_clients:&ovh_bhs
+  roles:
+  - backup_ovh
+
+- name: Configure backups on all guests and bare-metal hosts were we can
+  hosts: backup_clients
+  roles:
+  - backup_restic
+...

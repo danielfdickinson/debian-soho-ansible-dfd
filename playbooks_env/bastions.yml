@@ -1,6 +1,6 @@
 ---
 - name: Ensure required variables are supplied on command line
-  hosts: website_servers
+  hosts: bastions
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid
@@ -10,13 +10,13 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
-- name: Configure website servers (including limited rsyncd for site deploys)
-  hosts: website_servers
+- name: Configure bastions in order to access other guests
+  hosts: bastions
+  gather_facts: true
   roles:
-  - apache2_webhost_static
-
-- name: Configure external (edge) reverse proxy
-  hosts: rproxy_external
-  roles:
-  - haproxy
+  - packages_base
+  - user_bastion_user_add
+  - packages_ssh_proxy
+  - fail2ban_ssh
+  - packages_firmware
 ...
