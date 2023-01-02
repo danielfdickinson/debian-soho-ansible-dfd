@@ -99,6 +99,7 @@ guestenv
 gwcidr
 helo
 hostvars
+htcacheclean
 htpasswd
 httplog
 httpv
@@ -111,6 +112,7 @@ imapd
 imapldev
 imaps
 inet
+inodes
 keytab
 kvm
 ldev

@@ -7,6 +7,8 @@
   loop:
   - ssl
   - brotli
+  - cache
+  - cache_disk
   - expires
   - headers
   - http2
@@ -64,6 +66,17 @@
     path: /etc/apache2/conf-enabled/private-ssl.conf
     src: /etc/apache2/conf-available/private-ssl.conf
     state: link
+  notify: Restart Apache2
+- name: Configure module cache_disk
+  # We don't need a non SSL vhost because we are behind a reverse proxy
+  # If we want auth, we also do that on the reverse proxy, not here
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/apache2/mods-available/cache_disk.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: cache_disk.conf
   notify: Restart Apache2
 - name: Configure VHosts
   become: yes
