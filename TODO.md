@@ -1,5 +1,7 @@
 # To Do
 
+* Fully configure sieve
+* Configure spamassassin bayesian filer training
 * Add backupmx role in a separate environment
 * Refactor large roles to better separate concerns by splitting up the roles
 * Check ansible-galaxy for potentially useful roles
