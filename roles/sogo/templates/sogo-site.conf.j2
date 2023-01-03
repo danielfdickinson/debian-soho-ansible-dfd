@@ -5,13 +5,7 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 <Directory /usr/lib/GNUstep/SOGo/>
 	AllowOverride None
 
-	<IfVersion < 2.4>
-		Order deny,allow
-		Allow from all
-	</IfVersion>
-	<IfVersion >= 2.4>
-		Require all granted
-	</IfVersion>
+	Require all granted
 
 	# Explicitly allow caching of static content to avoid browser specific behavior.
 	# A resource's URL MUST change in order to have the client load the new version.
@@ -66,13 +60,13 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 
 		AddDefaultCharset UTF-8
 
-		Order allow,deny
-		Allow from all
+		Require all granted
 	</Proxy>
 
-	# For Apple autoconfiguration
 	<IfModule rewrite_module>
 		RewriteEngine On
+
+		# For Apple autoconfiguration
 		RewriteRule ^/.well-known/caldav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
 		RewriteRule ^/.well-known/carddav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
 
