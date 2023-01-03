@@ -10,6 +10,11 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
+- name: Configure internal MXes
+  hosts: internal_mxes
+  roles:
+  - postfix_mx_internal
+
 - name: Configure IMAP (mailbox) servers
   hosts: mailbox_servers
   roles:
@@ -18,11 +23,6 @@
     health_check_port_dovecot: "{{ libvirt_guest_definitions[envname][instance_name]['health_check_port_dovecot'] }}"
     imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
     sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
-
-- name: Configure internal MXes
-  hosts: internal_mxes
-  roles:
-  - postfix_mx_internal
 
 - name: Configure external MXes
   hosts: external_mxes
