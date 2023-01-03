@@ -124,7 +124,7 @@
       interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
       direction: in
       proto: tcp
-      src: "{{ env_conn_admin[envname]['v4nat_net'] }}/{{ env_conn_admin[envname]['v4nat_prefix'] }}"
+      src: "{{ v4nat_net }}/{{ v4nat_prefix }}"
       to_port: "{{ lmtp_port }}"
   - name: Allow LMTP from local (internal) network (v6)
     community.general.ufw:
@@ -132,6 +132,6 @@
       interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
       direction: in
       proto: tcp
-      src: "{{ env_conn_admin[envname]['v6nat_net'] }}/{{ env_conn_admin[envname]['v6nat_prefix'] }}"
+      src: "{{ v6nat_net }}/{{ v6nat_prefix }}"
       to_port: "{{ lmtp_port }}"
 ...

@@ -6,7 +6,7 @@
 			<port start='1024' end='65535' />
 		</nat>
 	</forward>
-	<domain name="{{ internal_domain }}" />
+	<domain name="{{ central_internal_domain }}" />
 	<dns enable="yes">
 		<host ip="{{ v4nat_addr }}">
 			<hostname>{{ ansible_facts['hostname'] }}</hostname>

@@ -8,5 +8,5 @@
     owner: root
     src: local_ipv6.j2
   notify: Restart networking
-  when: env_conn_admin[envname]['local_ipv6_cidr'] is defined
+  when: local_ipv6_cidr is defined
 ...

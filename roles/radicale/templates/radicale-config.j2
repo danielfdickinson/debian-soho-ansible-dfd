@@ -4,9 +4,9 @@
 [server]
 hosts = 0.0.0.0:{{ gdav_port }}, [::]:{{ gdav_port }}
 ssl = True
-certificate = {{ host_private_cert_cert_file }}
-key = {{ host_private_cert_key_file }}-radicale
-certificate_authority = {{ env_conn_admin[envname]['private_ca_cert_file'] }}
+certificate = {{ private_cert_cert_file }}
+key = {{ private_cert_key_file }}-radicale
+certificate_authority = {{ private_ca_cert_file }}
 
 [auth]
 type = htpasswd

@@ -92,7 +92,7 @@
     label: "{{ item.key }}"
   vars:
     ddata: "{{ env_default_userdata[guest_envname] }}"
-    edata: "{{ env_conn_admin[guest_envname] }}"
+    edata: "{{ vault_env_conn_admin[guest_envname] }}"
     eddata: "{{ env_depends_conn_admin[guest_envname] }}"
     idata: "{{ env_guest_userdata[guest_envname][item.key] }}"
     instance_item: "{{ item }}"
@@ -163,7 +163,7 @@
     label: "{{ item.key }}"
   vars:
     instance_item: "{{ item }}"
-    edata: "{{ env_conn_admin[guest_envname] }}"
+    edata: "{{ vault_env_conn_admin[guest_envname] }}"
     idata: "{{ env_guest_userdata[guest_envname][item.key] }}"
   ansible.builtin.template:
     dest: /var/local/cloud_init_data/{{ guest_envname }}/{{ item.key }}/domain.xml

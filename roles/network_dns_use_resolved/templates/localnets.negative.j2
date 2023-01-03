@@ -1,3 +1,3 @@
-{% if internal_domain %}{{ internal_domain }}{% endif %}
+{% if central_internal_domain is defined %}{{ central_internal_domain }}{% endif %}
 
-{% if external_rfc1618_domain %}{{ external_rfc1618_domain }}{% endif %}
+{% if rc1618_external_domain is defined %}{{ rfc1618_external_domain }}{% endif %}

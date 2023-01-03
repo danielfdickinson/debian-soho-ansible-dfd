@@ -22,9 +22,9 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 <VirtualHost *:{{ gdav_port }}>
 	# ServerName {{ gdav_server_name_external }}
 	SSLEngine On
-	SSLCACertificateFile {{ env_conn_admin[envname]['private_ca_cert_file'] }}
-	SSLCertificateFile {{ host_private_cert_cert_file }}
-	SSLCertificateKeyFile {{ host_private_cert_key_file }}
+	SSLCACertificateFile {{ private_ca_cert_file }}
+	SSLCertificateFile {{ private_cert_cert_file }}
+	SSLCertificateKeyFile {{ private_cert_key_file }}
 	SSLVerifyClient On
 
 	# Redirect / to /SOGo

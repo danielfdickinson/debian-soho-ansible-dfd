@@ -1,14 +1,25 @@
-postmaster@{{ internal_domain }} postmaster@{{ ansible_facts['fqdn'] }}
-{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ internal_domain, ansible_facts['fqdn'] ] )) %}
-postmaster@{{ vdomain }} postmaster@{{ internal_domain }}
+# postmaster on this host goes to admin_user on this host
+postmaster@{{ ansible_facts['fqdn'] }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
+
+# If we somehow get one of our other hosts postmaster mail it goes to admin_user
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains_hosts ] | flatten | difference( [ ansible_facts['fqdn'] ] ) | unique ) %}
+postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {% endfor %}
-{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains ] | flatten | difference( [ central_local_domain ] )) %}
+
+# Admin user aliases for should be from local hosts (because we don't accept
+# external mail), so redirect to internal admin user mailbox
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains_hosts ] | flatten | difference( [ central_internal_domain, ansible_facts['fqdn'] ] ) | unique ) %}
 {% for adminaddr in well_known_admin_aliases | unique %}
-{{ adminaddr }}@{{ vdomain }} {{ central_local_email }}
+{{ adminaddr }}@{{ vdomain }} {{ admin_user }}@{{ central_internal_domain }}
 {% endfor %}
 {% endfor %}
+
+# Now redirect all admin user aliases for the internal mailbox domain to the
+# internal mailbox admin user (we don't need to repeat for this host, because
+# that is already handled by /etc/aliases)
 {% for adminaddr in well_known_admin_aliases | unique | difference( [ admin_user ] ) %}
-{{ adminaddr }}@{{ central_local_domain }} {{ central_local_email }}
+{{ adminaddr }}@{{ central_internal_domain }} {{ admin_user }}@{{ central_internal_domain }}
 {% endfor %}
-# Note that we don't include regular users' emails; they'll come in on the
-# external_mxes directly to dovecot via lmtp
+
+# Note that we don't include regular users' emails or external mail; that will
+# come in on the external_mxes and be delivered directly to dovecot via lmtp

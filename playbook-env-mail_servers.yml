@@ -17,7 +17,6 @@
   vars:
     health_check_port_dovecot: "{{ libvirt_guest_definitions[envname][instance_name]['health_check_port_dovecot'] }}"
     imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
-    remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
     sieve_port: "{{ libvirt_guest_definitions[envname][instance_name]['sieve_port'] }}"
 
 - name: Configure internal MXes

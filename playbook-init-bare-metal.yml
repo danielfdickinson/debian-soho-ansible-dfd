@@ -32,11 +32,11 @@
   roles:
   - user_admin_add
   vars:
-    new_admin_base_homedir: "{{ env_conn_admin[bare_metal_env]['admin_base_homedir'] }}"
-    new_admin_gecos: "{{ env_conn_admin[bare_metal_env]['admin_gecos'] }}"
-    new_admin_password: "{{ env_conn_admin[bare_metal_env]['admin_password'] }}"
-    new_admin_ssh_key: "{{ env_conn_admin[bare_metal_env]['admin_ssh_key'] }}"
-    new_admin_user: "{{ env_conn_admin[bare_metal_env]['admin_user'] }}"
+    new_admin_base_homedir: "{{ vault_env_conn_admin[bare_metal_env]['admin_base_homedir'] }}"
+    new_admin_gecos: "{{ vault_env_conn_admin[bare_metal_env]['admin_gecos'] }}"
+    new_admin_password: "{{ vault_env_conn_admin[bare_metal_env]['admin_password'] }}"
+    new_admin_ssh_key: "{{ vault_env_conn_admin[bare_metal_env]['admin_ssh_key'] }}"
+    new_admin_user: "{{ vault_env_conn_admin[bare_metal_env]['admin_user'] }}"
     ansible_ssh_port: "{{ initial_ssh_port }}"
     ansible_become_password: "{{ initial_password }}"
     ansible_ssh_user: "{{ initial_ssh_user }}"
@@ -48,7 +48,7 @@
   - sshd_port_set
   vars:
     ansible_ssh_port: "{{ initial_ssh_port }}"
-    ansible_become_password: "{{ env_conn_admin[bare_metal_env]['ansible_become_password'] }}"
-    ansible_ssh_user: "{{ env_conn_admin[bare_metal_env]['ansible_ssh_user'] }}"
-    new_ansible_port: "{{ env_conn_admin[bare_metal_env]['ansible_ssh_port'] }}"
+    ansible_become_password: "{{ vault_env_conn_admin[bare_metal_env]['ansible_become_password'] }}"
+    ansible_ssh_user: "{{ vault_env_conn_admin[bare_metal_env]['ansible_ssh_user'] }}"
+    new_ansible_port: "{{ vault_env_conn_admin[bare_metal_env]['ansible_ssh_port'] }}"
 ...

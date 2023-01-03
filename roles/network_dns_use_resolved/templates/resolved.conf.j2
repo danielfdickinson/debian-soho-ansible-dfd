@@ -2,6 +2,6 @@
 DNSSEC=yes
 MulticastDNS=no
 LLMNR=no
-Domains={{ ansible_facts['domain'] }} {% if ansible_facts['domain'] != internal_domain %}{{ internal_domain }}{% endif %}
+Domains={{ ansible_facts['domain'] }} {% if ansible_facts['domain'] != central_internal_domain %}{{ central_internal_domain }}{% endif %} {% if ansible_facts['domain'] != central_external_domain %}{{ central_external_domain }}{% endif %}
 
 FallbackDNS={{ fallback_dns }}

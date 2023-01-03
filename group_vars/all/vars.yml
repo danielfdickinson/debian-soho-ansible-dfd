@@ -1,103 +1,29 @@
 ---
-admin_base_homedir: "{{ env_conn_admin[envname]['admin_base_homedir'] }}"
-admin_gecos: "{{ env_conn_admin[envname]['admin_gecos'] }}"
-admin_password: "{{ env_conn_admin[envname]['admin_password'] }}"
-admin_ssh_key: "{{ env_conn_admin[envname]['admin_ssh_key'] }}"
-admin_ssh_key_userdata: "{{ env_conn_admin[envname]['admin_ssh_key_userdata'] }}"
-admin_user: "{{ env_conn_admin[envname]['admin_user'] }}"
-ansible_become_password: "{{ env_conn_admin[envname]['ansible_become_password'] }}"
+admin_base_homedir: "{{ vault_env_conn_admin[envname]['admin_base_homedir'] }}"
+admin_gecos: "{{ vault_env_conn_admin[envname]['admin_gecos'] }}"
+admin_password: "{{ vault_env_conn_admin[envname]['admin_password'] }}"
+admin_ssh_key: "{{ vault_env_conn_admin[envname]['admin_ssh_key'] }}"
+admin_ssh_key_userdata: "{{ vault_env_conn_admin[envname]['admin_ssh_key_userdata'] }}"
+admin_user: "{{ vault_env_conn_admin[envname]['admin_user'] }}"
+ansible_become_password: "{{ vault_env_conn_admin[envname]['ansible_become_password'] }}"
 ansible_ssh_common_args: "{% if 'external_ssh' not in group_names %}-o ProxyCommand=\"ssh -o StrictHostKeyChecking=no -p {{ bastion_port }} -W %h:%p -q {{ bastion_user }}@{{ bastion_host }}\"{% endif %}"
 ansible_ssh_host_key_checking: false # Note: this should be true in production
-ansible_ssh_port: "{{ env_conn_admin[envname]['ansible_ssh_port'] }}"
-ansible_ssh_user: "{{ env_conn_admin[envname]['ansible_ssh_user'] }}"
+ansible_ssh_port: "{{ vault_env_conn_admin[envname]['ansible_ssh_port'] }}"
+ansible_ssh_user: "{{ vault_env_conn_admin[envname]['ansible_ssh_user'] }}"
 backupmx_port: "{{ vault_backupmx_port }}"
-bastion_host: "{{ env_conn_admin[envname]['bastion_host'] }}"
-bastion_port: "{{ env_conn_admin[envname]['bastion_port'] }}"
-bastion_ssh_key: "{{ env_conn_admin[envname]['bastion_ssh_key'] }}"
-bastion_user: "{{ env_conn_admin[envname]['bastion_user'] }}"
-central_local_domain: "{{ env_conn_admin[envname]['central_local_domain'] }}"
-central_local_email: "{{ env_conn_admin[envname]['central_local_email'] }}"
+bastion_host: "{{ vault_env_conn_admin[envname]['bastion_host'] }}"
+bastion_port: "{{ vault_env_conn_admin[envname]['bastion_port'] }}"
+bastion_ssh_key: "{{ vault_env_conn_admin[envname]['bastion_ssh_key'] }}"
+bastion_user: "{{ vault_env_conn_admin[envname]['bastion_user'] }}"
+central_external_domain: "{{ vault_env_conn_admin[envname]['central_external_domain'] }}"
+central_external_email: "{{ vault_env_conn_admin[envname]['central_external_email'] }}"
+central_internal_domain: "{{ vault_env_conn_admin[envname]['central_internal_domain'] }}"
+central_internal_email: "{{ vault_env_conn_admin[envname]['central_internal_email'] }}"
 default_mail_local_destinations: "{{ vault_default_mail_local_destinations }}"
-email_interfaces: "{{ email_interfaces_map[envname] }}"
+email_interfaces: "{{ vault_email_interfaces_map[envname] }}"
 email_interfaces_map: "{{ vault_email_interfaces_map }}"
-email_relayhost: "{{ email_relayhost_map[envname] }}"
+email_relayhost: "{{ vault_email_relayhost_map[envname] }}"
 email_relayhost_map: "{{ vault_email_relayhost_map }}"
-env_conn_admin:
-  bare_metal_local:
-    admin_base_homedir: &default_admin_base_homedir /local-home
-    admin_gecos: "{{ vault_env_conn_admin['bare_metal_local']['admin_gecos'] }}"
-    admin_password: "{{ vault_env_conn_admin['bare_metal_local']['admin_password'] }}"
-    admin_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['admin_ssh_key'] }}"
-    admin_ssh_key_userdata: "{{ vault_env_conn_admin['bare_metal_local']['admin_ssh_key_userdata'] }}"
-    admin_user: "{{ vault_env_conn_admin['bare_metal_local']['admin_user'] }}"
-    ansible_become_password: "{{ vault_env_conn_admin['bare_metal_local']['ansible_become_password'] }}"
-    ansible_ssh_port: "{{ host_ansible_ssh_port | default(22) }}"
-    ansible_ssh_user: "{{ vault_env_conn_admin['bare_metal_local']['ansible_ssh_user'] }}"
-    bastion_host: "{{ vault_env_conn_admin['bare_metal_local']['bastion_host'] }}"
-    bastion_port: omit
-    bastion_user: "{{ vault_env_conn_admin['bare_metal_local']['bastion_user'] }}"
-    bastion_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['bastion_ssh_key'] }}"
-    central_local_domain: &main_central_local_domain ldev.thecshore.ca
-    central_local_email: "{{ vault_env_conn_admin['bare_metal_local']['central_local_email'] }}"
-    external_rfc1618_domain: "{{ vault_env_conn_admin['bare_metal_local']['external_rfc1618_domain'] }}"
-    fallback_dns: "{{ vault_env_conn_admin['bare_metal_local']['fallback_dns'] }}"
-    internal_domain: &main_internal_domain ldev
-    internal_relay_port: "{{ vault_env_conn_admin['bare_metal_local']['internal_relay_port'] }}"
-    libvirt_client_ssh_key: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_ssh_key'] }}"
-    libvirt_client_user: "{{ vault_env_conn_admin['bare_metal_local']['libvirt_client_user'] }}"
-    local_freshclam_mirror: "{{ vault_env_conn_admin['bare_metal_local']['local_freshclam_mirror'] | default(None) }}"
-    local_ipv6_cidr: "{{ host_local_ipv6_cidr | default(None) }}"
-    local_ipv6_gateway: "{{ host_local_ipv6_gateway | default(None) }}"
-    opendkim_private_key: "{{ vault_env_conn_admin[envname]['opendkim_private_key'] | default(None) }}"
-    remote_admin_ip: "{{ vault_env_conn_admin['bare_metal_local']['remote_admin_ip'] }}"
-    remote_monitoring_ips: "{{ vault_env_conn_admin['bare_metal_local']['remote_monitoring_ips'] }}"
-    v6natnet_ula: "{{ vault_env_conn_admin['bare_metal_local']['v6natnet_ula'] }}"
-  ldev:
-    admin_base_homedir: *default_admin_base_homedir
-    admin_gecos: "{{ vault_env_conn_admin['ldev']['admin_gecos'] }}"
-    admin_password: "{{ vault_env_conn_admin['ldev']['admin_password'] }}"
-    admin_ssh_key: "{{ vault_env_conn_admin['ldev']['admin_ssh_key'] }}"
-    admin_ssh_key_userdata: "{{ vault_env_conn_admin['ldev']['admin_ssh_key_userdata'] }}"
-    admin_user: "{{ vault_env_conn_admin['ldev']['admin_user'] }}"
-    ansible_become_password: "{{ vault_env_conn_admin['ldev']['ansible_become_password'] }}"
-    ansible_ssh_port: "{{ host_ansible_ssh_port | default(22) }}"
-    ansible_ssh_user: "{{ vault_env_conn_admin['ldev']['ansible_ssh_user'] }}"
-    bastion_host: "{{ vault_env_conn_admin['ldev']['bastion_host'] }}"
-    bastion_port: "{{ vault_env_conn_admin['ldev']['bastion_port'] }}"
-    bastion_user: "{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
-    bastion_ssh_key: "{{ vault_env_conn_admin['ldev']['bastion_ssh_key'] }}"
-    central_local_domain: *main_central_local_domain
-    central_local_email: "{{ vault_env_conn_admin['ldev']['central_local_email'] }}"
-    external_rfc1618_domain: "{{ vault_env_conn_admin['ldev']['external_rfc1618_domain'] }}"
-    fallback_dns: "{{ vault_env_conn_admin['ldev']['fallback_dns'] }}"
-    gdav_server_name_external: "{{ vault_env_conn_admin['ldev']['gdav_server_name_external'] }}"
-    guest_ansible_ssh_port: "{{ vault_env_conn_admin['ldev']['guest_ansible_ssh_port'] }}"
-    internal_domain: *main_internal_domain
-    internal_relay_port: "{{ vault_env_conn_admin['ldev']['internal_relay_port'] }}"
-    libvirt_client_ssh_key: omit
-    libvirt_client_user: omit
-    local_freshclam_mirror: "{{ vault_env_conn_admin['ldev']['local_freshclam_mirror'] | default(None) }}"
-    opendkim_private_key: "{{ vault_env_conn_admin['ldev']['opendkim_private_key'] }}"
-    private_ca_cert_certificate: "{{ vault_env_conn_admin['ldev']['private_ca_cert_certificate'] }}"
-    private_ca_cert_file: "{{ vault_env_conn_admin['ldev']['private_ca_cert_file'] }}"
-    private_email_domain: "{{ vault_env_conn_admin['ldev']['private_email_domain'] }}"
-    private_email_user: "{{ vault_env_conn_admin['ldev']['private_email_user'] }}"
-    public_email_domain: "{{ vault_env_conn_admin['ldev']['public_email_domain'] }}"
-    public_email_user: "{{ vault_env_conn_admin['ldev']['public_email_user'] }}"
-    remote_admin_ip: "{{ vault_env_conn_admin['ldev']['remote_admin_ip'] }}"
-    remote_monitoring_ips: "{{ vault_env_conn_admin['ldev']['remote_monitoring_ips'] }}"
-    v4nat_addr: "{{ vault_env_conn_admin['ldev']['v4nat_addr'] }}"
-    v4nat_net: "{{ vault_env_conn_admin['ldev']['v4nat_net'] }}"
-    v4nat_prefix: "{{ vault_env_conn_admin['ldev']['v4nat_prefix'] }}"
-    v6nat_addr: "{{ vault_env_conn_admin['ldev']['v6nat_addr'] }}"
-    v6nat_net: "{{ vault_env_conn_admin['ldev']['v6nat_net'] }}"
-    v6nat_prefix: "{{ vault_env_conn_admin['ldev']['v6nat_prefix'] }}"
-    v6natnet_ula: "{{ vault_env_conn_admin['ldev']['v6natnet_ula'] }}"
-    vbridge: "{{ vault_env_conn_admin['ldev']['vbridge'] }}"
-    virtual_alias_domains: "{{ vault_env_conn_admin['ldev']['virtual_alias_domains'] }}"
-    webhosts_add_www: "{{ vault_env_conn_admin['ldev']['webhosts_add_www'] | default(None) }}"
-    webhosts_noadd_www: "{{ vault_env_conn_admin['ldev']['webhosts_noadd_www'] | default(None) }}"
-    websites_static: "{{ vault_env_conn_admin['ldev']['websites_static'] }}"
 env_default_userdata:
   ldev:
     apt:
@@ -109,8 +35,8 @@ env_default_userdata:
     - sudonp
     - sys
     ntp_servers:
-    - "{{ env_conn_admin['ldev']['v4nat_addr'] }}"
-    - "{{ env_conn_admin['ldev']['v6nat_addr'] }}"
+    - "{{ vault_env_conn_admin['ldev']['v4nat_addr'] }}"
+    - "{{ vault_env_conn_admin['ldev']['v6nat_addr'] }}"
     packages:
     - molly-guard
     - powermgmt-base
@@ -122,21 +48,21 @@ env_default_userdata:
     - [systemctl, reload, apparmor]
     runcmd_after:
     - [bash, /run/ci-files/conf-ufw]
-    # - [systemctl, daemon-reload]
+    - [systemctl, daemon-reload]
     - [systemctl, restart, networking]
     - [rm, -rf, /run/ci-files]
     users:
-    - name: "{{ env_conn_admin['ldev']['admin_user'] }}"
-      gecos: "{{ env_conn_admin['ldev']['admin_gecos'] }}"
+    - name: "{{ vault_env_conn_admin['ldev']['admin_user'] }}"
+      gecos: "{{ vault_env_conn_admin['ldev']['admin_gecos'] }}"
       groups:
       - adm
       - sudo
       - sudonp
-      homedir: "{{ env_conn_admin['ldev']['admin_base_homedir'] }}/{{ env_conn_admin['ldev']['admin_user'] }}"
+      homedir: "{{ vault_env_conn_admin['ldev']['admin_base_homedir'] }}/{{ vault_env_conn_admin['ldev']['admin_user'] }}"
       lock_passwd: true
       shell: /bin/bash
       ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ env_conn_admin['ldev']['admin_ssh_key_userdata'] }}
+      - no-agent-forwarding,no-port-forwarding {{ vault_env_conn_admin['ldev']['admin_ssh_key_userdata'] }}
     write_files: "{{ role_write_files }}"
     # So lookups don't error when we aren't handling userdata
 env_depends_conn_admin:
@@ -156,12 +82,12 @@ env_guest_userdata:
       runcmd:
       - [systemctl, restart, fail2ban]
       users:
-      - name: "{{ env_conn_admin['ldev']['bastion_user'] }}"
-        homedir: "{{ admin_base_homedir }}/{{ env_conn_admin['ldev']['bastion_user'] }}"
+      - name: "{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
+        homedir: "{{ admin_base_homedir }}/{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
         lock_passwd: true
         shell: /bin/bash
         ssh_authorized_keys:
-        - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
+        - "{{ vault_env_conn_admin['ldev']['bastion_ssh_key'] }}"
     gate:
       fqdn: "{{ vault_env_guest_userdata['ldev']['gate']['fqdn'] }}"
       hostname: gateldev
@@ -207,12 +133,12 @@ env_guest_userdata:
       runcmd:
       - [systemctl, restart, fail2ban]
       users:
-      - name: "{{ env_conn_admin['ldev']['bastion_user'] }}"
-        homedir: "{{ admin_base_homedir }}/{{ env_conn_admin['ldev']['bastion_user'] }}"
+      - name: "{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
+        homedir: "{{ admin_base_homedir }}/{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
         lock_passwd: true
         shell: /bin/bash
         ssh_authorized_keys:
-        - "{{ env_conn_admin['ldev']['bastion_ssh_key'] }}"
+        - "{{ vault_env_conn_admin['ldev']['bastion_ssh_key'] }}"
     smtp01:
       bootcmd:
       - [mkdir, -p, /var/spool/postfix]
@@ -245,29 +171,37 @@ env_guest_userdata:
       - fail2ban
       runcmd:
       - [systemctl, restart, fail2ban]
-external_rfc1618_domain: "{{ env_conn_admin[envname]['external_rfc1618_domain'] }}"
-fallback_dns: "{{ env_conn_admin[envname]['fallback_dns'] }}"
-gdav_port: "{{ libvirt_guest_definitions[envname][instance_name]['gdav_port'] }}"
-gdav_server_name_external: "{{ env_conn_admin[envname]['gdav_server_name_external'] }}"
+external_relayhost: "{{ vault_env_conn_admin[envname]['external_relayhost'] }}"
+fallback_dns: "{{ vault_env_conn_admin[envname]['fallback_dns'] }}"
+gdav_port: "{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}"
+gdav_server_name_external: "{{ vault_env_conn_admin[envname]['gdav_server_name_external'] }}"
+ha_dhparam: "{{ vault_env_conn_admin[envname]['ha_dhparam'] }}"
+ha_dhparam_file: "{{ vault_env_conn_admin[envname]['ha_dhparam_file'] }}"
+ha_mal_beginnings: "{{ vault_env_conn_admin[envname]['ha_mal_beginnings'] }}"
+ha_mal_endings: "{{ vault_env_conn_admin[envname]['ha_mal_endings'] }}"
+ha_mal_host_doms: "{{ vault_env_conn_admin[envname]['ha_mal_host_doms'] }}"
+ha_mal_query_substrings: "{{ vault_env_conn_admin[envname]['ha_mal_query_substrings'] }}"
+ha_mal_substrings: "{{ vault_env_conn_admin[envname]['ha_mal_substrings'] }}"
+ha_stats_users: "{{ vault_env_conn_admin[envname]['ha_stats_users'] }}"
 instance_name: "{{ (env_guest_userdata[envname] | dict2items | selectattr('value.fqdn', 'equalto', inventory_hostname)).0.key }}"
-internal_domain: "{{ env_conn_admin[envname]['internal_domain'] }}"
-internal_fqdn: "{{ ansible_facts['hostname'] }}.{{ internal_domain }}"
-internal_relay_port: "{{ env_conn_admin[envname]['internal_relay_port'] }}"
-libvirt_client_ssh_key: "{{ env_conn_admin[envname]['libvirt_client_ssh_key'] }}"
-libvirt_client_user: "{{ env_conn_admin[envname]['libvirt_client_user'] }}"
+internal_relay_port: "{{ vault_env_conn_admin[envname]['internal_relay_port'] }}"
+libvirt_client_ssh_key: "{{ vault_env_conn_admin[envname]['libvirt_client_ssh_key'] }}"
+libvirt_client_user: "{{ vault_env_conn_admin[envname]['libvirt_client_user'] }}"
 libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
 libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
-lmtp_port: "{{ vault_lmtp_port }}"
-local_freshclam_mirror: "{{ env_conn_admin[envname]['local_freshclam_mirror'] }}"
-mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
-mailbox_server_address: "{{ vault_mailbox_server_address }}"
-mailbox_server_fqdn: "{{ vault_mailbox_server_fqdn }}"
+lmtp_port: "{{ libvirt_guest_definitions[envname]['imap']['lmtp_port'] }}"
+local_ipv6_cidr: "{{ vault_env_conn_admin[envname]['local_ipv6_cidr'] | default(None) }}"
+local_ipv6_gateway: "{{ vault_env_conn_admin[envname]['local_ipv6_gateway'] | default(None) }}"
+local_freshclam_mirror: "{{ vault_env_conn_admin[envname]['local_freshclam_mirror'] }}"
 mail_groupware_users: "{{ vault_env_conn_admin[envname]['mail_groupware_users'] }}"
-opendkim_private_key: "{{ env_conn_admin[envname]['opendkim_private_key'] | default(None) }}"
-private_ca_cert_certificate: "{{ env_conn_admin[envname]['private_ca_cert_certificate'] }}"
-private_ca_cert_file: "{{ env_conn_admin[envname]['private_ca_cert_file'] }}"
+mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
+mailbox_server_address: "{{ libvirt_guest_definitions[envname]['imap']['v4addr'] }}"
+mailbox_server_fqdn: "{{ env_guest_userdata[envname]['imap']['fqdn'] }}"
+opendkim_private_key: "{{ vault_env_conn_admin[envname]['opendkim_private_key'] | default(None) }}"
+private_ca_cert_certificate: "{{ vault_env_conn_admin[envname]['private_ca_cert_certificate'] }}"
+private_ca_cert_file: "{{ vault_env_conn_admin[envname]['private_ca_cert_file'] }}"
 private_client_cert_cert_content: "{{ host_private_client_cert_cert_content }}"
 private_client_cert_cert_file: "{{ host_private_client_cert_cert_file }}"
 private_client_cert_key_content: "{{ host_private_client_cert_key_content }}"
@@ -278,24 +212,24 @@ private_cert_cert_file: "{{ host_private_cert_cert_file }}"
 private_cert_full_file: "{{ host_private_client_cert_full_file | replace('-cert', '-full') | default(None) }}"
 private_cert_key_content: "{{ host_private_cert_key_content }}"
 private_cert_key_file: "{{ host_private_cert_key_file }}"
-private_email_domain: "{{ env_conn_admin[envname]['private_email_domain'] }}"
-private_email_user: "{{ env_conn_admin[envname]['private_email_user'] }}"
-private_email_user_aliases: "{{ vault_private_email_user_aliases }}"
+private_email_domain: "{{ vault_env_conn_admin[envname]['private_email_domain'] }}"
+private_email_user: "{{ vault_env_conn_admin[envname]['private_email_user'] }}"
+private_email_user_aliases: "{{ vault_env_conn_admin[envname]['private_email_user_aliases'] }}"
 public_cert_cert_file: "{{ host_public_cert_cert_file }}"
 public_cert_cert_file_src: "{{ host_public_cert_cert_file_src }}"
 public_cert_full_file: "{{ host_public_cert_full_file }}"
 public_cert_key_file: "{{ host_public_cert_key_file }}"
 public_cert_key_file_src: "{{ host_public_cert_key_file_src }}"
 public_cert_key_private_key: "{{ host_public_cert_private_key }}"
-public_email_domain: "{{ env_conn_admin[envname]['public_email_domain'] }}"
-public_email_user: "{{ env_conn_admin[envname]['public_email_user'] }}"
-public_email_user_aliases: "{{ vault_public_email_user_aliases }}"
-remote_admin_ip: "{{ env_conn_admin[envname]['remote_admin_ip'] }}"
-remote_monitoring_ips: "{{ env_conn_admin[envname]['remote_monitoring_ips'] }}"
+public_email_domain: "{{ vault_env_conn_admin[envname]['public_email_domain'] }}"
+public_email_user: "{{ vault_env_conn_admin[envname]['public_email_user'] }}"
+public_email_user_aliases: "{{ vault_env_conn_admin[envname]['public_email_user_aliases'] }}"
+remote_admin_ip: "{{ vault_env_conn_admin[envname]['remote_admin_ip'] }}"
+remote_monitoring_ips: "{{ vault_env_conn_admin[envname]['remote_monitoring_ips'] }}"
 second_interface: "{{ host_second_interface }}"
-smtp_port: "{{ vault_smtp_port }}"
-smtpd_dh_param: "{{ vault_smtpd_dh_param }}"
-smtpd_dh_param_file: "{{ vault_smtpd_dh_param_file }}"
+smtp_port: "{{ libvirt_guest_definitions[envname]['smtp01']['smtp_port'] }}"
+smtpd_dh_param: "{{ vault_env_conn_admin[envname]['smtpd_dh_param'] }}"
+smtpd_dh_param_file: "{{ vault_env_conn_admin[envname]['smtpd_dh_param_file'] }}"
 sogo_encryption_key: "{{ vault_env_conn_admin[envname]['sogo_encryption_key'] }}"
 sogodb_password: "{{ vault_env_conn_admin[envname]['sogodb_password'] }}"
 storage_extra_use_lvm2: "{{ host_storage_extra_use_lvm2 }}"
@@ -304,16 +238,23 @@ storage_logical_volumes: "{{ host_storage_logical_volumes }}"
 storage_mountpoints: "{{ host_storage_mountpoints }}"
 storage_mounts: "{{ host_storage_mounts }}"
 storage_volume_groups: "{{ host_storage_volume_groups }}"
-submission_port: "{{ vault_submission_port }}"
-submission_relay_host: "{{ vault_submission_relay_host }}"
-submission_relay_port: "{{ vault_submission_relay_port }}"
-v6natnet_ula: "{{ env_conn_admin[envname]['v6natnet_ula'] }}"
-virtual_alias_domains: "{{ [env_conn_admin[envname]['virtual_alias_domains'], virtual_alias_domains_hosts] | flatten | unique }}"
-virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ansible_facts') | reject('eq', {}) | map(attribute='fqdn'), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique }}"
-virtual_mailbox_domains:
-- "{{ central_local_domain }}"
+submission_port: "{{ libvirt_guest_definitions[envname]['imap']['submission_port'] }}"
+submission_relay_host: "{{ env_guest_userdata[envname]['smtp01']['fqdn'] }}"
+submission_relay_port: "{{ libvirt_guest_definitions[envname]['smtp01']['submission_relay_port'] }}"
+v4nat_addr: "{{ vault_env_conn_admin[envname]['v4nat_addr'] }}"
+v4nat_cidr: "{{ vault_env_conn_admin[envname]['v4nat_addr'] + '/' + (vault_env_conn_admin[envname]['v4nat_prefix'] | string) }}"
+v4nat_net: "{{ vault_env_conn_admin[envname]['v4nat_net'] }}"
+v4nat_prefix: "{{ vault_env_conn_admin[envname]['v4nat_prefix'] }}"
+v6nat_addr: "{{ vault_env_conn_admin[envname]['v6nat_addr'] }}"
+v6nat_cidr: "{{ vault_env_conn_admin[envname]['v6nat_addr'] }}/64"
+v6nat_net: "{{ vault_env_conn_admin[envname]['v6nat_net'] }}"
+v6nat_prefix: "{{ vault_env_conn_admin[envname]['v6nat_prefix'] }}"
+v6natnet_ula: "{{ vault_env_conn_admin[envname]['v6natnet_ula'] }}"
+virtual_alias_domains: "{{ mail_groupware_users | selectattr('alias_domains', 'defined') | map(attribute='alias_domains') | unique | difference(virtual_mailbox_domains) | unique }}"
+virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ansible_facts') | reject('eq', {}) | map(attribute='fqdn'), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique | difference([virtual_alias_domains, virtual_mailbox_domains] | flatten | unique) }}"
+virtual_mailbox_domains: "{{ mail_groupware_users | map(attribute='maildomain') | unique }}"
 well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
-webhosts_add_www: "{{ env_conn_admin[envname]['webhosts_add_www'] }}"
-webhosts_noadd_www: "{{ env_conn_admin[envname]['webhosts_noadd_www'] }}"
-websites_static: "{{ env_conn_admin[envname]['websites_static'] }}"
+webhosts_add_www: "{{ vault_env_conn_admin[envname]['webhosts_add_www'] }}"
+webhosts_noadd_www: "{{ vault_env_conn_admin[envname]['webhosts_noadd_www'] }}"
+websites_static: "{{ vault_env_conn_admin[envname]['websites_static'] }}"
 ...

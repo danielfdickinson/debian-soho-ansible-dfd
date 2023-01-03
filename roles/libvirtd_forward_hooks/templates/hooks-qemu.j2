@@ -11,7 +11,7 @@ if [ "${1}" = "{{ item.0.value.libvirt_domain_name }}" ]; then
 		/usr/sbin/iptables -t nat -D PREROUTING -p tcp --dest {{ ansible_facts['default_ipv4']['address'] }} --dport {{ item.1.host_port }} -j DNAT --to $GUEST_IP:{{ item.1.guest_port }}
 		if [ -n "${GUEST_IP6}" ]; then
 			/usr/sbin/ip6tables -D FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.1.guest_port }} -j ACCEPT
-			/usr/sbin/ip6tables -t nat -D PREROUTING -p tcp --dest {{ env_conn_admin[envname]['local_ipv6_cidr'] }} --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
+			/usr/sbin/ip6tables -t nat -D PREROUTING -p tcp --dest {{ local_ipv6_cidr }} --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
 		fi
 	fi
 	if [ "${2}" = "start" ] || [ "${2}" = "reconnect" ]; then
@@ -19,7 +19,7 @@ if [ "${1}" = "{{ item.0.value.libvirt_domain_name }}" ]; then
 		/usr/sbin/iptables -t nat -I PREROUTING -p tcp  --dest {{ ansible_facts['default_ipv4']['address'] }} --dport {{ item.1.host_port }} -j DNAT --to $GUEST_IP:{{ item.1.guest_port }}
 		if [ -n "${GUEST_IP6}" ]; then
 			/usr/sbin/ip6tables -I FORWARD -o {{ vbridge }} -p tcp -d $GUEST_IP6 --dport {{ item.1.guest_port }} -j ACCEPT
-			/usr/sbin/ip6tables -t nat -I PREROUTING -p tcp  --dest {{ env_conn_admin[envname]['local_ipv6_cidr'] }} --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
+			/usr/sbin/ip6tables -t nat -I PREROUTING -p tcp  --dest {{ local_ipv6_cidr }} --dport {{ item.1.host_port }} -j DNAT --to [$GUEST_IP6]:{{ item.1.guest_port }}
 		fi
 	fi
 fi
