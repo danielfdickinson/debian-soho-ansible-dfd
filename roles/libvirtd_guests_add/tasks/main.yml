@@ -148,7 +148,7 @@
     label: "{{ item.path }}"
   become: yes
   ansible.builtin.copy:
-    dest: "{{ libvirt_pool_cloud_init_path }}/{{ item.path | replace('/var/local/cloud_init_data', '') | replace('/', '-') }}"
+    dest: "{{ libvirt_pool_cloud_init_path }}/{{ item.path | replace('/var/local/cloud_init_data/', '') | replace('/', '-') }}"
     group: kvm
     mode: "0600"
     owner: libvirt-qemu
