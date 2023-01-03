@@ -1,6 +1,6 @@
 ---
 - name: Ensure required variables are supplied on command line
-  hosts: cert_private:cert_public
+  hosts: cert_private:cert_public:!bare_metal
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid

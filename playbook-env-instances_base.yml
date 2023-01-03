@@ -1,6 +1,6 @@
 ---
 - name: Ensure required variables are supplied on command line
-  hosts: all
+  hosts: all:!bare_metal
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid
