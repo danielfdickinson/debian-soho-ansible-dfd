@@ -1,19 +1,19 @@
 ---
 - name: Include bastions playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/bastions.yml
+  ansible.builtin.import_playbook: playbook-env-bastions.yml
 
 - name: Include instances base playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/instances_base.yml
+  ansible.builtin.import_playbook: playbook-env-instances_base.yml
 
 - name: Include certificates playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/certificates.yml
+  ansible.builtin.import_playbook: playbook-env-certificates.yml
 
 - name: Include mail server plays (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/mail_servers.yml
+  ansible.builtin.import_playbook: playbook-env-mail_servers.yml
 
 - name: Include websites and reverse proxy playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/web_external.yml
+  ansible.builtin.import_playbook: playbook-env-web_external.yml
 
 - name: Include plays common to all instances (which can also be standalone)
-  ansible.builtin.import_playbook: playbooks_env/instances_common.yml
+  ansible.builtin.import_playbook: playbook-env-instances_common.yml
 ...

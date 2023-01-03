@@ -40,7 +40,7 @@
   changed_when: vol_os_create_out.rc == 0
   failed_when: vol_os_create_out.rc != 0
   notify: Refresh list of volumes in {{ item.value['pool_os'] }} pool
-  when: item.value.vol_name_os not in ( libvirt_os_pool_vol_list.results | map(attribute='stdout_lines') | flatten | unique )
+  when: item.value.vol_name_os not in (libvirt_os_pool_vol_list.results | map(attribute='stdout_lines') | flatten | unique)
 - name: Create data volumes for instances
   include_tasks: create_data_volumes.yml
   loop: "{{ libvirt_guest_definitions[guest_envname] | dict2items | selectattr('value.data_volumes', 'defined') | map(attribute='value') | map(attribute='data_volumes') | flatten(1) }}"
