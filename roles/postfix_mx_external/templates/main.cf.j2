@@ -36,7 +36,6 @@ mta_relay_restrictions = permit_mynetworks, reject_unauth_destination
 mta_sasl_auth_enable=no
 mta_tls_auth_only=yes
 mta_tls_security_level=may
-#mua_authorized_xclient_hosts = 127.0.0.1
 mua_authorized_xclient_hosts = {{ libvirt_guest_definitions[envname]['imap']['v4addr'] }} [{{ libvirt_guest_definitions[envname]['imap']['v6addr'] }}]
 mua_milters = unix:opendkim/opendkim.sock unix:spamass/spamass.sock unix:clamav/clamav-milter.ctl
 mua_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient

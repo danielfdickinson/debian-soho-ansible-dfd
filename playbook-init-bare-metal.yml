@@ -41,7 +41,7 @@
     ansible_become_password: "{{ initial_password }}"
     ansible_ssh_user: "{{ initial_ssh_user }}"
 
-- name: Removed user 'debian'
+- name: Remove user 'debian' and set SSH port
   hosts: bare_metal
   roles:
   - user_debian_remove
