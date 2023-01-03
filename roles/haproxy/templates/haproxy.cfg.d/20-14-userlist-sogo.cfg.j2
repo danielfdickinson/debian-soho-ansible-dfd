@@ -1,0 +1,4 @@
+userlist sogo-auth
+{% for sogouser in mail_groupware_users %}
+	user {{ sogouser.login }} {{ sogouser['ha_password_type'] | default('password') }} {{ sogouser.http_password }}
+{% endfor %}

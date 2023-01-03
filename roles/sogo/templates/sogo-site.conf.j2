@@ -55,11 +55,13 @@ AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/S
 		<IfModule headers_module>
 			RequestHeader set "x-webobjects-server-port" "443"
 			SetEnvIf Host (.*) HTTP_HOST=$1
+			SetEnvIf X-Remote-User (.*) REMOTE_USER=$1
 			RequestHeader set "x-webobjects-server-name" "%{HTTP_HOST}e" env=HTTP_HOST
 			RequestHeader set "x-webobjects-server-url" "https://%{HTTP_HOST}e" env=HTTP_HOST
-			RequestHeader unset "x-webobjects-remote-user"
 			RequestHeader set "x-webobjects-server-protocol" "HTTP/1.0"
 			RequestHeader set "x-webobjects-remote-host" "%{REMOTE_HOST}e" env=REMOTE_HOST
+			RequestHeader set "x-webobjects-remote-user" "%{REMOTE_USER}e" env=REMOTE_USER
+			RequestHeader set "x-webobjects-auth-type" "Basic"
 		</IfModule>
 
 		AddDefaultCharset UTF-8

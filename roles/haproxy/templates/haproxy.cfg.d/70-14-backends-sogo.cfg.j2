@@ -2,9 +2,18 @@ backend be_sogo
 	balance roundrobin
 
 	stick-table type ip size 2m expire 10m store http_req_rate(10s)
+
 	acl suspect_scan sc1_http_req_rate gt 20
 	acl suspected_abuser sc0_inc_gpc0(fe_http_s) gt 0
+
+	acl auth_sogo http_auth(sogo-auth)
+
 	tcp-request content track-sc1 src
 	tcp-request content reject if suspect_scan suspected_abuser
+
+	http-request add-header X-Remote-User %[http_auth_user] if auth_sogo
+	http-request allow if auth_sogo
+	http-request auth realm SOGo unless auth_sogo
+	http-request deny
 
 	server sogo01 gdavldev.ldev:{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ env_conn_admin[envname]['private_ca_cert_file'] }} verify required alpn h2,http/1.1

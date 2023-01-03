@@ -22,6 +22,16 @@
 	SOGoMailMessageCheck = manually;
 	SOGoMailAuxiliaryUserAccountsEnabled = YES;
 	SOGoMemcachedHost = 127.0.0.1;
+	SOGoTrustProxyAuthentication = YES;
+	SOGoEncryptionKey = "{{ sogo_encryption_key }}";
+	SOGoHideSystemEmail = YES;
+	SOGoXSRFValidationEnabled = YES;
+	SOGoForceExternalLoginWithEmail = YES;
+	SOGOMaximumMessageSubmissionCount = 5;
+	SOGOMaximumRecipientCount = 20;
+	SOGoVacationEnabled = YES;
+	SOGoForwardEnabled = YES;
+	SOGoSieveScriptsEnabled = YES;
 	SOGoUserSources =
 	(
 		{
@@ -30,6 +40,7 @@
 			viewURL = "postgresql://sogo:{{ sogodb_password }}@127.0.0.1:5432/sogo/sogo_users";
 			canAuthenticate = YES;
 			isAddressBook = NO;
+			prependPasswordScheme = YES;
 			userPasswordAlgorithm = argon2id;
 		}
 	);
