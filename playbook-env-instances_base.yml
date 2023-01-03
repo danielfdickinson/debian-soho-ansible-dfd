@@ -10,6 +10,23 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
+- name: Wait for cloud init to finish
+  hosts: all
+  tasks:
+  - name: Check cloud init status
+    community.general.cloud_init_data_facts:
+      filter: status
+    register: cistat
+    until: cistat.cloud_init_data_facts.status.v1.stage is defined and not cistat.cloud_init_data_facts.status.v1.stage
+    retries: 50
+    delay: 5
+  - name: Ensure cloud init result was success
+    community.general.cloud_init_data_facts:
+      filter: status
+    register: res
+    failed_when: res.cloud_init_data_facts.status.v1.errors is defined and res.cloud_init_data_facts.status.v1.errors
+    changed_when: false
+
 - name: For all guests, add a password to admin user
   hosts: all
   gather_facts: true
