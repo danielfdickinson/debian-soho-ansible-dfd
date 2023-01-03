@@ -17,6 +17,8 @@
 - name: Format nocloud image
   listen: Copy cloud init data to nocloud image
   loop: "{{ nocloud_img_size.results }}"
+  loop_control:
+    label: "{{ item.path }}"
   community.general.filesystem:
     dev: "{{ item.path }}"
     force: true
@@ -26,6 +28,8 @@
 - name: Copy files to nocloud image
   listen: Copy cloud init data to nocloud image
   loop: "{{ nocloud_img_size.results }}"
+  loop_control:
+    label: "{{ item.path }}"
   ansible.builtin.command:
     argv:
     - mcopy
