@@ -61,12 +61,12 @@
     db: sogo
     query: INSERT INTO sogo_users (c_uid, c_name, c_password, c_cn, mail) VALUES (%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING
     positional_args:
-    - "{{ item.uid }}"
+    - "{{ item.login }}"
     - "{{ item.name }}"
-    - "{{ item.password }}"
+    - "{{ item.mailpassword }}"
     - "{{ item.cn }}"
     - "{{ item.mail }}"
-  loop: "{{ sogo_users }}"
+  loop: "{{ mail_groupware_users }}"
   loop_control:
     label: "{{ item.name }}"
 - name: Update sogo users in sogo_users table
@@ -77,11 +77,11 @@
     query: UPDATE sogo_users SET (c_name, c_password, c_cn, mail) = (%s, %s, %s, %s) WHERE c_uid = %s
     positional_args:
     - "{{ item.name }}"
-    - "{{ item.password }}"
+    - "{{ item.mailpassword }}"
     - "{{ item.cn }}"
     - "{{ item.mail }}"
-    - "{{ item.uid }}"
-  loop: "{{ sogo_users }}"
+    - "{{ item.login }}"
+  loop: "{{ mail_groupware_users }}"
   loop_control:
     label: "{{ item.name }}"
   changed_when: false
