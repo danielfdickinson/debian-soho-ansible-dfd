@@ -20,6 +20,7 @@ submission_relay_port = {{ submission_relay_port }}
 submission_relay_trusted = yes
 submission_relay_ssl = starttls
 protocol lmtp {
+	mail_plugins = $mail_plugins sieve
 	ssl_cert = <{{ private_cert_cert_file }}
 	ssl_key = <{{ private_cert_key_file }}
 }
