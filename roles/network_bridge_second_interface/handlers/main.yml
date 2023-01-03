@@ -1,7 +1,23 @@
 ---
-- name: Restart networking
+- name: Stop second interface
+  listen: Start br1 on second interface
   become: yes
   ansible.builtin.systemd:
-    name: networking
-    state: restarted
+    name: ifup@{{ second_interface }}
+    enabled: false
+    state: stopped
+- name: Start second interface
+  listen: Start br1 on second interface
+  become: yes
+  ansible.builtin.command:
+    cmd: ifup {{ second_interface }}
+  register: ifup_if2_out
+  changed_when: ifup_if2_out.rc == 0
+- name: Start br1
+  listen: Start br1 on second interface
+  become: yes
+  ansible.builtin.command:
+    cmd: ifup br1
+  register: ifup_br1_out
+  changed_when: ifup_br1_out.rc == 0
 ...
