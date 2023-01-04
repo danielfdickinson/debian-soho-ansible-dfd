@@ -55,11 +55,11 @@
   roles:
   - libvirtd
   - user_libvirt_client_add
-  - fail2ban
-  - fail2ban_ssh
+  - system_fail2ban
+  - system_fail2ban_ssh
 
 - name: Add NUT to local bare-metal
   hosts: bare_metal:&bare_metal_local
   roles:
-  - upsd
+  - service_hardware_upsd
 ...

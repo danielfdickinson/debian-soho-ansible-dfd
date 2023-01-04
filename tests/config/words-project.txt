@@ -220,6 +220,7 @@ skel
 smtpd
 sogo
 sogodb
+sogouser
 spamc
 spamd
 spamhaus

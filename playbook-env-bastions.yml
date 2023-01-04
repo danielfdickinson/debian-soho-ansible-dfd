@@ -34,6 +34,6 @@
   - packages_base
   - user_bastion_user_add
   - packages_ssh_proxy
-  - fail2ban_ssh
+  - system_fail2ban_ssh
   - packages_firmware
 ...

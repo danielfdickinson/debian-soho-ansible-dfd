@@ -13,12 +13,12 @@
 - name: Configure internal MXes
   hosts: internal_mxes
   roles:
-  - postfix_mx_internal
+  - service_postfix_mx_internal
 
 - name: Configure IMAP (mailbox) servers
   hosts: mailbox_servers
   roles:
-  - dovecot
+  - service_dovecot
   vars:
     health_check_port_dovecot: "{{ libvirt_guest_definitions[envname][instance_name]['health_check_port_dovecot'] }}"
     imap_port: "{{ libvirt_guest_definitions[envname][instance_name]['imap_port'] }}"
@@ -27,5 +27,5 @@
 - name: Configure external MXes
   hosts: external_mxes
   roles:
-  - postfix_mx_external
+  - service_postfix_mx_external
 ...

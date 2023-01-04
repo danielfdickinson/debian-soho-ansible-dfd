@@ -45,7 +45,7 @@
   hosts: bare_metal
   roles:
   - user_debian_remove
-  - sshd_port_set
+  - system_sshd_port_set
   vars:
     ansible_ssh_port: "{{ initial_ssh_port }}"
     ansible_become_password: "{{ vault_env_conn_admin[bare_metal_env]['ansible_become_password'] }}"

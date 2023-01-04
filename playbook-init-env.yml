@@ -32,7 +32,7 @@
   hosts: libvirtd_hosts:&{{ envname | default([]) }}
   gather_facts: true
   roles:
-  - chronyd_libvirtd
+  - system_chronyd_libvirtd
   vars:
     v4nat_addr: "{{ vault_env_conn_admin[guest_envname]['v4nat_addr'] }}"
     v4nat_net: "{{ vault_env_conn_admin[guest_envname]['v4nat_net'] }}"

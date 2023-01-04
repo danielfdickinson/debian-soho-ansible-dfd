@@ -13,15 +13,15 @@
 - name: Configure website servers (including limited rsyncd for site deploys)
   hosts: website_servers
   roles:
-  - apache2_webhost_static
+  - service_webhost_static
 
 - name: Configure groupware
   hosts: groupware
   roles:
-  - sogo
+  - service_sogo
 
 - name: Configure external (edge) reverse proxy
   hosts: rproxy_external
   roles:
-  - haproxy
+  - service_haproxy
 ...

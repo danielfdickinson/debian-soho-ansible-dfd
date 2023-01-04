@@ -13,5 +13,5 @@
 - name: Configure internal email senders
   hosts: email_internal_senders:!internal_mxes:!external_mxes
   roles:
-  - postfix_sender_internal
+  - system_postfix_sender_internal
 ...
