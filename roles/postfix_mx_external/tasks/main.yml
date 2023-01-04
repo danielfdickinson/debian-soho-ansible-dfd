@@ -137,6 +137,9 @@
 - name: Ensure private server certificate and key (for incoming bkmx) present
   ansible.builtin.import_tasks: task-cert_private_server.yml
   notify: Restart postfix
+- name: Ensure private client certificate and key (for lmtp)
+  ansible.builtin.import_tasks: task-cert_private_client.yml
+  notify: Restart postfix
 - name: Copy opendkim private keys from local to remote
   become: yes
   ansible.builtin.copy:

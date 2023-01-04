@@ -1,6 +1,6 @@
 ---
 - name: Ensure required variables are supplied on command line
-  hosts: cert_private:cert_public:!bare_metal
+  hosts: cert_public:!bare_metal
   gather_facts: false
   pre_tasks:
   - name: Ensure given environment is valid
@@ -9,11 +9,6 @@
       - envname in group_names
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
-
-- name: Add SSL private client certificate
-  hosts: cert_private:&ssl_private_clients
-  roles:
-  - cert_private_client
 
 - name: Use cert+key from certbot dns-01 (via local)
   # This avoids the need to do have/use certbot on the remote hosts
