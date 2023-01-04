@@ -24,6 +24,9 @@
 - name: Ensure private client certificate and key (for submission relay)
   ansible.builtin.import_tasks: task-cert_private_client.yml
   notify: Restart dovecot
+- name: Ensure public client certificate and key (for external)
+  ansible.builtin.import_tasks: task-cert_public_local_full.yml
+  notify: Restart dovecot
 - name: Configure dovecot as mailbox server
   become: yes
   block:

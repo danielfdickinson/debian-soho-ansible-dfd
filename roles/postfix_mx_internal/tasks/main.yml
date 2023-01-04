@@ -12,6 +12,9 @@
   - name: Ensure private server certificate and key (for incoming) present
     ansible.builtin.import_tasks: task-cert_private_server.yml
     notify: Restart postfix
+  - name: Ensure public client certificate and key (for external)
+    ansible.builtin.import_tasks: task-cert_public_local_full.yml
+    notify: Restart postfix
   - name: Configure postfix main.cf
     ansible.builtin.template:
       dest: /etc/postfix/main.cf

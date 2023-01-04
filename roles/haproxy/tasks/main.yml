@@ -20,6 +20,9 @@
 - name: Ensure private client certificate and key (for backends)
   ansible.builtin.import_tasks: task-cert_private_client.yml
   notify: Restart haproxy
+- name: Ensure public client certificate and key (for external)
+  ansible.builtin.import_tasks: task-cert_public_local_full.yml
+  notify: Restart haproxy
 - name: Ensure HAProxy configuration directory exists
   become: yes
   ansible.builtin.file:

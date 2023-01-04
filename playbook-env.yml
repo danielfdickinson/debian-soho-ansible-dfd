@@ -5,9 +5,6 @@
 - name: Include instances base playbook (which can also be standalone)
   ansible.builtin.import_playbook: playbook-env-instances_base.yml
 
-- name: Include certificates playbook (which can also be standalone)
-  ansible.builtin.import_playbook: playbook-env-certificates.yml
-
 - name: Include mail server plays (which can also be standalone)
   ansible.builtin.import_playbook: playbook-env-mail_servers.yml
 
