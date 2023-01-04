@@ -15,11 +15,6 @@
   roles:
   - cert_private_client
 
-- name: Add SSL private server certificate
-  hosts: cert_private:&ssl_private_servers
-  roles:
-  - cert_private_server
-
 - name: Use cert+key from certbot dns-01 (via local)
   # This avoids the need to do have/use certbot on the remote hosts
   # but we do need to push the renewed certificates from time to time

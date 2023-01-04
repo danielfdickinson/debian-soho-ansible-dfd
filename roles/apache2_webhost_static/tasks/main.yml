@@ -8,6 +8,9 @@
 - name: Ensure private CA certificate (for verifying proxy) is present
   ansible.builtin.import_tasks: task-cert_private_ca.yml
   notify: Restart Apache2
+- name: Ensure private server certificate and key (for incoming proxy) present
+  ansible.builtin.import_tasks: task-cert_private_server.yml
+  notify: Restart Apache2
 - name: Configure SSL for connection from upstream reverse proxy
   # We don't need a non SSL vhost because we are behind a reverse proxy
   # If we want auth, we also do that on the reverse proxy, not here

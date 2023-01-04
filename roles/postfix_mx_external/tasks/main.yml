@@ -134,6 +134,9 @@
 - name: Ensure private CA certificate (for verifying internal hosts) is present
   ansible.builtin.import_tasks: task-cert_private_ca.yml
   notify: Restart postfix
+- name: Ensure private server certificate and key (for incoming bkmx) present
+  ansible.builtin.import_tasks: task-cert_private_server.yml
+  notify: Restart postfix
 - name: Copy opendkim private keys from local to remote
   become: yes
   ansible.builtin.copy:

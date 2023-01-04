@@ -18,6 +18,9 @@
 - name: Ensure private CA certificate (for verifying internal hosts) is present
   ansible.builtin.import_tasks: task-cert_private_ca.yml
   notify: Restart dovecot
+- name: Ensure private server certificate and key (for incoming internal hosts)
+  ansible.builtin.import_tasks: task-cert_private_server.yml
+  notify: Restart dovecot
 - name: Configure dovecot as mailbox server
   become: yes
   block:
