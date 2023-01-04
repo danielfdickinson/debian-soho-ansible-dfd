@@ -5,8 +5,8 @@ conf_default_remove:
 - serve-cgi-bin
 conf_default_add:
 - global-log
-# - ha-proxy-protocol
+- ha-proxy-protocol
 conf_conf_list:
 - global-log
-# - ha-proxy-protocol
+- ha-proxy-protocol
 ...

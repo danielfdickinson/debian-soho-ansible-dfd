@@ -20,11 +20,6 @@
   roles:
   - sogo
 
-- name: Configure website and internal reverse proxies to use PROXY protocol
-  hosts: website_servers:rproxy_internal
-  roles:
-  - apache2_proxy_protocol
-
 - name: Configure external (edge) reverse proxy
   hosts: rproxy_external
   roles:

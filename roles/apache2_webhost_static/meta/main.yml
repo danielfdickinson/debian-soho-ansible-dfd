@@ -1,6 +1,5 @@
 ---
 dependencies:
-- role: apache2_proxy_protocol
 - role: service_apache2_conf
 - role: service_apache2_mod
 # Because ansible-lint complains otherwise

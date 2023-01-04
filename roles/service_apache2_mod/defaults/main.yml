@@ -34,4 +34,5 @@ mods_default_add:
 - http2
 - rewrite
 - ssl
+- "{% if apache2_global_proxy_protocol is defined %}{% if apache2_global_proxy_protocol != 'Off' %}remoteip{% endif %}{% else %}remoteip{% endif %}"
 ...
