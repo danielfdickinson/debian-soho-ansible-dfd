@@ -4,6 +4,5 @@
   ansible.builtin.apt:
     name:
     - apache2
-    - apache2-utils
     state: present
 ...

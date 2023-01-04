@@ -20,6 +20,7 @@ OCSP
 OLEVB
 RBWARNTIME
 Referer
+RewriteCond
 SASL
 SNI
 SPNEGO
@@ -44,6 +45,7 @@ bsdauth
 caldav
 carddav
 ccert
+cgid
 chdir
 checkpassword
 chrony
@@ -68,6 +70,7 @@ dnsmasq
 dnsv4
 dnsv6
 doci
+dont-vary
 dontlognull
 dosfstools
 doveadm
@@ -128,6 +131,7 @@ lmtpd
 loadavg
 localdomain
 localnet
+logio
 lsmtpd
 lsub
 luser
@@ -154,6 +158,7 @@ netaddrs
 newaliases
 nexthop
 noadd
+noauth
 nocloud
 nocows
 nodev
@@ -204,6 +209,7 @@ rubygems
 scache
 sdbox
 selectattr
+setenvif
 shfmt
 showq
 skel
@@ -246,6 +252,7 @@ virusalert
 vmail
 vmailbox
 vtype
+webp
 winbind
 wwwldev
 xclient
