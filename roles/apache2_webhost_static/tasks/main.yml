@@ -1,19 +1,4 @@
 ---
-- name: Enable Apache2 modules needed by our static webhost
-  become: yes
-  community.general.apache2_module:
-    name: "{{ item }}"
-    state: present
-  loop:
-  - ssl
-  - brotli
-  - cache
-  - cache_disk
-  - expires
-  - headers
-  - http2
-  - ratelimit
-  notify: Restart Apache2
 - name: Update port on which apache listens
   become: yes
   ansible.builtin.copy:
@@ -22,20 +7,6 @@
     mode: "0644"
     owner: root
     src: ports.conf
-  notify: Restart Apache2
-- name: Disable Apache2 module not required on our static webhost
-  become: yes
-  community.general.apache2_module:
-    name: "{{ item }}"
-    force: true
-    state: absent
-  loop:
-  - access_compat
-  - autoindex
-  - authz_user
-  - authn_file
-  - auth_basic
-  - authn_core
   notify: Restart Apache2
 - name: Disable Debian default site for Apache2
   become: yes
@@ -61,22 +32,13 @@
     src: private-ssl.conf.j2
   notify: Restart Apache2
 - name: Enable SSL for connection from upstream reverse proxy
+  # We don't need a non SSL vhost because we are behind a reverse proxy
+  # If we want auth, we also do that on the reverse proxy, not here
   become: yes
   ansible.builtin.file:
     path: /etc/apache2/conf-enabled/private-ssl.conf
     src: /etc/apache2/conf-available/private-ssl.conf
     state: link
-  notify: Restart Apache2
-- name: Configure module cache_disk
-  # We don't need a non SSL vhost because we are behind a reverse proxy
-  # If we want auth, we also do that on the reverse proxy, not here
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/apache2/mods-available/cache_disk.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: cache_disk.conf
   notify: Restart Apache2
 - name: Configure VHosts
   become: yes

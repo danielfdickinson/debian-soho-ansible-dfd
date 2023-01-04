@@ -1,0 +1,37 @@
+---
+mods_conf_list:
+- alias
+- cache_disk
+- deflate
+- dir
+- http2
+- status
+mods_default_removable_auth_compat:
+# Compatibility with 2.2.x ACL
+- access_compat
+mods_default_removable_basic:
+- autoindex
+mods_default_removable_cgi:
+- cgid
+mods_default_remove: "{{ [mods_default_removable_auth_compat, mods_default_removable_basic, mods_default_removable_cgi, mods_noauth_list if mods_noauth else None] | flatten | unique }}"
+mods_noauth: true
+mods_noauth_list:
+# How the client sees challenge/response for auth (HTTP Basic Auth)
+- auth_basic
+# Authentication methods
+- authn_core
+# Authenticate users using an htpasswd file
+- authn_file
+# Authorization and access controls (by authenticated user)
+- authz_user
+mods_default_add:
+# Modules we want for an up to date web experience and/or better SEO
+- brotli
+- cache
+- cache_disk
+- expires
+- headers
+- http2
+- rewrite
+- ssl
+...

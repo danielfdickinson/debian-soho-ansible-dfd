@@ -1,6 +1,12 @@
 ---
 dependencies:
-- role: packages_apache2
+- role: service_apache2_mod
+  vars:
+    apache2_global_cache_disk_path: /
+    mods_noauth: false
+    mods_service_add:
+    - proxy
+    - proxy_http
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

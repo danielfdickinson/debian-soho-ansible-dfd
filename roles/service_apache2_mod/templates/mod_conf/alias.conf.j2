@@ -1,0 +1,45 @@
+<IfModule alias_module>
+	# Aliases: Add here as many aliases as you need (with no limit). The format is
+	# Alias fakename realname
+	#
+	# Note that if you include a trailing / on fakename then the server will
+	# require it to be present in the URL.  So "/icons" isn't aliased in this
+	# example, only "/icons/".  If the fakename is slash-terminated, then the
+	# realname must also be slash terminated, and if the fakename omits the
+	# trailing slash, the realname must also omit it.
+	#
+	# We include the /icons/ alias for FancyIndexed directory listings.  If
+	# you do not use FancyIndexing, you may comment this out.
+
+	# Alias /icons/ "/usr/share/apache2/icons/"
+
+	# <Directory "/usr/share/apache2/icons">
+	#	Options FollowSymlinks
+	#	AllowOverride None
+	#	Require all granted
+	# </Directory>
+	{% if apache2_global_aliases is defined %}
+	{% for global_alias in apache2_global_aliases %}
+	Alias {{ global_alias.alias_path }} "{{ global_alias.alias_target }}"
+	<Directory "{{ global_alias.alias_target }}">
+		{% if global_alias['options'] is defined %}
+		Options {{ global_alias['options'] }}
+		{% else %}
+		# Apache default setting; omitting this doesn't add to security
+		# See https://httpd.apache.org/docs/2.4/mod/core.html#options
+		Options FollowSymlinks
+		{% endif %}
+		AllowOverride None
+		{% if global_alias['acls'] is defined %}
+		{% for acl in global_alias['acls'] %}
+		Require {{ acl }}
+		{% endfor %}
+		{% else %}
+		Require all granted
+		{% endif %}
+	</Directory>
+	{% endfor %}
+	{% endif %}
+</IfModule>
+
+# vim: syntax=apache

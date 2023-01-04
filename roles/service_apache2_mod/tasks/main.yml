@@ -1,0 +1,35 @@
+---
+- name: Configure default conf files or those added via our default module adds
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/mods-available/{{ item }}.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: mod_conf/{{ item }}.conf.j2
+  loop: "{{ mods_conf_list }}"
+  notify: Restart apache2
+- name: Disable apache2 modules not required on host
+  become: yes
+  community.general.apache2_module:
+    name: "{{ item }}"
+    force: true
+    state: absent
+  loop: "{{ mods_default_remove | default([]) }}"
+  notify: Restart apache2
+- name: Disable apache2 modules we enabled and no longer want
+  become: yes
+  community.general.apache2_module:
+    name: "{{ item }}"
+    force: true
+    state: absent
+  loop: "{{ mods_added_remove | default([]) }}"
+  notify: Restart apache2
+- name: Enable apache2 modules we want for an up-to-date experience
+  become: yes
+  community.general.apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ [mods_default_add, (mods_service_add|default(None))] | flatten | unique | default([]) }}"
+  notify: Restart apache2
+...

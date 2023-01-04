@@ -1,11 +1,10 @@
 ---
 dependencies:
-- role: apache2_proxy_protocol
-- role: service_apache2_mod
+- role: packages_apache2
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Configure Apache2 as a static webhost
+  description: Configure apache2 modules
   license: MIT
   min_ansible_version: "6.0"
   platforms:

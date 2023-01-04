@@ -12,7 +12,9 @@
 
 	# This will also cache local documents. It usually makes more sense to
 	# put this into the configuration for just one virtual host.
-	CacheEnable disk /
+	{% if apache2_global_cache_disk_path is defined %}
+	CacheEnable disk {{ apache2_global_cache_disk_path }}
+	{% endif %}
 
 	# The result of CacheDirLevels * CacheDirLength must not be higher than
 	# 20. Moreover, pay attention on file system limits. Some file systems

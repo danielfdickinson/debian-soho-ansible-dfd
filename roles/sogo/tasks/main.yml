@@ -104,21 +104,6 @@
     owner: root
     src: sogo-site.conf.j2
   notify: Restart Apache2
-- name: Enable Apache2 modules needed by SOGo
-  become: yes
-  community.general.apache2_module:
-    name: "{{ item }}"
-    state: present
-  loop:
-  - ssl
-  - brotli
-  - expires
-  - headers
-  - http2
-  - proxy
-  - proxy_http
-  - rewrite
-  notify: Restart Apache2
 - name: Update port on which apache listens
   become: yes
   ansible.builtin.template:
@@ -127,13 +112,6 @@
     mode: "0644"
     owner: root
     src: ports.conf.j2
-  notify: Restart Apache2
-- name: Disable Apache2 autoindex module
-  become: yes
-  community.general.apache2_module:
-    name: autoindex
-    force: true
-    state: absent
   notify: Restart Apache2
 - name: Disable Debian default site for Apache2
   become: yes

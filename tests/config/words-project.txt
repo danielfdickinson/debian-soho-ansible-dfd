@@ -28,6 +28,10 @@ SSLCA
 UFW
 ULA
 Winbind
+a2disconf
+a2dismod
+a2enconf
+a2enmod
 abortonclose
 addrtype
 adminaddr
