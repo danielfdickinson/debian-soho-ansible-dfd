@@ -1,5 +1,8 @@
 ---
 dependencies:
+- role: service_apache2_conf
+  vars:
+    apache2_global_https_port: "{{ gdav_port }}"
 - role: service_apache2_mod
   vars:
     apache2_global_cache_disk_path: /

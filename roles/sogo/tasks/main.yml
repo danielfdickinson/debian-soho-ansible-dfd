@@ -104,25 +104,10 @@
     owner: root
     src: sogo-site.conf.j2
   notify: Restart Apache2
-- name: Update port on which apache listens
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/apache2/ports.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: ports.conf.j2
-  notify: Restart Apache2
 - name: Disable Debian default site for Apache2
   become: yes
   ansible.builtin.file:
     path: /etc/apache2/sites-enabled/000-default.conf
-    state: absent
-  notify: Restart Apache2
-- name: Disable CGI serving
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/conf-enabled/serve-cgi-bin.conf
     state: absent
   notify: Restart Apache2
 - name: Configure SOGo

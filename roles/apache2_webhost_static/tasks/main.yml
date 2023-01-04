@@ -1,23 +1,8 @@
 ---
-- name: Update port on which apache listens
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/apache2/ports.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: ports.conf
-  notify: Restart Apache2
 - name: Disable Debian default site for Apache2
   become: yes
   ansible.builtin.file:
     path: /etc/apache2/sites-enabled/000-default.conf
-    state: absent
-  notify: Restart Apache2
-- name: Disable CGI serving
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/conf-enabled/serve-cgi-bin.conf
     state: absent
   notify: Restart Apache2
 - name: Configure SSL for connection from upstream reverse proxy

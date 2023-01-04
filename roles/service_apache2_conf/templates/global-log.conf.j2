@@ -1,0 +1,2 @@
+LogFormat "%h %v %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" v_combined
+GlobalLog ${APACHE_LOG_DIR}/access_global.log v_combined

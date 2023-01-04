@@ -1,0 +1,45 @@
+---
+- name: Update ports on which server listens
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/ports.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: ports.conf.j2
+  notify: Restart apache2
+- name: Add or update global configuration snippets
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/conf-available/{{ item }}.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: "{{ item }}.conf.j2"
+  loop: "{{ conf_conf_list }}"
+  notify: Restart apache2
+- name: Disable apache2 configurations not required on host
+  become: yes
+  ansible.builtin.command:
+    cmd: a2disconf {{ item | quote }}
+  register: a2disconf_default_out
+  changed_when: a2disconf_default_out.rc == 0 and "already disabled" not in a2disconf_default_out.stdout
+  loop: "{{ conf_default_remove | default([]) }}"
+  notify: Restart apache2
+- name: Disable apache2 global config we enabled and no longer want
+  become: yes
+  ansible.builtin.command:
+    cmd: a2disconf {{ item | quote }}
+  register: a2disconf_added_out
+  changed_when: a2disconf_added_out.rc == 0 and "already disabled" not in a2disconf_added_out.stdout
+  loop: "{{ conf_added_remove | default([]) }}"
+  notify: Restart apache2
+- name: Enable apache2 global config we want for an up-to-date experience
+  become: yes
+  ansible.builtin.command:
+    cmd: a2enconf {{ item | quote }}
+  register: a2enconf_add_out
+  changed_when: a2enconf_add_out.rc == 0 and "already enabled" not in a2enconf_add_out.stdout
+  loop: "{{ [conf_default_add, (conf_service_add | default(None))] | flatten | unique | default([]) }}"
+  notify: Restart apache2
+...

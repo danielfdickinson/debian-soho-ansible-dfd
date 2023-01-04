@@ -1,0 +1,15 @@
+{% if apache2_global_http_port is defined %}
+Listen {{ apache2_global_http_port }}
+{% endif %}
+
+<IfModule ssl_module>
+	{% if apache2_global_https_port is defined %}
+	Listen {{ apache2_global_https_port }}
+	{% endif %}
+</IfModule>
+
+<IfModule mod_gnutls.c>
+	{% if apache2_global_https_port is defined %}
+	Listen {{ apache2_global_https_port }}
+	{% endif %}
+</IfModule>
