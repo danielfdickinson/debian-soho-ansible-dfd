@@ -6,6 +6,9 @@
     ansible.builtin.apt:
       name:
       - postfix
+  - name: Ensure private CA certificate (for verifying internal hosts) is present
+    ansible.builtin.import_tasks: task-cert_private_ca.yml
+    notify: Restart postfix
   - name: Configure postfix main.cf
     ansible.builtin.template:
       dest: /etc/postfix/main.cf

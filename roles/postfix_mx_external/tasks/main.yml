@@ -131,6 +131,9 @@
     owner: root
     src: opendkim.conf.j2
   notify: Restart opendkim
+- name: Ensure private CA certificate (for verifying internal hosts) is present
+  ansible.builtin.import_tasks: task-cert_private_ca.yml
+  notify: Restart postfix
 - name: Copy opendkim private keys from local to remote
   become: yes
   ansible.builtin.copy:
