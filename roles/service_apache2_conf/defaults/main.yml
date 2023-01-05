@@ -9,8 +9,10 @@ conf_default_remove:
 conf_default_add:
 - global-log
 - ha-proxy-protocol
+- private-ssl
 conf_conf_list:
 - global-log
 - ha-proxy-protocol
+- private-ssl
 - security
 ...

@@ -1,0 +1,17 @@
+<IfModule mod_ssl.c>
+	# generated 2022-12-27, Mozilla Guideline v5.6, Apache 2.4.54, OpenSSL 1.1.1n, modern configuration, no HSTS, no OCSP
+	# https://ssl-config.mozilla.org/#server=apache&version=2.4.54&config=modern&openssl=1.1.1n&hsts=false&ocsp=false&guideline=5.6
+
+	# this configuration requires mod_ssl
+	SSLEngine On
+
+	# modern configuration
+	SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1 -TLSv1.2
+	SSLHonorCipherOrder off
+	SSLSessionTickets off
+	SSLCACertificateFile {{ private_ca_cert_file }}
+	SSLCertificateFile {{ private_cert_cert_file }}
+	SSLCertificateKeyFile {{ private_cert_key_file }}
+</IfModule>
+
+# vim: syntax=apache
