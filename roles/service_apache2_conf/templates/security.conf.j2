@@ -1,0 +1,22 @@
+# Disable access to the entire file system except for the directories that
+# are explicitly allowed later.
+#
+# This currently breaks the configurations that come with some web application
+# Debian packages.
+
+{% if apache2_global_default_deny_directories %}
+<Directory />
+	AllowOverride None
+	Require all denied
+</Directory>
+{% endif %}
+
+ServerTokens {{ apache2_global_server_tokens }}
+ServerSignature {{ apache2_global_server_signature }}
+
+<IfModule mod_headers.c>
+	Header set X-Content-Type-Options: {{ apache2_global_content_type_options | default("nosniff") }}
+	Header set X-Frame-Options: {{ apache2_global_frame_options | default("sameorigin") }}
+</IfModule>
+
+# vim: syntax=apache

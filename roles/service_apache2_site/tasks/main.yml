@@ -1,0 +1,34 @@
+---
+- name: Disable debian default site for apache2
+  become: yes
+  ansible.builtin.command:
+    cmd: a2dissite 000-default
+  register: a2dissite_out
+  changed_when: a2dissite_out.rc == 0 and "already disabled" not in a2dissite_out.stdout
+  notify: Restart apache2
+- name: Ensure private CA certificate (for verifying proxy) is present
+  ansible.builtin.include_tasks: task-cert_private_ca.yml
+- name: Ensure private server certificate and key (for incoming proxy) present
+  ansible.builtin.include_tasks: task-cert_private_server.yml
+- name: Add/Update VHosts configuration
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/apache2/sites-available/site-{{ item.server_name_external }}.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: sites.conf.j2
+  loop: "{{ virtual_hosts }}"
+  loop_control:
+    label: "{{ item.server_name_external }}"
+  notify: Restart apache2
+- name: Enable vhosts
+  become: yes
+  ansible.builtin.command:
+    cmd: a2ensite site-{{ item.server_name_external }}
+  register: a2ensite_out
+  changed_when: a2ensite_out.rc == 0 and "already enabled" not in a2ensite_out.stdout
+  when: item['disabled'] is not defined or (item['disabled'] is defined and not item['disabled'])
+  loop: "{{ virtual_hosts }}"
+  notify: Restart apache2
+...

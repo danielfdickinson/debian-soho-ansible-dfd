@@ -1,5 +1,8 @@
 ---
+apache2_global_default_deny_directories: true
 apache2_global_https_port: 443
+apache2_global_server_signature: "Off"
+apache2_global_server_tokens: Prod
 conf_default_remove:
 - localized-error-pages
 - serve-cgi-bin
@@ -9,4 +12,5 @@ conf_default_add:
 conf_conf_list:
 - global-log
 - ha-proxy-protocol
+- security
 ...

@@ -1,14 +1,14 @@
 use chroot = no
 read only = no
 syslog facility = local4
-syslog tag = {{  ( item.fqdn | split('.') )[0] }}
+syslog tag = {{  ( item['vhost']['server_name_external'] | split('.') )[0] }}
 
-[{{ ( item.fqdn | split('.'))[0] }}]
-path = /var/www/{{ item.fqdn }}
+[{{ ( item['vhost']['server_name_external'] | split('.'))[0] }}]
+path = /var/www/{{ item['vhost']['server_name_external'] }}
 
 {% if item['subsites'] is defined %}
 {% for subsite in item['subsites'] %}
 [{{ subsite }}]
-path = /var/www/{{ item.fqdn }}/{{ subsite }}
+path = /var/www/{{ item['vhost']['server_name_external'] }}/{{ subsite }}
 {% endfor %}
 {% endif %}

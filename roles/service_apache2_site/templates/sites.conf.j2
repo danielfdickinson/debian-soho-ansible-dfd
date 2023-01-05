@@ -1,0 +1,44 @@
+<IfModule mod_ssl.c>
+	# generated 2022-12-27, Mozilla Guideline v5.6, Apache 2.4.54, OpenSSL 1.1.1n, modern configuration, no HSTS, no OCSP
+	# https://ssl-config.mozilla.org/#server=apache&version=2.4.54&config=modern&openssl=1.1.1n&hsts=false&ocsp=false&guideline=5.6
+
+	# this configuration requires mod_ssl
+	SSLEngine On
+
+	# modern configuration
+	SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1 -TLSv1.2
+	SSLHonorCipherOrder off
+	SSLSessionTickets off
+
+# Don't create virtual hosts unless we are told about them
+{% for vhost in virtual_hosts %}
+	# Only enable virtual hosts if we have mod_ssl
+	<VirtualHost *:{{ vhost['https_port'] | default(apache2_global_https_port) }}>
+		ServerName {{ vhost['server_name_external'] }}
+
+		# Allow enabling HTTP/2, if available
+		Protocols {{ vhost['protocols'] | default(["h2", "http/1.1"]) | join(' ') }}
+
+		SSLCACertificateFile {{ vhost['private_cert_cert_file'] | default(private_ca_cert_file) }}
+		SSLCertificateFile {{ vhost['private_cert_cert_file'] | default(private_cert_cert_file) }}
+		SSLCertificateKeyFile {{ vhost['private_cert_key_file'] | default(private_cert_key_file) }}
+		SSLVerifyClient {{ vhost['ssl_verify_client'] | default('On') }}
+
+		{% if apache2_global_default_deny_directories %}
+		<Directory "{{ vhost['document_root'] | default("/var/www/" + vhost['server_name_external']) }}">
+			AllowOverride {{ vhost['document_root_overrides'] | default("None") }}
+			Require all granted
+		</Directory>
+		{% endif %}
+		DocumentRoot {{ vhost['document_root'] | default("/var/www/" + vhost['server_name_external']) }}
+
+		{% if vhost['additional_directives'] is defined %}
+		{{ vhost['additional_directives'] }}
+		{% endif %}
+
+		ErrorLog ${APACHE_LOG_DIR}/error_{{ vhost['server_name_external'] }}.log
+		Customlog ${APACHE_LOG_DIR}/access_{{ vhost['server_name_external'] }}.log combined
+	</VirtualHost>
+{% endfor %}
+</IfModule>
+

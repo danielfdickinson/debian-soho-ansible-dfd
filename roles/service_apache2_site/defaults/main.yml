@@ -1,0 +1,4 @@
+---
+apache2_global_default_deny_directories: true
+apache2_global_https_port: 443
+...

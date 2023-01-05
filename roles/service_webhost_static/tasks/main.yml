@@ -1,63 +1,9 @@
 ---
-- name: Disable Debian default site for Apache2
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/sites-enabled/000-default.conf
-    state: absent
-  notify: Restart Apache2
-- name: Ensure private CA certificate (for verifying proxy) is present
-  ansible.builtin.import_tasks: task-cert_private_ca.yml
-  notify: Restart Apache2
-- name: Ensure private server certificate and key (for incoming proxy) present
-  ansible.builtin.import_tasks: task-cert_private_server.yml
-  notify: Restart Apache2
-- name: Configure SSL for connection from upstream reverse proxy
-  # We don't need a non SSL vhost because we are behind a reverse proxy
-  # If we want auth, we also do that on the reverse proxy, not here
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/apache2/conf-available/private-ssl.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: private-ssl.conf.j2
-  notify: Restart Apache2
-- name: Enable SSL for connection from upstream reverse proxy
-  # We don't need a non SSL vhost because we are behind a reverse proxy
-  # If we want auth, we also do that on the reverse proxy, not here
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/conf-enabled/private-ssl.conf
-    src: /etc/apache2/conf-available/private-ssl.conf
-    state: link
-  notify: Restart Apache2
-- name: Configure VHosts
-  become: yes
-  loop: "{{ websites_static }}"
-  loop_control:
-    label: "{{ item.fqdn }}"
-  ansible.builtin.template:
-    dest: /etc/apache2/sites-available/{{ item.fqdn }}.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: vhost.conf.j2
-  notify: Restart Apache2
-- name: Enable VHosts
-  become: yes
-  loop: "{{ websites_static }}"
-  loop_control:
-    label: "{{ item.fqdn }}"
-  ansible.builtin.file:
-    path: /etc/apache2/sites-enabled/{{ item.fqdn }}.conf
-    src: /etc/apache2/sites-available/{{ item.fqdn }}.conf
-    state: link
-  notify: Restart Apache2
 - name: Ensure VHost site operators exist
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.builtin.user:
     name: "{{ item.operator }}"
     password_lock: true
@@ -67,9 +13,9 @@
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.builtin.file:
-    path: /var/www/{{ item.fqdn }}
+    path: /var/www/{{ item.vhost.server_name_external }}
     group: "{{ item.operator }}"
     mode: "0775"
     owner: root
@@ -78,9 +24,9 @@
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.builtin.copy:
-    dest: /var/www/{{ item.fqdn }}/index.html
+    dest: /var/www/{{ item.vhost.server_name_external }}/index.html
     force: false
     group: "{{ item.operator }}"
     mode: "0644"
@@ -95,7 +41,7 @@
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.builtin.file:
     path: /home/{{ item.operator }}
     group: "{{ admin_user }}"
@@ -106,7 +52,7 @@
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.builtin.template:
     dest: /home/{{ item.operator }}/rsyncd.conf
     group: "{{ admin_user }}"
@@ -117,7 +63,7 @@
   become: yes
   loop: "{{ websites_static }}"
   loop_control:
-    label: "{{ item.fqdn }}"
+    label: "{{ item.vhost.server_name_external }}"
   ansible.posix.authorized_key:
     key: "{{ item.ssh_key }}"
     user: "{{ item.operator }}"
