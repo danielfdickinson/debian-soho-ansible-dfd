@@ -1,15 +1,84 @@
 ---
 dependencies:
-- role: service_apache2_conf
+- role: service_apache2_site
   vars:
     apache2_global_https_port: "{{ gdav_port }}"
-- role: service_apache2_mod
-  vars:
     apache2_global_cache_disk_path: /
     mods_noauth: false
     mods_service_add:
     - proxy
     - proxy_http
+    virtual_hosts:
+    - server_name_external: "{{ gdav_server_name_external }}"
+      document_root: /usr/lib/GNUstep/SOGo/WebServerResources
+      additional_directives: |
+        Alias /SOGo/WebServerResources/ /usr/lib/GNUstep/SOGo/WebServerResources/
+        Alias /SOGo.woa/WebServerResources/ /usr/lib/GNUstep/SOGo/WebServerResources/
+        AliasMatch /SOGo/so/ControlPanel/Products/(.*)/Resources/(.*) /usr/lib/GNUstep/SOGo/$1.SOGo/Resources/$2
+        <Directory /usr/lib/GNUstep/SOGo/>
+        AllowOverride None
+        Require all granted
+
+        {% raw %}
+        # Explicitly allow caching of static content to avoid browser specific behavior.
+        # A resource's URL MUST change in order to have the client load the new version.
+        {% endraw %}
+
+        <IfModule expires_module>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 year"
+        </IfModule>
+        </Directory>
+
+        {% raw %}
+        # Redirect / to /SOGo
+        {% endraw %}
+
+        <IfModule mod_alias.c>
+        RedirectMatch permanent ^/$ https://{{ gdav_server_name_external }}/SOGo
+        </IfModule>
+
+        ProxyRequests Off
+        SetEnv proxy-nokeepalive 1
+        ProxyPreserveHost On
+        ProxyPass /SOGo http://127.0.0.1:20000/SOGo retry=0
+
+        <Proxy http://127.0.0.1:20000/SOGo>
+        <IfModule headers_module>
+        RequestHeader set "x-webobjects-server-port" "443"
+        SetEnvIf Host (.*) HTTP_HOST=$1
+        SetEnvIf X-Remote-User (.*) REMOTE_USER=$1
+        RequestHeader set "x-webobjects-server-name" "%{HTTP_HOST}e" env=HTTP_HOST
+        RequestHeader set "x-webobjects-server-url" "https://%{HTTP_HOST}e" env=HTTP_HOST
+        RequestHeader set "x-webobjects-server-protocol" "HTTP/1.0"
+        RequestHeader set "x-webobjects-remote-host" "%{REMOTE_HOST}e" env=REMOTE_HOST
+        RequestHeader set "x-webobjects-remote-user" "%{REMOTE_USER}e" env=REMOTE_USER
+        RequestHeader set "x-webobjects-auth-type" "Basic"
+        </IfModule>
+
+        AddDefaultCharset UTF-8
+        Require all granted
+        </Proxy>
+
+        <IfModule rewrite_module>
+        RewriteEngine On
+
+        {% raw %}
+        # For Apple autoconfiguration
+        {% endraw %}
+
+        RewriteRule ^/.well-known/caldav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
+        RewriteRule ^/.well-known/carddav/?$ https://{{ gdav_server_name_external }}/SOGo/dav [R=301]
+
+        {% raw %}
+        # We use mod_rewrite to pass remote address to the SOGo proxy.
+        # The remote address will appear in SOGo's log files and in the X-Forward
+        # header of emails.
+        {% endraw %}
+
+        RewriteRule ^/SOGo/(.*)$ /SOGo/$1 [env=REMOTE_HOST:%{REMOTE_ADDR},PT]
+        </IfModule>
+
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

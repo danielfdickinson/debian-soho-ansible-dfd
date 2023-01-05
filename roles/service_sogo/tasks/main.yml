@@ -95,21 +95,6 @@
     dest: /etc/postgresql/13/main/pg_hba.conf
     state: present
     users: sogo
-- name: Add SOGo configuration for Apache2
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/apache2/sites-available/sogo.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: sogo-site.conf.j2
-  notify: Restart Apache2
-- name: Disable Debian default site for Apache2
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/sites-enabled/000-default.conf
-    state: absent
-  notify: Restart Apache2
 - name: Configure SOGo
   become: yes
   ansible.builtin.template:
@@ -119,20 +104,6 @@
     owner: sogo
     src: sogo.conf.j2
   notify: Restart SOGo
-- name: Ensure private CA certificate (for verifying proxy) is present
-  ansible.builtin.include_tasks: task-cert_private_ca.yml
-- name: Ensure private server certificate and key (for incoming proxy) present
-  ansible.builtin.include_tasks: task-cert_private_server.yml
-- name: Enable SOGo site for Apache2
-  become: yes
-  ansible.builtin.file:
-    path: /etc/apache2/sites-enabled/sogo.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: /etc/apache2/sites-available/sogo.conf
-    state: link
-  notify: Restart Apache2
 - name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v4)
   become: yes
   community.general.ufw:
