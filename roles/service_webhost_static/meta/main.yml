@@ -2,6 +2,7 @@
 dependencies:
 - role: service_apache2_site
   vars:
+    apache2_global_cache_disk_path: /
     virtual_hosts: "{{ websites_static | map(attribute='vhost') }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
