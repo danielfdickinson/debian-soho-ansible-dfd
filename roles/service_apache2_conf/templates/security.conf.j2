@@ -5,6 +5,7 @@
 # Debian packages.
 
 {% if apache2_global_default_deny_directories %}
+
 <Directory />
 	AllowOverride None
 	Require all denied
@@ -15,8 +16,8 @@ ServerTokens {{ apache2_global_server_tokens }}
 ServerSignature {{ apache2_global_server_signature }}
 
 <IfModule mod_headers.c>
-	Header set X-Content-Type-Options: {{ apache2_global_content_type_options | default("nosniff") }}
-	Header set X-Frame-Options: {{ apache2_global_frame_options | default("sameorigin") }}
+	Header set X-Content-Type-Options: {{ apache2_global_content_type_options | default("\"nosniff\"") }}
+	Header set X-Frame-Options: {{ apache2_global_frame_options | default("\"sameorigin\"") }}
 </IfModule>
 
 # vim: syntax=apache

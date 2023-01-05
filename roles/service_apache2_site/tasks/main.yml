@@ -30,5 +30,7 @@
   changed_when: a2ensite_out.rc == 0 and "already enabled" not in a2ensite_out.stdout
   when: item['disabled'] is not defined or (item['disabled'] is defined and not item['disabled'])
   loop: "{{ virtual_hosts }}"
+  loop_control:
+    label: "{{ item.server_name_external }}"
   notify: Restart apache2
 ...
