@@ -1,9 +1,14 @@
 <IfModule mod_dir.c>
 	{% if apache2_global_index_files is defined %}
+
 	DirectoryIndex {{ apache2_global_index_files | join(' ') }}
+
 	{% else %}
+
 	DirectoryIndex index.html
+
 	{% endif %}
+
 </IfModule>
 
 # vim: syntax=apache

@@ -10,9 +10,10 @@
 	# This path must be the same as the one in /etc/default/apache2
 	CacheRoot /var/cache/apache2/mod_cache_disk
 
+	{% if apache2_global_cache_disk_path is defined %}
+
 	# This will also cache local documents. It usually makes more sense to
 	# put this into the configuration for just one virtual host.
-	{% if apache2_global_cache_disk_path is defined %}
 	CacheEnable disk {{ apache2_global_cache_disk_path }}
 	{% endif %}
 
