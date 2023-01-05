@@ -4,12 +4,16 @@
   ansible.builtin.systemd:
     name: haproxy
     state: restarted
-  listen: Restart haproxy service
+  listen:
+  - Restart haproxy service
+  - Restart SSL-based server
 - name: Reload unit files
   become: yes
   ansible.builtin.systemd:
     daemon_reload: true
-  listen: Restart haproxy service
+  listen:
+  - Restart haproxy service
+  - Restart SSL-based server
 - name: Reload haproxy
   become: yes
   ansible.builtin.systemd:

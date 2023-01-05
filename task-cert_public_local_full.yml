@@ -17,6 +17,8 @@
       owner: root
       src: "{{ host_public_cert_cert_file_src }}"
     when: host_public_cert_cert_file is defined
+    notify:
+    - Restart SSL-based server
   - name: Add key for public cert as file
     ansible.builtin.copy:
       dest: "{{ host_public_cert_key_file }}"
@@ -25,6 +27,8 @@
       owner: root
       src: "{{ host_public_cert_key_file_src }}"
     when: host_public_cert_key_file is defined
+    notify:
+    - Restart SSL-based server
   - name: Add cert+key for public cert as file
     ansible.builtin.template:
       dest: "{{ host_public_cert_full_file }}"
@@ -33,4 +37,6 @@
       owner: root
       src: public_cert_full_file.j2
     when: host_public_cert_full_file is defined
+    notify:
+    - Restart SSL-based server
 ...

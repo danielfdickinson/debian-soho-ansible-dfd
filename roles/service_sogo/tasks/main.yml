@@ -120,11 +120,9 @@
     src: sogo.conf.j2
   notify: Restart SOGo
 - name: Ensure private CA certificate (for verifying proxy) is present
-  ansible.builtin.import_tasks: task-cert_private_ca.yml
-  notify: Restart Apache2
+  ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private server certificate and key (for incoming proxy) present
-  ansible.builtin.import_tasks: task-cert_private_server.yml
-  notify: Restart Apache2
+  ansible.builtin.include_tasks: task-cert_private_server.yml
 - name: Enable SOGo site for Apache2
   become: yes
   ansible.builtin.file:

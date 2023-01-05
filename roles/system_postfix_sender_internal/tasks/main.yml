@@ -5,11 +5,9 @@
     name:
     - postfix
 - name: Ensure private CA certificate (for verifying internal MX) is present
-  ansible.builtin.import_tasks: task-cert_private_ca.yml
-  notify: Restart postfix
+  ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private client certificate and key (for sending to internal MX)
-  ansible.builtin.import_tasks: task-cert_private_client.yml
-  notify: Restart postfix
+  ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Configure email aliases
   become: yes
   ansible.builtin.template:

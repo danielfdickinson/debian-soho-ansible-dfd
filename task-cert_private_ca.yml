@@ -7,5 +7,7 @@
     mode: "0644"
     owner: root
     src: private_ca_cert.crt.j2
-  notify: Add CA certificate to system
+  notify:
+  - Add CA certificate to system
+  - Restart SSL-based server
 ...

@@ -30,8 +30,10 @@ ULA
 Winbind
 a2disconf
 a2dismod
+a2dissite
 a2enconf
 a2enmod
+a2ensite
 abortonclose
 addrtype
 adminaddr
@@ -249,6 +251,7 @@ vdomain
 vfat
 vgname
 vhost
+vhosts
 virbr
 virsh
 virt

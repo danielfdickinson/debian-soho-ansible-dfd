@@ -7,14 +7,11 @@
       name:
       - postfix
   - name: Ensure private CA certificate (for verifying internal hosts) is present
-    ansible.builtin.import_tasks: task-cert_private_ca.yml
-    notify: Restart postfix
+    ansible.builtin.include_tasks: task-cert_private_ca.yml
   - name: Ensure private server certificate and key (for incoming) present
-    ansible.builtin.import_tasks: task-cert_private_server.yml
-    notify: Restart postfix
+    ansible.builtin.include_tasks: task-cert_private_server.yml
   - name: Ensure public client certificate and key (for external)
-    ansible.builtin.import_tasks: task-cert_public_local_full.yml
-    notify: Restart postfix
+    ansible.builtin.include_tasks: task-cert_public_local_full.yml
   - name: Configure postfix main.cf
     ansible.builtin.template:
       dest: /etc/postfix/main.cf

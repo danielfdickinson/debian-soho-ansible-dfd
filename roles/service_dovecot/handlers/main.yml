@@ -1,5 +1,6 @@
 ---
 - name: Restart dovecot
+  listen: Restart SSL-based server
   become: yes
   ansible.builtin.systemd:
     name: dovecot

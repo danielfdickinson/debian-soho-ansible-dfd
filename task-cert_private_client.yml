@@ -16,6 +16,8 @@
       mode: "0644"
       owner: root
       src: private_client_cert-cert.pem.j2
+    notify:
+    - Restart SSL-based server
   - name: Add private key for private client cert as file
     ansible.builtin.template:
       dest: "{{ host_private_client_cert_key_file }}"
@@ -23,6 +25,8 @@
       mode: "0600"
       owner: root
       src: private_client_cert-key.pem.j2
+    notify:
+    - Restart SSL-based server
   - name: Add cert+private key for private client cert as file
     ansible.builtin.template:
       dest: "{{ private_client_cert_full_file }}"
@@ -30,4 +34,6 @@
       mode: "0600"
       owner: root
       src: private_client_cert-full.pem.j2
+    notify:
+    - Restart SSL-based server
 ...

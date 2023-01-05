@@ -17,6 +17,7 @@
     name: clamav-daemon
     state: restarted
 - name: Restart postfix
+  listen: Restart SSL-based server
   become: yes
   ansible.builtin.systemd:
     name: postfix
