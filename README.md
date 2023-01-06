@@ -1,6 +1,6 @@
 # DFD Debian Libvirt VM cluster via Ansible
 
-Bare-metal and Libvirt virtual machine deployment via Ansible for a 'personal
+Bare-metal and Libvirt virtual machine deployment via Ansible for a 'SOHO/KOHO
 infrastructure' cluster, including mail server, groupware, and web hosting.
 
 This repository should not include any unencrypted private or even particularly
