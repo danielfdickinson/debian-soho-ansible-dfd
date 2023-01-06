@@ -1,9 +1,4 @@
 ---
-- name: Ensure postfix is installed
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - postfix
 - name: Ensure private CA certificate (for verifying internal MX) is present
   ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private client certificate and key (for sending to internal MX)

@@ -97,7 +97,6 @@
     - opendkim
     - opendmarc
     - postfix-policyd-spf-python
-    - postfix
     - spamass-milter
     - spamassassin
 - name: Ensure postfix is a member of opendkim and opendmarc

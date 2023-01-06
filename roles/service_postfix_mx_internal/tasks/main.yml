@@ -2,10 +2,6 @@
 - name: Configure postfix as an email receiver (internal only)
   become: yes
   block:
-  - name: Ensure postfix is installed
-    ansible.builtin.apt:
-      name:
-      - postfix
   - name: Ensure private CA certificate (for verifying internal hosts) is present
     ansible.builtin.include_tasks: task-cert_private_ca.yml
   - name: Ensure private server certificate and key (for incoming) present
