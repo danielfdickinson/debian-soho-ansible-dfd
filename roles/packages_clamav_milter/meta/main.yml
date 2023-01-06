@@ -1,11 +1,10 @@
 ---
 dependencies:
-- role: packages_postfix
-- role: packages_clamav_milter
+- role: packages_clamav
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Configure postfix as external MX
+  description: Configure clamav-milter for use with postfix
   license: MIT
   min_ansible_version: "6.0"
   platforms:

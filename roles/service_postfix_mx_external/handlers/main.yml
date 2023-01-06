@@ -1,21 +1,4 @@
 ---
-- name: Update clamav unit files
-  listen: Update clamav unit files and restart them
-  become: yes
-  ansible.builtin.systemd:
-    daemon_reload: true
-- name: Restart freshclam
-  listen: Update clamav unit files and restart them
-  become: yes
-  ansible.builtin.systemd:
-    name: clamav-freshclam
-    state: restarted
-- name: Restart clamav-daemon
-  listen: Update clamav unit files and restart them
-  become: yes
-  ansible.builtin.systemd:
-    name: clamav-daemon
-    state: restarted
 - name: Rehash sender transport map
   become: yes
   ansible.builtin.command: postmap hash:/etc/postfix/sender_default_transport_map

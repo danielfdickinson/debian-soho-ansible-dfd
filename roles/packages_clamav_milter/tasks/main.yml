@@ -1,0 +1,60 @@
+---
+- name: Ensure postfix system group exists
+  ansible.builtin.group:
+    name: postfix
+    state: present
+    system: true
+- name: Set clamav milter log to syslog
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/LogSyslog
+    value: "true"
+    vtype: boolean
+- name: Support multiple recipients (clamav)
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/SupportMultipleRecipients
+    value: "true"
+    vtype: boolean
+- name: Set clamav milter to reject infected messages
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/OnInfected
+    value: Reject
+    vtype: select
+- name: Set clamav milter to log infected messages
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/LogInfected
+    value: Basic
+    vtype: select
+- name: Set clamav milter rejection messages for infected email
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/RejectMsg
+    value: Rejected - detected malicious content in message (%v)
+    vtype: string
+- name: Set clamav milter socket location
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/MilterSocket
+    value: /var/spool/postfix/clamav/clamav-milter.ctl
+    vtype: string
+- name: Set clamav milter socket group
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/MilterSocketGroup
+    value: postfix
+    vtype: string
+- name: Set clamav milter socket mode
+  ansible.builtin.debconf:
+    name: clamav-milter
+    question: clamav-milter/MilterSocketMode
+    value: "660"
+    vtype: string
+- name: Ensure clamav-milter is installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - clamav-milter
+...
