@@ -14,4 +14,17 @@
     owner: root
     src: jail.local.j2
   notify: Reload fail2ban
+- name: Add additional fail2ban jails, if supplied
+  become: yes
+  notify: Reload fail2ban
+  ansible.builtin.template:
+    dest: /etc/fail2ban/jail.d/{{ item.dest }}.local
+    group: root
+    mode: "0644"
+    owner: root
+    src: extra_jail.local.j2
+  loop: "{{ f2b_jails }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  when: f2b_jails is defined
 ...

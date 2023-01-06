@@ -8,11 +8,6 @@
 - name: Rehash virtual aliases
   become: yes
   ansible.builtin.command: postmap hash:/etc/postfix/virtual_aliases
-- name: Restart Fail2Ban
-  become: yes
-  ansible.builtin.systemd:
-    name: fail2ban
-    state: restarted
 - name: Restart spamd
   become: yes
   ansible.builtin.systemd:

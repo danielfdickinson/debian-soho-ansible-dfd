@@ -3,7 +3,6 @@
   become: yes
   ansible.builtin.apt:
     name:
-    - fail2ban
     - libarchive-zip-perl
     - libio-string-perl
     - opendkim
@@ -180,15 +179,6 @@
     owner: root
     src: aliases.j2
   notify: Apply email aliases
-- name: Add Fail2Ban configuration for Postfix
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/fail2ban/jail.d/mx.local
-    group: root
-    mode: "0644"
-    owner: root
-    src: mx_jail.local.j2
-  notify: Restart Fail2Ban
 - name: Allow SMTP from external sources
   become: yes
   community.general.ufw:
