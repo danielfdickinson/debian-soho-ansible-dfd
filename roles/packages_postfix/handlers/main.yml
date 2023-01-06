@@ -1,11 +1,11 @@
 ---
-- name: Apply email aliases
-  become: yes
-  ansible.builtin.command: newaliases
 - name: Restart postfix
   listen: Restart SSL-based server
   become: yes
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: postfix
     state: restarted
+- name: Apply email aliases
+  become: yes
+  ansible.builtin.command: newaliases
 ...

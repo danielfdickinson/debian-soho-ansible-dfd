@@ -16,12 +16,6 @@
   ansible.builtin.systemd:
     name: clamav-daemon
     state: restarted
-- name: Restart postfix
-  listen: Restart SSL-based server
-  become: yes
-  ansible.builtin.systemd:
-    name: postfix
-    state: restarted
 - name: Rehash sender transport map
   become: yes
   ansible.builtin.command: postmap hash:/etc/postfix/sender_default_transport_map
@@ -31,9 +25,6 @@
 - name: Rehash virtual aliases
   become: yes
   ansible.builtin.command: postmap hash:/etc/postfix/virtual_aliases
-- name: Apply email aliases
-  become: yes
-  ansible.builtin.command: newaliases
 - name: Restart Fail2Ban
   become: yes
   ansible.builtin.systemd:
