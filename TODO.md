@@ -1,5 +1,7 @@
 # To Do
 
+* Only install/configure fail2ban as a dependency not as a separate task
+	* E.g. should not be in the playbook, rather only triggered
 * Fully configure sieve
 * Configure spamassassin bayesian filer training
 * Add backupmx role in a separate environment
