@@ -1,0 +1,26 @@
+---
+- name: Configure spamd startup
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/default/spamassassin
+    group: root
+    mode: "0644"
+    owner: root
+    src: spamassassin.default
+  notify: Restart spamd
+- name: Configure spamassassin
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/spamassassin/local.cf
+    group: root
+    mode: "0644"
+    owner: root
+    src: local.cf.j2
+  notify: Restart spamd
+- name: Enable spamd
+  become: yes
+  ansible.builtin.systemd:
+    name: spamassassin
+    enabled: true
+    state: started
+...

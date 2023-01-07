@@ -1,0 +1,7 @@
+---
+- name: Restart spamass-milter
+  become: yes
+  ansible.builtin.systemd:
+    name: spamass-milter
+    state: restarted
+...

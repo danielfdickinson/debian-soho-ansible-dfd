@@ -1,0 +1,9 @@
+---
+- name: Ensure spamassassin milter is installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - libarchive-zip-perl
+    - libio-string-perl
+    - spamass-milter
+...

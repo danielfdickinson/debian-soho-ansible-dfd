@@ -1,0 +1,15 @@
+---
+dependencies:
+- role: system_spamassassin
+- role: packages_spamass_milter
+# Because ansible-lint complains otherwise
+galaxy_info:
+  author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
+  description: Configure spamassassin milter
+  license: MIT
+  min_ansible_version: "6.0"
+  platforms:
+  - name: Debian
+    versions:
+    - all
+...

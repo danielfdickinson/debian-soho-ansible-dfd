@@ -1,0 +1,7 @@
+---
+- name: Restart spamd
+  become: yes
+  ansible.builtin.systemd:
+    name: spamassassin
+    state: restarted
+...

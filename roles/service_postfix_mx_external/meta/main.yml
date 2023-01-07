@@ -7,6 +7,7 @@ dependencies:
       dest: mx
 - role: packages_postfix
 - role: system_clamav_milter
+- role: system_spamass_milter
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

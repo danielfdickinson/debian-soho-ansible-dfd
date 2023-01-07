@@ -8,14 +8,4 @@
 - name: Rehash virtual aliases
   become: yes
   ansible.builtin.command: postmap hash:/etc/postfix/virtual_aliases
-- name: Restart spamd
-  become: yes
-  ansible.builtin.systemd:
-    name: spamassassin
-    state: restarted
-- name: Restart spamass-milter
-  become: yes
-  ansible.builtin.systemd:
-    name: spamass-milter
-    state: restarted
 ...

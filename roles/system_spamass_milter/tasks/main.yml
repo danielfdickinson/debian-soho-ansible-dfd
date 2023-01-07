@@ -1,0 +1,11 @@
+---
+- name: Configure spamass-milter startup
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/default/spamass-milter
+    group: root
+    mode: "0644"
+    owner: root
+    src: spamass-milter.default
+  notify: Restart spamass-milter
+...
