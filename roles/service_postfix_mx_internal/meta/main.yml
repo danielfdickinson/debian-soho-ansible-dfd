@@ -1,8 +1,21 @@
 ---
 dependencies:
-- role: packages_postfix
-- role: system_cert_client_private
 - role: system_cert_server_private
+- role: system_postfix_common
+  vars:
+    postfix_email_relayhost: localhost
+    postfix_is_mx: true
+    postfix_lsmtpd_incoming: true
+    # We _are_ the internal MX, so false
+    postfix_smtp_to_internal_mx: false
+    postfix_virtual_mailboxes: "{{ mail_groupware_users | selectattr('maildomain', 'equalto', central_internal_domain) }}"
+- role: system_ufw
+  vars:
+    ufw_role_rules:
+    - from: "{{ v4nat_net }}/{{ v4nat_prefix }}"
+      port: "{{ internal_relay_port }}"
+    - from: "{{ v6nat_net }}/{{ v6nat_prefix }}"
+      port: "{{ internal_relay_port }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

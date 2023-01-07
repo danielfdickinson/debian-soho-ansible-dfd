@@ -6,6 +6,7 @@ postmaster@{{ ansible_facts['fqdn'] }} {{ admin_user }}@{{ ansible_facts['fqdn']
 postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {% endfor %}
 
+{% if postfix_is_external_mx %}
 # Admin user aliases could be abuse reports or spam, so deliver to our external
 # admin_user mailbox. We exclude our internal mailbox domain because it should
 # be a non-externally-routable domain (i.e. not domain.tld)
@@ -20,6 +21,16 @@ postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {% for adminaddr in well_known_admin_aliases | unique | difference( [ admin_user ] ) %}
 {{ adminaddr }}@{{ central_external_domain }} {{ admin_user }}@{{ central_external_domain }}
 {% endfor %}
+{% else %}
+
+# Admin user aliases for should be from local hosts (because we don't accept
+# external mail), so redirect to internal admin user mailbox
+{% for vdomain in ( [ virtual_mailbox_domains, virtual_alias_domains_hosts ] | flatten | difference( [ central_internal_domain, ansible_facts['fqdn'] ] ) | unique ) %}
+{% for adminaddr in well_known_admin_aliases | unique %}
+{{ adminaddr }}@{{ vdomain }} {{ admin_user }}@{{ central_internal_domain }}
+{% endfor %}
+{% endfor %}
+{% endif %}
 
 # Redirect all admin user aliases for the internal mailbox domain to the
 # internal mailbox admin user (we don't need to repeat for this host, because
@@ -28,6 +39,7 @@ postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {{ adminaddr }}@{{ central_internal_domain }} {{ admin_user }}@{{ central_internal_domain }}
 {% endfor %}
 
+{% if postfix_is_external_mx %}
 # Add aliases for users, except for the domain with their mailbox. Note that we do not include
 # the per-host domains as there is no reason to expect it to be legitimate
 # mail. (We also exclude the not externally routable internal domain)
@@ -41,6 +53,7 @@ postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {% endif %}
 {% endfor %}
 
+
 # For each user with aliases, add the aliases in their mailbox domain
 {% for mailbox_user in mail_groupware_users | selectattr('localpart', 'ne', admin_user) | selectattr('maildomain', 'ne', central_internal_domain) %}
 {% if mailbox_user['alias_names'] is defined %}
@@ -49,3 +62,7 @@ postmaster@{{ vdomain }} {{ admin_user }}@{{ ansible_facts['fqdn'] }}
 {% endfor %}
 {% endif %}
 {% endfor %}
+{% else %}
+# Note that we don't include regular users' emails or external mail; that will
+# come in on the external_mxes and be delivered directly to dovecot via lmtp
+{% endif %}

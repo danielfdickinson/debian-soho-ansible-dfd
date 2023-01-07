@@ -1,3 +1,0 @@
-{% for muser in (mail_groupware_users | selectattr('maildomain', 'equalto', central_internal_domain)) %}
-{{ muser.localpart }}@{{ muser.maildomain }} accept
-{% endfor %}

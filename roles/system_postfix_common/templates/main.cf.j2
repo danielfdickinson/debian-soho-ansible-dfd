@@ -3,6 +3,7 @@ alias_database = hash:/etc/aliases
 alias_maps = hash:/etc/aliases
 append_dot_mydomain = no
 biff = no
+{% if postfix_bkmx_incoming %}
 bkmx_recipient_restrictions = reject_unknown_recipient_domain, reject_unlisted_recipient
 bkmx_relay_restrictions = permit_mynetworks, reject_unauth_destination
 bkmx_sasl_auth_enable=no
@@ -12,31 +13,55 @@ bkmx_tls_cert_file={{ private_cert_cert_file }}
 bkmx_tls_key_file={{ private_cert_key_file }}
 bkmx_tls_req_ccert=yes
 bkmx_tls_security_level=encrypt
+{% endif %}
 bounce_notice_recipient = postmaster
 compatibility_level = 2
-inet_interfaces = all
+inet_interfaces = {{ postfix_email_interfaces }}
 inet_protocols = ipv4 ipv6
+{% if postfix_lmtp_uses_tls %}
 lmtp_tls_CAfile={{ private_ca_cert_file }}
 lmtp_tls_cert_file={{ private_client_cert_cert_file }}
 lmtp_tls_fingerprint_digest = sha256
 lmtp_tls_key_file={{ private_client_cert_key_file }}
 lmtp_tls_security_level=verify
+{% endif %}
 local_recipient_maps = proxy:unix:passwd.byname $alias_maps
+{% if postfix_lsmtpd_incoming %}
+lsmtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
+lsmtpd_sasl_auth_enable=no
+lsmtpd_tls_auth_only=yes
+lsmtpd_tls_CAfile={{ private_ca_cert_file }}
+lsmtpd_tls_security_level=encrypt
+lsmtpd_tls_cert_file={{ private_cert_cert_file }}
+lsmtpd_tls_key_file={{ private_cert_key_file }}
+lsmtpd_tls_req_ccert=yes
+{% endif %}
 luser_relay =
 mailbox_size_limit = 0
+{% if postfix_uses_milters %}
 # milter macros useful for spamass-milter
 milter_connect_macros = j {daemon_name} v {if_name} _
 milter_data_macros = j i {auth_type} {daemon_name} v {if_name} _
 milter_rcpt_macros = j {auth_type} {daemon_name} v {if_name} _
 milter_default_action=accept
 milter_macro_daemon_name=MTA
+{% if not postfix_mta_local %}
 mta_milters = unix:opendkim/opendkim.sock unix:opendmarc/opendmarc.sock unix:spamass/spamass.sock unix:clamav/clamav-milter.ctl
+{% endif %}
+{% endif %}
+{% if postfix_is_mx %}
+{% if postfix_mta_local %}
+mta_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient
+{% else %}
 mta_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_unlisted_recipient, check_policy_service unix:private/policyd-spf
+{% endif %}
 mta_relay_restrictions = permit_mynetworks, reject_unauth_destination
 mta_sasl_auth_enable=no
 mta_tls_auth_only=yes
 mta_tls_security_level=may
-mua_authorized_xclient_hosts = {{ libvirt_guest_definitions[envname]['imap']['v4addr'] }} [{{ libvirt_guest_definitions[envname]['imap']['v6addr'] }}]
+{% endif %}
+{% if postfix_mua_incoming %}
+mua_authorized_xclient_hosts = {{ postfix_mua_authorized_xclient_hosts }}
 mua_milters = unix:opendkim/opendkim.sock unix:spamass/spamass.sock unix:clamav/clamav-milter.ctl
 mua_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient
 mua_relay_restrictions = permit_mynetworks, reject_unauth_destination
@@ -48,6 +73,7 @@ mua_tls_cert_file={{ private_cert_cert_file }}
 mua_tls_key_file={{ private_cert_key_file }}
 mua_tls_req_ccert=yes
 mua_tls_security_level=encrypt
+{% endif %}
 mydestination = {{ mail_local_destinations | unique | join(' ') }}
 mydomain = {{ ansible_facts['fqdn'] }}
 myhostname = {{ ansible_facts['fqdn'] }}
@@ -56,16 +82,38 @@ myorigin = {{ ansible_facts['fqdn'] }}
 notify_classes = resource, software, 2bounce
 policyd-spf_time_limit = 3600
 readme_directory = no
+{% if postfix_direct_delivery %}
 relayhost = {{ external_relayhost }}
+{% elif postfix_email_relayhost == "localhost" %}
+relayhost = [localhost]
+{% else %}
+relayhost = [{{ email_relayhost }}]:{{ internal_relay_port }}
+{% endif %}
 sender_dependent_default_transport_maps = hash:/etc/postfix/sender_default_transport_map
+{% if postfix_smtp_to_internal_mx %}
+smtp_tls_CAfile = {{ private_ca_cert_file }}
+smtp_tls_cert_file = {{ private_client_cert_cert_file }}
+smtp_tls_fingerprint_digest = sha256
+smtp_tls_key_file = {{ private_client_cert_key_file }}
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+smtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+smtp_tls_security_level=verify
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_verify_cert_match={{ host_email_tls_verify_match | default('hostname') }}
+{% else %}
 smtp_tls_CApath=/etc/ssl/certs
 smtp_tls_fingerprint_digest = sha256
 smtp_tls_security_level=may
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-#smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+{% endif %}
 smtpd_banner = $myhostname ESMTP $mail_name
+{% if postfix_is_mx %}
 smtpd_client_restrictions = reject_unauth_pipelining
+{% if postfix_uses_milters %}
 smtpd_milters = unix:opendkim/opendkim.sock unix:opendmarc/opendmarc.sock unix:spamass/spamass.sock unix:clamav/clamav-milter.ctl
+{% endif %}
+{% endif %}
+{% if postfix_is_external_mx %}
 smtpd_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_rbl_client zen.spamhaus.org, reject_unlisted_recipient, check_policy_service unix:private/policyd-spf
 smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
 smtpd_sasl_auth_enable=no
@@ -86,10 +134,45 @@ smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
 smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
 tls_medium_cipherlist = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
 tls_preempt_cipherlist = no
+{% else %}
+smtpd_recipient_restrictions = permit_mynetworks, reject_unknown_recipient_domain, reject_unlisted_recipient
+smtpd_relay_restrictions = permit_mynetworks reject_unauth_destination
+smtpd_sasl_auth_enable=no
+{% if postfix_is_mx %}
+# smtpd config:
+# generated 2022-12-25, Mozilla Guideline v5.6, Postfix 3.5.17, OpenSSL 1.1.1n, modern configuration
+# https://ssl-config.mozilla.org/#server=postfix&version=3.5.17&config=modern&openssl=1.1.1n&guideline=5.6
+smtpd_tls_cert_file = {{ public_cert_cert_file }}
+smtpd_tls_auth_only = yes
+smtpd_tls_fingerprint_digest = sha256
+smtpd_tls_key_file = {{ public_cert_key_file }}
+smtpd_tls_security_level=may
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1, !TLSv1.2
+tls_preempt_cipherlist = no
+{% else %}
+smtpd_tls_fingerprint_digest = sha256
+smtpd_tls_security_level=may
+tls_append_default_CA=no
+tls_preempt_cipherlist = no
+{% endif %}
+{% endif %}
 unknown_local_recipient_reject_code = 550
 unverified_recipient_reject_reason = Address lookup failed
+{% if postfix_is_mx %}
+{% if postfix_is_external_mx %}
 virtual_alias_domains = {{ [ virtual_alias_domains, virtual_alias_domains_hosts ] | flatten | difference([ ansible_facts['fqdn']]) | unique | join(' ') }}
+{% else %}
+virtual_alias_domains = {{ virtual_alias_domains_hosts | difference([ ansible_facts['fqdn']]) | unique | join(' ') }}
+{% endif %}
 virtual_alias_maps = hash:/etc/postfix/virtual_aliases
+{% if postfix_is_external_mx %}
 virtual_mailbox_domains = {{ virtual_mailbox_domains | join(' ') }}
+{% else %}
+virtual_mailbox_domains = {{ central_internal_domain }}
+{% endif %}
 virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+{% if postfix_is_external_mx %}
 virtual_transport = lmtp:inet:{{ mailbox_server_fqdn }}
+{% endif %}
+{% endif %}

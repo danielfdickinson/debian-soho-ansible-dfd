@@ -1,5 +1,5 @@
 ---
-- name: Ensure Postfix DH Param file is present (for SSL)
+- name: Ensure Postfix DH Param file is present (for public SSL)
   become: yes
   ansible.builtin.template:
     dest: "{{ smtpd_dh_param_file }}"
@@ -7,58 +7,5 @@
     mode: "0640"
     owner: root
     src: dhparam.j2
-- name: Configure postfix main.cf
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/postfix/main.cf
-    group: root
-    mode: "0644"
-    owner: root
-    src: main.cf.j2
   notify: Restart postfix
-- name: Configure postfix master.cf
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/postfix/master.cf
-    group: root
-    mode: "0644"
-    owner: root
-    src: master.cf.j2
-  notify: Restart postfix
-- name: Configure sender addresses which should only deliver locally
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/postfix/sender_default_transport_map
-    group: root
-    mode: "0644"
-    owner: root
-    src: sender_default_transport_map.j2
-  notify: Rehash sender transport map
-- name: Configure virtual mailboxes
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/postfix/vmailbox
-    group: root
-    mode: "0644"
-    owner: root
-    src: vmailbox.j2
-  notify: Rehash virtual mailboxes
-- name: Configure virtual aliases
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/postfix/virtual_aliases
-    group: root
-    mode: "0644"
-    owner: root
-    src: virtual_aliases.j2
-  notify: Rehash virtual aliases
-- name: Configure system email aliases
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/aliases
-    group: root
-    mode: "0644"
-    owner: root
-    src: aliases.j2
-  notify: Apply email aliases
 ...

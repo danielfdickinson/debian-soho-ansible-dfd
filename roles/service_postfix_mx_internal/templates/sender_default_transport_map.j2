@@ -1,4 +1,0 @@
-{%- for mydestination in mail_local_destinations | unique %}
-MAILER-DAEMON@{{ mydestination }} local:{{ ansible_facts['fqdn'] }}
-postmaster@{{ mydestination }} local:{{ ansible_facts['fqdn'] }}
-{%- endfor %}

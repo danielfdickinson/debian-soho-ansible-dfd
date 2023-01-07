@@ -5,10 +5,21 @@ dependencies:
     f2b_jails:
     - content: "{{ lookup('template', 'mx_jail.local.j2') }}"
       dest: mx
-- role: packages_postfix
-- role: system_cert_client_private
 - role: system_cert_server_private
 - role: system_cert_public
+- role: system_postfix_common
+  vars:
+    postfix_bkmx_incoming: true
+    postfix_direct_delivery: true
+    postfix_is_external_mx: true
+    postfix_is_mx: true
+    postfix_lmtp_uses_tls: true
+    postfix_mta_local: false
+    postfix_mua_incoming: true
+    postfix_smtp_to_internal_mx: false
+    postfix_uses_milters: true
+    postfix_uses_policyd_spf: true
+    postfix_virtual_mailboxes: "{{ mail_groupware_users }}"
 - role: system_policyd_spf_python
 - role: system_clamav_milter
 - role: system_spamass_milter
@@ -17,7 +28,10 @@ dependencies:
     ufw_role_rules:
     - port: "{{ backupmx_port }}"
     - port: "{{ smtp_port }}"
-    - port: "{{ submission_relay_port }}"
+    - from: "{{ v4nat_net }}/{{ v4nat_prefix }}"
+      port: "{{ submission_relay_port }}"
+    - from: "{{ v6nat_net }}/{{ v6nat_prefix }}"
+      port: "{{ submission_relay_port }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

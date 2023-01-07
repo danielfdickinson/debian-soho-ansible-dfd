@@ -1,0 +1,16 @@
+---
+postfix_bkmx_incoming: false
+postfix_direct_delivery: false
+postfix_email_interfaces: all
+postfix_email_relayhost: "{{ email_relayhost }}"
+postfix_is_external_mx: false
+postfix_is_mx: false
+postfix_lmtp_uses_tls: false
+postfix_lsmtpd_incoming: false
+postfix_mta_local: true
+postfix_mua_incoming: false
+postfix_smtp_to_internal_mx: true
+postfix_uses_milters: false
+postfix_uses_policyd_spf: false
+postfix_virtual_mailboxes: []
+...

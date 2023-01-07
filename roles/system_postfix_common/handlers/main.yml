@@ -1,0 +1,5 @@
+---
+- name: Rehash sender transport map
+  become: yes
+  ansible.builtin.command: postmap hash:/etc/postfix/sender_default_transport_map
+...

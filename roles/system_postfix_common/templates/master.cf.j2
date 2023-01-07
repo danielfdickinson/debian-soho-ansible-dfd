@@ -11,16 +11,21 @@
 # ==========================================================================
 smtp       inet  n       -       y       -       -       smtpd
   -o syslog_name=postfix/smtpd
+{% if postfix_is_mx %}
+{% if postfix_uses_milters %}
   -o smtpd_milters=$mta_milters
+{% endif %}
   -o smtpd_recipient_restrictions=$mta_recipient_restrictions
   -o smtpd_relay_restrictions=$mta_relay_restrictions
   -o smtpd_sasl_auth_enable=$mta_sasl_auth_enable
   -o smtpd_tls_auth_only=$mta_tls_auth_only
   -o smtpd_tls_security_level=$mta_tls_security_level
+{% endif %}
 #smtp      inet  n       -       y       -       1       postscreen
 #smtpd     pass  -       -       y       -       -       smtpd
 #dnsblog   unix  -       -       y       -       0       dnsblog
 #tlsproxy  unix  -       -       y       -       0       tlsproxy
+{% if postfix_bkmx_incoming %}
 0.0.0.0:{{  backupmx_port }} inet n   -       y       -       -       smtpd
   -o syslog_name=postfix/smtpd_bkmx
   -o smtpd_recipient_restrictions=$bkmx_recipient_restrictions
@@ -45,6 +50,8 @@ smtp       inet  n       -       y       -       -       smtpd
   -o smtpd_tls_req_ccert=$bkmx_tls_req_ccert
   -o smtpd_tls_security_level=$bkmx_tls_security_level
 #  -o milter_macro_daemon_name=BKMX
+{% endif %}
+{% if postfix_mua_incoming %}
 0.0.0.0:{{  submission_relay_port }} inet n   -       y       -       -       smtpd
   -o syslog_name=postfix/submission
   -o smtpd_authorized_xclient_hosts=$mua_authorized_xclient_hosts
@@ -75,6 +82,33 @@ smtp       inet  n       -       y       -       -       smtpd
   -o smtpd_tls_req_ccert=$mua_tls_req_ccert
   -o smtpd_tls_security_level=$mua_tls_security_level
 #  -o milter_macro_daemon_name=MUA
+{% endif %}
+{% if postfix_lsmtpd_incoming %}
+{{ ansible_facts['default_ipv4']['address'] }}:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
+  -o syslog_name=postfix/lsmtpd
+  -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
+  -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
+  -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
+  -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
+  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
+  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
+  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
+  -o smtpd_tls_security_level=$lsmtpd_tls_security_level
+#  -o milter_macro_daemon_name=LSMTPD
+[{{ ansible_facts['default_ipv6']['address'] }}]:{{  internal_relay_port }} inet n   -       y       -       -       smtpd
+  -o syslog_name=postfix/lsmtpd
+  -o smtpd_sasl_auth_enable=$lsmtpd_sasl_auth_enable
+  -o smtpd_relay_restrictions=$lsmtpd_relay_restrictions
+  -o smtpd_recipient_restrictions=$lsmtpd_recipient_restrictions
+  -o smtpd_tls_auth_only=$lsmtpd_tls_auth_only
+  -o smtpd_tls_CAfile=$lsmtpd_tls_CAfile
+  -o smtpd_tls_cert_file=$lsmtpd_tls_cert_file
+  -o smtpd_tls_key_file=$lsmtpd_tls_key_file
+  -o smtpd_tls_req_ccert=$lsmtpd_tls_req_ccert
+  -o smtpd_tls_security_level=$lsmtpd_tls_security_level
+#  -o milter_macro_daemon_name=LSMTPD
+{% endif %}
 #628       inet  n       -       y       -       -       qmqpd
 pickup    unix  n       -       y       60      1       pickup
 cleanup   unix  n       -       y       -       0       cleanup
@@ -113,9 +147,10 @@ postlog   unix-dgram n  -       n       -       1       postlogd
 # and other message envelope options.
 # ====================================================================
 #
+{% if postfix_uses_policyd_spf %}
 policyd-spf  unix  -       n       n       -       0       spawn
   user=policyd-spf argv=/usr/bin/policyd-spf
-
+{% endif %}
 #mailman   unix  -       n       n       -       -       pipe
 #  flags=FRX user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
 #  ${nexthop} ${user}

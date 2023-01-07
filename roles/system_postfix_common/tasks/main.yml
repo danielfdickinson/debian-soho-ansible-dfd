@@ -1,0 +1,58 @@
+---
+- name: Configure email aliases
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/aliases
+    group: root
+    mode: "0644"
+    owner: root
+    src: aliases.j2
+  notify: Apply email aliases
+- name: Configure postfix main.cf
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/main.cf
+    group: root
+    mode: "0644"
+    owner: root
+    src: main.cf.j2
+  notify: Restart postfix
+- name: Configure sender addresses which should only deliver locally
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/sender_default_transport_map
+    group: root
+    mode: "0644"
+    owner: root
+    src: sender_default_transport_map.j2
+  notify: Rehash sender transport map
+- name: Configure postfix master.cf
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/master.cf
+    group: root
+    mode: "0644"
+    owner: root
+    src: master.cf.j2
+  notify: Restart postfix
+- name: Configure virtual mailboxes
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/vmailbox
+    group: root
+    mode: "0644"
+    owner: root
+    src: vmailbox.j2
+  notify: Rehash virtual mailboxes
+  when: postfix_is_mx
+- name: Configure virtual aliases
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/postfix/virtual_aliases
+    group: root
+    mode: "0644"
+    owner: root
+    src: virtual_aliases.j2
+  notify: Rehash virtual aliases
+  when: postfix_is_mx
+...
