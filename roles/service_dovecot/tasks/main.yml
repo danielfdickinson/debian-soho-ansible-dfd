@@ -15,8 +15,6 @@
     mode: "0644"
     owner: root
     src: hosts.debian.tmpl.j2
-- name: Ensure public client certificate and key (for external)
-  ansible.builtin.include_tasks: task-cert_public_local_full.yml
 - name: Configure dovecot as mailbox server
   become: yes
   block:

@@ -8,6 +8,7 @@ dependencies:
 - role: packages_postfix
 - role: system_cert_client_private
 - role: system_cert_server_private
+- role: system_cert_public
 - role: system_policyd_spf_python
 - role: system_clamav_milter
 - role: system_spamass_milter

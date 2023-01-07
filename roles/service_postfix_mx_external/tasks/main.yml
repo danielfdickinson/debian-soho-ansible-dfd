@@ -1,6 +1,4 @@
 ---
-- name: Ensure public client certificate and key (for external)
-  ansible.builtin.include_tasks: task-cert_public_local_full.yml
 - name: Ensure Postfix DH Param file is present (for SSL)
   become: yes
   ansible.builtin.template:
