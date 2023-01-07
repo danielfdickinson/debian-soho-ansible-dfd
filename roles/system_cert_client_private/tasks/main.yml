@@ -1,0 +1,40 @@
+---
+- name: Add directory for private certificates and keys
+  become: yes
+  ansible.builtin.file:
+    group: root
+    mode: "0755"
+    owner: root
+    path: /etc/ssl/privcert
+    state: directory
+- name: Add private client certificate as file
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ host_private_client_cert_cert_file }}"
+    group: root
+    mode: "0644"
+    owner: root
+    src: private_client_cert-cert.pem.j2
+  notify:
+  - Restart SSL-based server
+- name: Add private key for private client cert as file
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ host_private_client_cert_key_file }}"
+    group: root
+    mode: "0600"
+    owner: root
+    src: private_client_cert-key.pem.j2
+  notify:
+  - Restart SSL-based server
+- name: Add cert+private key for private client cert as file
+  become: yes
+  ansible.builtin.template:
+    dest: "{{ private_client_cert_full_file }}"
+    group: root
+    mode: "0600"
+    owner: root
+    src: private_client_cert-full.pem.j2
+  notify:
+  - Restart SSL-based server
+...

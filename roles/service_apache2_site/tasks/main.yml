@@ -6,8 +6,6 @@
   register: a2dissite_out
   changed_when: a2dissite_out.rc == 0 and "already disabled" not in a2dissite_out.stdout
   notify: Restart apache2
-- name: Ensure private server certificate and key (for incoming proxy) present
-  ansible.builtin.include_tasks: task-cert_private_server.yml
 - name: Add/Update VHosts configuration
   become: yes
   ansible.builtin.template:

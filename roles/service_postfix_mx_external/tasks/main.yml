@@ -1,8 +1,4 @@
 ---
-- name: Ensure private server certificate and key (for incoming bkmx) present
-  ansible.builtin.include_tasks: task-cert_private_server.yml
-- name: Ensure private client certificate and key (for lmtp)
-  ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Ensure public client certificate and key (for external)
   ansible.builtin.include_tasks: task-cert_public_local_full.yml
 - name: Ensure Postfix DH Param file is present (for SSL)

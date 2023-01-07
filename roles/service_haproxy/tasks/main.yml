@@ -14,10 +14,6 @@
     owner: root
     src: haproxy.service
   notify: Restart haproxy service
-- name: Ensure private client certificate and key (for backends)
-  ansible.builtin.include_tasks: task-cert_private_client.yml
-- name: Ensure public client certificate and key (for external)
-  ansible.builtin.include_tasks: task-cert_public_local_full.yml
 - name: Ensure HAProxy configuration directory exists
   become: yes
   ansible.builtin.file:

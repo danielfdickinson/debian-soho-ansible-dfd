@@ -2,10 +2,6 @@
 - name: Configure postfix as an email receiver (internal only)
   become: yes
   block:
-  - name: Ensure private server certificate and key (for incoming) present
-    ansible.builtin.include_tasks: task-cert_private_server.yml
-  - name: Ensure public client certificate and key (for external)
-    ansible.builtin.include_tasks: task-cert_public_local_full.yml
   - name: Configure postfix main.cf
     ansible.builtin.template:
       dest: /etc/postfix/main.cf

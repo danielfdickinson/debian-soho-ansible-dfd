@@ -1,11 +1,10 @@
 ---
 dependencies:
-- role: packages_postfix
-- role: system_cert_client_private
+- role: system_cert_ca_private
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Configure postfix as to send emails to internal MX only
+  description: Add/update private client certificate for host
   license: MIT
   min_ansible_version: "6.0"
   platforms:
