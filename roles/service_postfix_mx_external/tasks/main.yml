@@ -1,9 +1,4 @@
 ---
-- name: Ensure milters amd requirements are installed
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - postfix-policyd-spf-python
 - name: Ensure private CA certificate (for verifying internal hosts) is present
   ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private server certificate and key (for incoming bkmx) present
@@ -12,15 +7,6 @@
   ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Ensure public client certificate and key (for external)
   ansible.builtin.include_tasks: task-cert_public_local_full.yml
-- name: Configure SPF policyd server
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/postfix-policyd-spf-python/policyd-spf.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: policyd-spf.conf
-  notify: Restart postfix
 - name: Ensure Postfix DH Param file is present (for SSL)
   become: yes
   ansible.builtin.template:

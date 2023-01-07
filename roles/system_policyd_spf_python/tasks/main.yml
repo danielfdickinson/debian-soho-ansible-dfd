@@ -1,0 +1,11 @@
+---
+- name: Configure SPF policyd server
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/postfix-policyd-spf-python/policyd-spf.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: policyd-spf.conf
+  notify: Restart postfix
+...

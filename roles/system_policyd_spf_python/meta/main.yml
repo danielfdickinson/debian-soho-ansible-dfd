@@ -1,0 +1,15 @@
+---
+dependencies:
+- role: packages_postfix
+- role: packages_policyd_spf_python
+# Because ansible-lint complains otherwise
+galaxy_info:
+  author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
+  description: Configure SPF policyd daemon for postfix
+  license: MIT
+  min_ansible_version: "6.0"
+  platforms:
+  - name: Debian
+    versions:
+    - all
+...
