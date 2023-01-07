@@ -15,8 +15,6 @@
     mode: "0644"
     owner: root
     src: hosts.debian.tmpl.j2
-- name: Ensure private CA certificate (for verifying internal hosts) is present
-  ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private server certificate and key (for incoming internal hosts)
   ansible.builtin.include_tasks: task-cert_private_server.yml
 - name: Ensure private client certificate and key (for submission relay)

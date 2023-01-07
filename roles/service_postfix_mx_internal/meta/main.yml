@@ -1,6 +1,7 @@
 ---
 dependencies:
 - role: packages_postfix
+- role: system_cert_ca_private
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

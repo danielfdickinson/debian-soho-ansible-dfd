@@ -14,8 +14,6 @@
     owner: root
     src: haproxy.service
   notify: Restart haproxy service
-- name: Ensure private CA certificate (for verifying backends) is present
-  ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private client certificate and key (for backends)
   ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Ensure public client certificate and key (for external)

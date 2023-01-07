@@ -1,6 +1,4 @@
 ---
-- name: Ensure private CA certificate (for verifying internal MX) is present
-  ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private client certificate and key (for sending to internal MX)
   ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Configure email aliases

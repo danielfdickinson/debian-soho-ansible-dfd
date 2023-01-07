@@ -1,6 +1,7 @@
 ---
 dependencies:
 - role: packages_apache2
+- role: system_cert_ca_private
 - role: service_apache2_conf
 - role: service_apache2_mod
 # Because ansible-lint complains otherwise
