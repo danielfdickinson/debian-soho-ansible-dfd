@@ -31,7 +31,7 @@
   hosts: bastions
   gather_facts: true
   roles:
-  - packages_base
+  - system_base
   - user_bastion_user_add
   - packages_ssh_proxy
   - system_fail2ban_ssh

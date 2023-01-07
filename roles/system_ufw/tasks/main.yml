@@ -1,0 +1,20 @@
+---
+- name: Allow SSH incoming
+  community.general.ufw:
+    direction: in
+    rule: allow
+    port: "{{ ansible_ssh_port }}"
+    proto: tcp
+- name: Don't log noisy v4 multicast blocking
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/after.rules
+    insertbefore: "# don't log noisy broadcast"
+    block: |
+      # don't log noisy multicast
+      -A ufw-after-input -m addrtype --dst-type MULTICAST -j ufw-skip-to-policy-input
+  notify: Restart ufw
+- name: Enable logging and start UFW
+  community.general.ufw:
+    logging: low
+    state: enabled
+...

@@ -42,7 +42,7 @@
   hosts: all:!libvirtd_hosts:!bastions
   # Avoid connectivity issues by not rebooting vm host or bastion
   roles:
-  - packages_base
+  - system_base
   - packages_firmware
 
 - name: Configure OVH (BHS) clients for backups

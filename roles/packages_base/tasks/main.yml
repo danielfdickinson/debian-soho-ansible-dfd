@@ -1,76 +1,10 @@
 ---
-- name: Upgrade packages if needed
+- name: Ensure our desired base packages are present
   become: yes
   ansible.builtin.apt:
-    autoclean: true
-    autoremove: true
-    purge: true
-    upgrade: yes
-- name: Configure base packages and make sure they are present
-  become: yes
-  block:
-  - name: Configure base packages
-    # Note that restic and rsyslog have their own roles
-    block:
-    - name: Configure unattended-upgrades
-      # Note that unattended-upgrades is not already configured for bare-metal
-      ansible.builtin.copy:
-        dest: /etc/apt/apt.conf.d/50unattended-upgrades
-        group: root
-        mode: "0644"
-        owner: root
-        src: 50unattended-upgrades
-    - name: Configure tmux for new users
-      ansible.builtin.copy:
-        dest: /etc/skel/.tmux.conf
-        group: root
-        mode: "0644"
-        owner: root
-        src: .tmux.conf
-    - name: Configure tmux for local admin
-      # Note that admin_user is assumed to be added by userdata
-      become: no
-      ansible.builtin.copy:
-        dest: "{{ admin_base_homedir }}/{{ admin_user }}/.tmux.conf"
-        mode: "0644"
-        src: .tmux.conf
-  - name: Ensure our desired base packages are present
-    become: yes
-    ansible.builtin.apt:
-      autoclean: true
-      autoremove: true
-      name:
-      - acl
-      - molly-guard
-      - mutt
-      - needrestart
-      - powermgmt-base
-      - python3-gi
-      - rsyslog-relp
-      - tmux
-      - ufw
-      - unattended-upgrades
-      purge: true
-      state: present
-  - name: Post-configure UFW
-    become: yes
-    block:
-    - name: Allow SSH incoming
-      community.general.ufw:
-        direction: in
-        rule: allow
-        port: "{{ ansible_ssh_port }}"
-        proto: tcp
-    - name: Don't log noisy v4 multicast blocking
-      ansible.builtin.blockinfile:
-        path: /etc/ufw/after.rules
-        insertbefore: "# don't log noisy broadcast"
-        block: |
-          # don't log noisy multicast
-          -A ufw-after-input -m addrtype --dst-type MULTICAST -j ufw-skip-to-policy-input
-      notify: Restart UFW
-    - name: Enable logging and start UFW
-      community.general.ufw:
-        logging: low
-        state: enabled
+    name:
+    - acl
+    - molly-guard
+    - mutt
+    state: present
 ...

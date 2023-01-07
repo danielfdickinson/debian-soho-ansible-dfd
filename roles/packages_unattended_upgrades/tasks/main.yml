@@ -1,0 +1,18 @@
+---
+- name: Ensure our unattended-upgrades package and suggests are present
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - powermgmt-base
+    - python3-gi
+    - unattended-upgrades
+    state: present
+- name: Configure unattended-upgrades
+  # Note that unattended-upgrades is not already configured for bare-metal
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    group: root
+    mode: "0644"
+    owner: root
+    src: 50unattended-upgrades
+...

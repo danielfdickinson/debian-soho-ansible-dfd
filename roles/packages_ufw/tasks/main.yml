@@ -1,0 +1,8 @@
+---
+- name: Ensure UFW present
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - ufw
+    state: present
+...
