@@ -4,7 +4,6 @@
   ansible.builtin.apt:
     autoclean: true
     autoremove: true
-    name:
     purge: true
     upgrade: yes
 - name: Ensure our packages for expected apt behaviour are installed
