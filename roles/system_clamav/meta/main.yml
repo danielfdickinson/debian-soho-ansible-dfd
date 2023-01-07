@@ -4,7 +4,7 @@ dependencies:
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Ensure clamav-milter is configured then installed
+  description: Configure clamav system service
   license: MIT
   min_ansible_version: "6.0"
   platforms:

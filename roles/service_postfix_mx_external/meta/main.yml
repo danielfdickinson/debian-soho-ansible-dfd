@@ -6,7 +6,7 @@ dependencies:
     - content: "{{ lookup('template', 'mx_jail.local.j2') }}"
       dest: mx
 - role: packages_postfix
-- role: packages_clamav_milter
+- role: system_clamav_milter
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

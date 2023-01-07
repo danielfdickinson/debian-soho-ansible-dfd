@@ -16,5 +16,4 @@
   ansible.builtin.systemd:
     name: clamav-daemon
     state: restarted
-
 ...

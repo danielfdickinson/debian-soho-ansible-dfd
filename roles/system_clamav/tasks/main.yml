@@ -1,0 +1,20 @@
+---
+- name: Update freshclam service to fix systemd warning on start
+  become: yes
+  notify: Update clamav unit files and restart them
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/clamav-freshclam.service
+    group: root
+    mode: "0644"
+    owner: root
+    src: clamav-freshclam.service
+- name: Update clamav-daemon service to fix systemd warning on start
+  become: yes
+  notify: Update clamav unit files and restart them
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/clamav-daemon.service
+    group: root
+    mode: "0644"
+    owner: root
+    src: clamav-daemon.service
+...
