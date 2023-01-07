@@ -69,25 +69,4 @@
     owner: root
     src: aliases.j2
   notify: Apply email aliases
-- name: Allow SMTP from external sources
-  become: yes
-  community.general.ufw:
-    rule: allow
-    direction: in
-    proto: tcp
-    to_port: "{{ smtp_port }}"
-- name: Allow backup MX SMTP on alternate port
-  become: yes
-  community.general.ufw:
-    rule: allow
-    direction: in
-    proto: tcp
-    to_port: "{{ backupmx_port }}"
-- name: Allow Submission on alternate port
-  become: yes
-  community.general.ufw:
-    rule: allow
-    direction: in
-    proto: tcp
-    to_port: "{{ submission_relay_port }}"
 ...

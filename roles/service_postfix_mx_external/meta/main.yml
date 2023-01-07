@@ -9,6 +9,12 @@ dependencies:
 - role: system_policyd_spf_python
 - role: system_clamav_milter
 - role: system_spamass_milter
+- role: system_ufw
+  vars:
+    ufw_role_rules:
+    - port: "{{ backupmx_port }}"
+    - port: "{{ smtp_port }}"
+    - port: "{{ submission_relay_port }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

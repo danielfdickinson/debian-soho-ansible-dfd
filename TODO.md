@@ -2,6 +2,7 @@
 
 * Only install/configure fail2ban as a dependency not as a separate task
 	* E.g. should not be in the playbook, rather only triggered
+* Likewise UFW (except should not be in a task list for a service / package)
 * Fully configure sieve
 * Configure spamassassin bayesian filer training
 * Add backupmx role in a separate environment
