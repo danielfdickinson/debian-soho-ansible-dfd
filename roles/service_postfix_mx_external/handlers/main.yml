@@ -18,14 +18,4 @@
   ansible.builtin.systemd:
     name: spamass-milter
     state: restarted
-- name: Restart opendkim
-  become: yes
-  ansible.builtin.systemd:
-    name: opendkim
-    state: restarted
-- name: Restart opendmarc
-  become: yes
-  ansible.builtin.systemd:
-    name: opendmarc
-    state: restarted
 ...

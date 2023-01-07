@@ -1,0 +1,37 @@
+---
+- name: Ensure opendmarc is installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - opendmarc
+- name: Ensure postfix is a member of opendmarc
+  become: yes
+  ansible.builtin.user:
+    name: postfix
+    append: true
+    home: /var/spool/postfix
+    groups:
+    - opendmarc
+    password_lock: true
+    shell: /usr/sbin/nologin
+    state: present
+    system: true
+  notify: Restart postfix
+- name: Ensure opendmarc socket directory exists
+  become: yes
+  ansible.builtin.file:
+    dest: /var/spool/postfix/opendmarc
+    group: postfix
+    mode: "0750"
+    owner: opendmarc
+    state: directory
+- name: Configure opendmarc
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/opendmarc.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: opendmarc.conf.j2
+  notify: Restart opendmarc
+...

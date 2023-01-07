@@ -5,42 +5,9 @@
     name:
     - libarchive-zip-perl
     - libio-string-perl
-    - opendkim
-    - opendmarc
     - postfix-policyd-spf-python
     - spamass-milter
     - spamassassin
-- name: Ensure postfix is a member of opendkim and opendmarc
-  become: yes
-  ansible.builtin.user:
-    name: postfix
-    append: true
-    home: /var/spool/postfix
-    groups:
-    - opendkim
-    - opendmarc
-    password_lock: true
-    shell: /usr/sbin/nologin
-    state: present
-    system: true
-  notify: Restart postfix
-- name: Ensure opendkim socket directory exists
-  become: yes
-  ansible.builtin.file:
-    dest: /var/spool/postfix/opendkim
-    group: postfix
-    mode: "0750"
-    owner: opendkim
-    state: directory
-- name: Configure OpenDKIM
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/opendkim.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: opendkim.conf.j2
-  notify: Restart opendkim
 - name: Ensure private CA certificate (for verifying internal hosts) is present
   ansible.builtin.include_tasks: task-cert_private_ca.yml
 - name: Ensure private server certificate and key (for incoming bkmx) present
@@ -49,32 +16,6 @@
   ansible.builtin.include_tasks: task-cert_private_client.yml
 - name: Ensure public client certificate and key (for external)
   ansible.builtin.include_tasks: task-cert_public_local_full.yml
-- name: Copy opendkim private keys from local to remote
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/dkimkeys/{{ opendkim_private_key.selector }}.private
-    group: opendkim
-    mode: "0600"
-    owner: opendkim
-    src: "{{ opendkim_private_key.src_path }}/{{ opendkim_private_key.selector }}.private"
-  notify: Restart opendkim
-- name: Ensure opendmarc socket directory exists
-  become: yes
-  ansible.builtin.file:
-    dest: /var/spool/postfix/opendmarc
-    group: postfix
-    mode: "0750"
-    owner: opendmarc
-    state: directory
-- name: Configure OpenDMARC
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/opendmarc.conf
-    group: root
-    mode: "0644"
-    owner: root
-    src: opendmarc.conf.j2
-  notify: Restart opendmarc
 - name: Configure spamd startup
   become: yes
   ansible.builtin.copy:

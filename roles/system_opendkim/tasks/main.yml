@@ -1,0 +1,46 @@
+---
+- name: Ensure opendkim is installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - opendkim
+- name: Ensure postfix is a member of opendkim
+  become: yes
+  ansible.builtin.user:
+    name: postfix
+    append: true
+    home: /var/spool/postfix
+    groups:
+    - opendkim
+    password_lock: true
+    shell: /usr/sbin/nologin
+    state: present
+    system: true
+  notify: Restart postfix
+- name: Ensure opendkim socket directory exists
+  become: yes
+  ansible.builtin.file:
+    dest: /var/spool/postfix/opendkim
+    group: postfix
+    mode: "0750"
+    owner: opendkim
+    state: directory
+- name: Configure opendkim
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/opendkim.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: opendkim.conf.j2
+  notify: Restart opendkim
+- name: Copy opendkim private keys from local to remote
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/dkimkeys/{{ opendkim_private_key.selector }}.private
+    group: opendkim
+    mode: "0600"
+    owner: opendkim
+    src: "{{ opendkim_private_key.src_path }}/{{ opendkim_private_key.selector }}.private"
+  notify: Restart opendkim
+...
