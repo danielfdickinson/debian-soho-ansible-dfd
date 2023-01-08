@@ -1,8 +1,0 @@
----
-- name: Rehash virtual mailboxes
-  become: yes
-  ansible.builtin.command: postmap hash:/etc/postfix/vmailbox
-- name: Rehash virtual aliases
-  become: yes
-  ansible.builtin.command: postmap hash:/etc/postfix/virtual_aliases
-...
