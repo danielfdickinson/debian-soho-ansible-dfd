@@ -1,17 +1,14 @@
 ---
 dependencies:
-- role: system_cert_ca_private
-- role: system_cert_server_private
-- role: system_cert_public
 - role: system_fail2ban
   vars:
     f2b_jails:
-    - content: "{{ lookup('file', 'haproxy_jail.local') }}"
-      dest: haproxy
+    - content: "{{ lookup('template', 'ssh_jail.local.j2') }}"
+      dest: ssh
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
-  description: Configure haproxy (as reverse proxy)
+  description: Configure SSH fail2ban jail
   license: MIT
   min_ansible_version: "6.0"
   platforms:

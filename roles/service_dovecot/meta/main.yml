@@ -3,6 +3,11 @@ dependencies:
 - role: system_cert_client_private
 - role: system_cert_server_private
 - role: system_cert_public
+- role: system_fail2ban
+  vars:
+    f2b_jails:
+    - content: "{{ lookup('file', 'dovecot_jail.local') }}"
+      dest: dovecot
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>

@@ -1,8 +1,7 @@
 # To Do
 
-* Only install/configure fail2ban as a dependency not as a separate task
-	* E.g. should not be in the playbook, rather only triggered
-* Likewise UFW (except should not be in a task list for a service / package)
+* Install UFW as dependency not as a separate task (should not be in a
+task list for a service / package)
 * Configure backups
 * Fully configure sieve
 * Configure spamassassin bayesian filter training

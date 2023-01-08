@@ -5,9 +5,4 @@
   ansible.builtin.systemd:
     name: dovecot
     state: restarted
-- name: Restart Fail2Ban
-  become: yes
-  ansible.builtin.systemd:
-    name: fail2ban
-    state: restarted
 ...

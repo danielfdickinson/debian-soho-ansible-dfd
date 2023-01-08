@@ -73,15 +73,6 @@
       owner: mail
       src: users.j2
     notify: Restart dovecot
-- name: Configure Fail2Ban for Dovecot with Sieve
-  become: yes
-  ansible.builtin.copy:
-    dest: /etc/fail2ban/jail.d/dovecot.local
-    group: root
-    mode: "0644"
-    owner: root
-    src: dovecot_jail.local
-  notify: Restart Fail2Ban
 - name: Allow access to Dovecot through firewall
   become: yes
   block:

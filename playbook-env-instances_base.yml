@@ -33,11 +33,6 @@
   roles:
   - user_admin_add_password
 
-- name: For externally-exposed (edge) hosts, enable Fail2Ban
-  hosts: edge_hosts
-  roles:
-  - system_fail2ban
-
 - name: Except bastions, install base packages and firmware, and reboot guests
   hosts: all:!libvirtd_hosts:!bastions
   # Avoid connectivity issues by not rebooting vm host or bastion

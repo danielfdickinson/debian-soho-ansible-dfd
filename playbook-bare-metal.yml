@@ -55,7 +55,6 @@
   roles:
   - libvirtd
   - user_libvirt_client_add
-  - system_fail2ban
   - system_fail2ban_ssh
 
 - name: Add NUT to local bare-metal
