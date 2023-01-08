@@ -14,13 +14,13 @@
   hosts: bare_metal
   gather_facts: true
   roles:
-  - network_hosts_fqdn_real_ip
-  - network_dns_use_resolved
+  - bare_metal_network_hosts_file
+  - bare_metal_network_resolved
 
 - name: Add local ipv6 when no internet-ipv6 available
   hosts: bare_metal:&local_ipv6
   roles:
-  - network_local_ipv6
+  - bare_metal_network_ipv6
 
 - name: Make second interface a bridge
   hosts: bare_metal:&bridge_second_interface
@@ -30,13 +30,13 @@
 - name: Setup additional storage
   hosts: bare_metal:&storage_extra
   roles:
-  - storage_setup_extra
+  - bare_metal_storage_extra
 
 - name: Add base and hardware packages
   hosts: bare_metal
   roles:
   - system_base
-  - packages_bare_metal
+  - bare_metal_packages_base
   - packages_firmware
 
 - name: Configure restic backup for local instances
@@ -54,11 +54,11 @@
   hosts: bare_metal:&libvirtd_hosts
   roles:
   - libvirtd
-  - user_libvirt_client_add
+  - bare_metal_user_libvirt_client_add
   - system_fail2ban_ssh
 
 - name: Add NUT to local bare-metal
   hosts: bare_metal:&bare_metal_local
   roles:
-  - service_hardware_upsd
+  - bare_metal_service_upsd
 ...

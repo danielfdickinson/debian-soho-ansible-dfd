@@ -30,7 +30,7 @@
   hosts: bare_metal
   gather_facts: true
   roles:
-  - user_admin_add
+  - bare_metal_user_admin_add
   vars:
     new_admin_base_homedir: "{{ vault_env_conn_admin[bare_metal_env]['admin_base_homedir'] }}"
     new_admin_gecos: "{{ vault_env_conn_admin[bare_metal_env]['admin_gecos'] }}"
@@ -44,8 +44,8 @@
 - name: Remove user 'debian' and set SSH port
   hosts: bare_metal
   roles:
-  - user_debian_remove
-  - system_sshd_port_set
+  - bare_metal_user_debian_remove
+  - bare_metal_system_sshd_port
   vars:
     ansible_ssh_port: "{{ initial_ssh_port }}"
     ansible_become_password: "{{ vault_env_conn_admin[bare_metal_env]['ansible_become_password'] }}"
