@@ -1,0 +1,12 @@
+---
+- name: Ensure dovecot packages present
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-lmtpd
+    - dovecot-managesieved
+    - dovecot-sieve
+    - dovecot-submissiond
+...

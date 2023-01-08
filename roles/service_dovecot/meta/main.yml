@@ -8,6 +8,7 @@ dependencies:
     f2b_jails:
     - content: "{{ lookup('file', 'dovecot_jail.local') }}"
       dest: dovecot
+- role: packages_dovecot
 - role: service_postfix_mx_internal
 # Because ansible-lint complains otherwise
 galaxy_info:
