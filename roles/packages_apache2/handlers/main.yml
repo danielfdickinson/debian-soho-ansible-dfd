@@ -1,0 +1,13 @@
+---
+- name: Restart apache2
+  listen: Restart SSL-based server
+  become: yes
+  ansible.builtin.systemd:
+    name: apache2
+    state: restarted
+- name: Reload apache2
+  become: yes
+  ansible.builtin.systemd:
+    name: apache2
+    state: reloaded
+...

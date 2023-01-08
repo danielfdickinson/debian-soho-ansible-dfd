@@ -1,8 +1,0 @@
----
-- name: Reload apache2
-  listen: Restart SSL-based server
-  become: yes
-  ansible.builtin.systemd:
-    name: apache2
-    state: reloaded
-...
