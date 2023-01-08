@@ -1,20 +1,4 @@
 ---
-- name: Install libvirtd and related packages
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - dnsmasq-base
-    - libvirt-clients
-    - libvirt-daemon-system
-    - libxml2-utils
-    - netcat-openbsd
-    - numad
-    - qemu-system
-    - qemu-utils
-    - ovmf
-    install_recommends: false
-    update_cache: true
-    state: present
 - name: Configure Libvirt shutdown guest handling
   become: yes
   ansible.builtin.copy:

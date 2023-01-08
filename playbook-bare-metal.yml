@@ -53,7 +53,7 @@
 - name: Add Libvirt, guests, and enable Fail2Ban
   hosts: bare_metal:&libvirtd_hosts
   roles:
-  - libvirtd
+  - bare_metal_service_libvirtd
   - bare_metal_user_libvirt_client_add
   - system_fail2ban_ssh
 
