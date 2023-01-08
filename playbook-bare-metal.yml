@@ -25,12 +25,12 @@
 - name: Make second interface a bridge
   hosts: bare_metal:&bridge_second_interface
   roles:
-  - network_bridge_second_interface
+  - bare_metal_network_bridge_second_interface
 
 - name: Setup additional storage
   hosts: bare_metal:&storage_extra
   roles:
-  - bare_metal_storage_extra
+  - bare_metal_system_storage_extra
 
 - name: Add base and hardware packages
   hosts: bare_metal

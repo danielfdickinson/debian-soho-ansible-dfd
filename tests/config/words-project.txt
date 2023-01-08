@@ -38,6 +38,7 @@ a2ensite
 abortonclose
 addrtype
 adminaddr
+airlockkss
 airlockldev
 alpn
 apic
@@ -51,6 +52,7 @@ brycewray
 bsdauth
 caldav
 carddav
+cbay
 ccert
 cgid
 chdir
@@ -95,8 +97,10 @@ fdbc
 ffdhe
 forwardfor
 fstype
+gatekss
 gateldev
 gdav
+gdavkss
 gdavldev
 gecos
 genparam
@@ -120,11 +124,13 @@ ifplugin
 ifup
 ignoreip
 imapd
+imapkss
 imapldev
 imaps
 inet
 inodes
 keytab
+kss
 kvm
 ldev
 leastconn
@@ -199,6 +205,7 @@ qcow2
 qmgr
 qmqpd
 radicale
+rbxks
 realtek
 recidive
 redispatch
@@ -263,5 +270,6 @@ vmailbox
 vtype
 webp
 winbind
+wwwkss
 wwwldev
 xclient
