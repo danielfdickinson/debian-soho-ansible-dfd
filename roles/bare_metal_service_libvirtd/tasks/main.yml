@@ -7,41 +7,4 @@
     mode: "0644"
     owner: root
     src: libvirt-guests
-- name: Add/split Libvirt storage pools
-  when: libvirtd_pool_list is defined
-  become: yes
-  block:
-  - name: Workaround '#1' for Apparmor issue with Libvirt extra pools under images
-    ansible.builtin.copy:
-      dest: /etc/apparmor.d/local/abstractions/libvirt-qemu
-      content: /var/lib/libvirt/images/** rwk,
-      group: root
-      mode: "0644"
-      owner: root
-    notify: Reload apparmor
-  - name: Workaround '#2' for Apparmor issue with Libvirt extra pools under images
-    ansible.builtin.template:
-      dest: /etc/apparmor.d/local/libvirt.virt-aa-helper
-      group: root
-      mode: "0644"
-      owner: root
-      src: libvirt.virt-aa-helper.j2
-    notify: Reload apparmor
-  - name: Add storage pools
-    block:
-    - name: Create pool directories
-      ansible.builtin.file:
-        path: /var/lib/libvirt/images/{{ item }}
-        group: kvm
-        mode: "0770"
-        owner: libvirt-qemu
-        state: directory
-      loop: "{{ libvirtd_pool_list }}"
-    - name: Define pools
-      ansible.builtin.command: virsh pool-define-as {{ item | quote }} dir --target /var/lib/libvirt/images/{{ item | quote }}
-      loop: "{{ libvirtd_pool_list }}"
-      register: pdefout
-      changed_when: pdefout.rc == 0
-      failed_when: "'already exists' not in pdefout.stderr and pdefout.rc != 0"
-      notify: start and autostart pools
 ...

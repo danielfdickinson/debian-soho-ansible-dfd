@@ -57,6 +57,11 @@
   - bare_metal_user_libvirt_client_add
   - system_fail2ban_ssh
 
+- name: Add split Libvirt pools on certain hosts
+  hosts: bare_metal:&libvirtd_split_pools
+  roles:
+  - bare_metal_service_libvirtd_pools
+
 - name: Add NUT to local bare-metal
   hosts: bare_metal:&bare_metal_local
   roles:
