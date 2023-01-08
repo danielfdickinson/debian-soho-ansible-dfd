@@ -10,11 +10,6 @@
       quiet: true
       fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
 
-- name: Configure internal MXes
-  hosts: internal_mxes
-  roles:
-  - service_postfix_mx_internal
-
 - name: Configure IMAP (mailbox) servers
   hosts: mailbox_servers
   roles:
