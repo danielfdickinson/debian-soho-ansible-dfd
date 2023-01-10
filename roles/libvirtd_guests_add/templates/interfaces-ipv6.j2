@@ -1,5 +1,0 @@
-iface ens2 inet6 static
-	address {{ instance_item.value.v6cidr }}
-	gateway {{ edata.v6nat_addr }}
-	dns-search {{ edata.central_internal_domain }}
-	dns-nameserver {{ edata.v6nat_addr }}

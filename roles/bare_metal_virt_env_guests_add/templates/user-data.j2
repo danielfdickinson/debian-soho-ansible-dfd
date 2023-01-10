@@ -1,0 +1,86 @@
+#cloud-config
+{% if item.userdata['apt'] is defined %}
+apt: {{ item.userdata['apt'] | to_json }}
+{% elif userdata['apt'] is defined %}
+apt: {{ userdata['apt'] | to_json }}
+{% endif %}
+{% if (userdata['bootcmd'] is defined) or (item.userdata['bootcmd'] is defined) %}
+bootcmd:
+{{ [userdata['bootcmd'] is defined | ternary(userdata['bootcmd'], None), item.userdata['bootcmd'] is defined | ternary(item.userdata['bootcmd'], None)] | flatten(1) | to_yaml }}
+{% endif %}
+{% if item.userdata['disk_setups'] is defined %}
+disk_setup:
+{% for disk, layout in item.userdata['disk_setups'] | dictsort %}
+  {{ disk }}:
+    table_type: gpt
+    layout: {{ layout | to_json }}
+    overwrite: false
+{% endfor %}
+{% endif %}
+{% if item.userdata['fs_setups'] is defined %}
+fs_setup:
+{% for disk, partitions in item.userdata['fs_setups'] | dictsort %}
+{% for partition in partitions %}
+- device: {{ disk }}
+  filesystem: ext4
+  overwrite: false
+  partition: {{ partition }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+fqdn: {{ item.userdata['fqdn'] }}
+{% if ( userdata['groups'] is defined ) or ( item.userdata['groups'] is defined ) %}
+groups: {{ [userdata['groups'] is defined | ternary(userdata['groups'], None), item.userdata['groups'] is defined | ternary(item.userdata['groups'], None)] | flatten(1) | unique | to_json }}
+{% endif %}
+hostname: {{ item.userdata.hostname }}
+{% if item.userdata['mounts'] is defined %}
+mounts: {{ item.userdata['mounts'] | to_json }}
+{% endif %}
+{% if item.userdata['ntp_servers'] is defined %}
+ntp:
+  enabled: true
+  ntp_client: chrony
+  servers: {{ item.userdata['ntp_servers'] | to_json }}
+{% endif %}
+packages: {{ [userdata.packages, item.userdata['packages']] | flatten(1) | unique | to_json }}
+package_update: true
+package_upgrade: true
+package_reboot_if_required: false
+preserve_hostname: false
+runcmd: {{ [userdata.runcmd_before, item.userdata['runcmd'] is defined | ternary(item.userdata['runcmd'], None), userdata.runcmd_after] | flatten(1) | unique | to_json }}
+{% if item.userdata['ssh_keys'] is defined %}
+ssh_keys: {{ item.userdata['ssh_keys'] | to_json }}
+{% endif %}
+{% if userdata['users'] is defined or item.userdata['users'] is defined %}
+users:
+{% for user in [userdata['users'] is defined | ternary(userdata['users'], None), item.userdata['users'] is defined | ternary(item.userdata['users'], None)] | flatten(1) %}
+- name: {{ user.name }}
+{% if user['gecos'] is defined %}
+  gecos: {{ user['gecos'] }}
+{% endif %}
+{% if user['groups'] is defined %}
+  groups: {{ user['groups'] | to_json }}
+{% endif %}
+{% if user['homedir'] is defined %}
+  homedir: {{ user['homedir'] }}
+{% endif %}
+{% if user['lock_passwd'] is defined %}
+  lock_passwd: {{ user['lock_passwd'] }}
+{% endif %}
+{% if user['plain_text_passwd'] is defined %}
+  plain_text_passwd: {{ user['plain_text_passwd'] }}
+{% endif %}
+{% if user['shell'] is defined %}
+  shell: {{ user['shell'] }}
+{% endif %}
+{%if user['ssh_authorized_keys'] is defined %}
+  ssh_authorized_keys: {{ user['ssh_authorized_keys'] | to_json }}
+{% endif %}
+{% if user['system'] is defined %}
+  system: {{ user['system'] }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if (userdata['write_files'] is defined) or (item.userdata['write_files'] is defined) %}
+write_files: {{ [userdata['write_files'] is defined | ternary(userdata['write_files'], None), item.userdata['write_files'] is defined | ternary(item.userdata['write_files'], None) ] | flatten(1) | to_json }}
+{% endif %}

@@ -1,0 +1,37 @@
+---
+- name: Make Libvirt qemu hook parts directory
+  become: yes
+  ansible.builtin.file:
+    path: /etc/libvirt-forward-hooks.d
+    group: root
+    mode: "0755"
+    owner: root
+    state: directory
+- name: Add Libvirt main qemu hook
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/libvirt/hooks/qemu
+    group: root
+    mode: "0755"
+    owner: root
+    src: hooks-qemu-main
+  notify: Restart libvirtd
+- name: Add ipv4 and ipv6 port forward hooks
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/libvirt-forward-hooks.d/{{ item.guest }}_{{ item.host_port }}to{{ item.guest_port }}.hook
+    group: root
+    mode: "0755"
+    owner: root
+    src: hooks-qemu.j2
+  vars:
+    item_guest_ip: "{{ guest_addrs[item.guest]['v4addr'] }}"
+    item_guest_ip6: "{{ guest_addrs[item.guest]['v6addr'] }}"
+  register: hooks_qemu_result
+  notify: Restart libvirtd
+  loop: "{{ domain_forwards }}"
+  loop_control:
+    label: host:{{ item.host_port }} => {{ item.guest }}:{{ item.guest_port }}
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+...

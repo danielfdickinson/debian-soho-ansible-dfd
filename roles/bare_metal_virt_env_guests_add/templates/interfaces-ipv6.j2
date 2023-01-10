@@ -1,0 +1,5 @@
+iface ens2 inet6 static
+	address {{ addrdata['v6addr'] }}/{{ addrdata['v6prefix'] }}
+	gateway {{ netdata['v6nat_addr'] }}
+	dns-search {{ netdata['net_domain'] }}
+	dns-nameserver {{ netdata['v6nat_addr'] }}

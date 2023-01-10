@@ -1,0 +1,65 @@
+<domain type="kvm">
+	<name>{{ item.guest }}</name>
+	<memory unit='M'>{{ item.memory }}</memory>
+	<vcpu>{{ item.vcpu }}</vcpu>
+	<os>
+		<type arch='x86_64' machine='pc-i440fx-5.2'>hvm</type>
+	</os>
+	<features>
+		<acpi/>
+		<apic/>
+		<pae/>
+	</features>
+	<cpu mode='host-model' />
+	<clock offset='utc'/>
+	<on_poweroff>destroy</on_poweroff>
+	<on_reboot>restart</on_reboot>
+	<on_crash>destroy</on_crash>
+	<devices>
+		<emulator>/usr/bin/qemu-system-x86_64</emulator>
+		<disk type='volume'>
+			<boot order='1' />
+			<driver name='qemu' type='qcow2'/>
+			<source pool='{{ item['pool_os'] }}' volume='{{ item['vol_name_os'] }}' index='1' />
+			<target dev='vda' bus='virtio'/>
+			<alias name='virtio-disk0'/>
+		</disk>
+		<disk type='volume'>
+			<driver name='qemu' type='raw'/>
+			<source pool='{{ libvirt_pool_cloud_init }}' volume='{{ envname }}-{{ item.guest }}-nocloud.img' index='2'/>
+			<target dev='vdb' bus='virtio'/>
+			<alias name='virtio-disk1'/>
+		</disk>
+{% if item['data_volumes'] is defined %}
+{% for data_volume in item['data_volumes'] %}
+		<disk type='volume'>
+			<driver name='qemu' type='qcow2'/>
+			<source pool='{{ data_volume.pool }}' volume='{{ data_volume.name }}' index='{{ 2 + loop.index }}'/>
+			<target dev='vd{{ 'abcdefghijklmnopqrstuvwxyz'[2 + loop.index0] }}' bus='virtio' />
+		</disk>
+{% endfor %}
+{% endif %}
+		<interface type='network'>
+			<mac address='{{ addrdata['mac'] }}' />
+			<source network='{{ envname }}' bridge='{{ netdata.vbridge }}'/>
+			<model type='virtio'/>
+		</interface>
+		<serial type='pty'>
+			<target type='isa-serial' port='0'>
+				<model name='isa-serial'/>
+			</target>
+			<alias name='serial0'/>
+		</serial>
+		<console type='pty'>
+			<target type='serial' port='0'/>
+			<alias name='serial0'/>
+		</console>
+		<memballoon model='virtio'>
+			<alias name='balloon0'/>
+		</memballoon>
+		<rng model='virtio'>
+			<backend model='random'>/dev/urandom</backend>
+			<alias name='rng0'/>
+		</rng>
+	</devices>
+</domain>

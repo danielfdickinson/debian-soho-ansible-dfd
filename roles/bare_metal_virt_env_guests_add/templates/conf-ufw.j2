@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ufw allow in on ens2 proto tcp from any to any port {{ item['ssh_port'] is defined | ternary(item['ssh_port'], netdata['ssh_port']) }}
+ufw enable

@@ -3,10 +3,17 @@
   gather_facts: true
   hosts: all
   tasks:
-  - name: Print all facts
+  - name: Ensure facts gathered
+    ansible.builtin.setup:
+
+- name: Output variables gathered
+  gather_facts: false
+  hosts: ldev_host
+  tasks:
+  # - name: Print all facts
+  #   ansible.builtin.debug:
+  #     var: ansible_facts
+  - name: Dump hostvars
     ansible.builtin.debug:
-      var: ansible_facts
-#  - debug:
-#      var: hostvars
-#    name: "Dump hostvars"
+      var: hostvars
 ...

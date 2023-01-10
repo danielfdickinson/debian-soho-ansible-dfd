@@ -36,6 +36,9 @@ a2enconf
 a2enmod
 a2ensite
 abortonclose
+addr
+addrdata
+addrs
 addrtype
 adminaddr
 airlockkss

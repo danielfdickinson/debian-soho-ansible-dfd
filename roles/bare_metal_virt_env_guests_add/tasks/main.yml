@@ -1,0 +1,276 @@
+---
+- name: Copy base OS volume file to libvirtd host
+  become: yes
+  # We use 'get_url' since we're often operating on remote hosts and our upload
+  # bandwidth would make this slower than using the official download servers
+  # We insist on DNSSEC on our remote hosts so this should be secure per docs on
+  # Debian cloud image server
+  ansible.builtin.get_url:
+    dest: "{{ libvirt_pool_base_images_path }}/{{ libvirt_os_base_image_name }}"
+    checksum: sha512:{{ libvirt_os_cloud_image_sha512sums_url }}
+    group: libvirt-qemu
+    mode: "0660"
+    owner: libvirt-qemu
+    timeout: 30
+    url: "{{ libvirt_os_cloud_image_url }}"
+  notify: Refresh list of volumes in base-images pool
+- name: Flush handlers (ensure list of volumes is up to date)
+  ansible.builtin.meta: flush_handlers
+- name: List all system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name --all
+  register: libvirt_domain_list
+  changed_when: false
+- name: List all volumes in libvirtd pool for os volumes
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] | map(attribute='pool_os') | unique }}"
+  loop_control:
+    label: "{{ item }}"
+  ansible.builtin.shell:
+    cmd: virsh vol-list --pool {{ item | quote }} | tail -n+3 | awk '{ print $1 }'
+  register: libvirt_os_pool_vol_list
+  changed_when: false
+- name: Create OS volume for instances
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] | selectattr('pool_os', 'defined') }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.command:
+    cmd: virsh vol-create-as {{ item.pool_os | quote }} {{ item.vol_name_os | quote }} {{ item.vol_size_os | quote }} --format qcow2 --backing-vol {{ libvirt_pool_base_images_path | quote }}/{{ libvirt_os_base_image_name | quote }} --backing-vol-format qcow2
+  register: vol_os_create_out
+  changed_when: vol_os_create_out.rc == 0
+  failed_when: vol_os_create_out.rc != 0
+  notify: Refresh list of volumes in {{ item['pool_os'] }} pool
+  when: item.vol_name_os not in (libvirt_os_pool_vol_list.results | map(attribute='stdout_lines') | flatten | unique)
+- name: Create data volumes for instances
+  include_tasks: create_data_volumes.yml
+  loop: "{{ env_domain_creation_params[envname] | selectattr('data_volumes', 'defined') | map(attribute='data_volumes') | flatten(1) }}"
+  loop_control:
+    label: "{{ item.name }} in {{ item.pool }}"
+- name: Create base directory for working data
+  become: yes
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data
+    group: "{{ ansible_user }}"
+    mode: "0750"
+    owner: "{{ ansible_user }}"
+    state: directory
+- name: Create environment directory for working data
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data/{{ envname }}
+    mode: "0750"
+    state: directory
+- name: Create instance directories for working data
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.file:
+    dest: /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}
+    mode: "0750"
+    state: directory
+- name: Ensure mtools and mkfs.vfat are available
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - dosfstools
+    - mtools
+    state: present
+- name: Create instances meta-data
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}/meta-data
+    mode: "0640"
+    src: meta-data.j2
+  register: meta_data_out
+  notify: Copy cloud init data to nocloud image
+- name: Create user-data for instances
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  vars:
+    addrdata: "{{ env_domain_addresses[envname][item.guest] }}"
+    defdata: "{{ env_default_params[envname] }}"
+    netdata: "{{ env_config_net[envname] }}"
+    userdata: "{{ env_default_userdata[envname] }}"
+    role_write_files:
+    - content: "{{ '%sudonp ALL=(ALL) NOPASSWD: ALL' | b64encode }}"
+      encoding: b64
+      path: /etc/sudoers.d/sudonp
+      permissions: "0400"
+    - content: "{{ lookup('file', '50unattended-upgrades') | b64encode }}"
+      encoding: b64
+      path: /etc/apt/apt.conf.d/50unattended-upgrades
+    - content: "{{ lookup('template', 'conf-ufw.j2') | b64encode }}"
+      encoding: b64
+      path: /run/ci-files/conf-ufw
+      permissions: "0755"
+    - content: "{{ lookup('template', 'jail.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/fail2ban/jail.local
+    - content: "{{ lookup('template', 'interfaces-ipv6.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/network/interfaces.d/60-ens2-ipv6
+    - content: "{{ lookup('template', 'local-home.site.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/apparmor.d/tunables/home.d/local-home.site.local
+    - content: "{{ lookup('template', 'sshd_custom.conf.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/ssh/sshd_config.d/sshd_custom.conf
+    - content: "{{ lookup('template', 'sshd_jail.local.j2') | b64encode }}"
+      encoding: b64
+      path: /etc/fail2ban/jail.d/ssh.local
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}/user-data
+    mode: "0640"
+    src: user-data.j2
+  register: user_data_out
+  notify: Copy cloud init data to nocloud image
+- name: Ensure image files for vfat exist
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  community.general.filesize:
+    path: /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}/nocloud.img
+    mode: "0640"
+    size: 2M
+    sparse: true
+  register: nocloud_img_size
+  notify: Copy cloud init data to nocloud image
+- name: Flush handlers (make sure cloudinit images are ready)
+  ansible.builtin.meta: flush_handlers
+- name: Copy nocloud data images to a pool
+  loop: "{{ nocloud_img_size.results }}"
+  loop_control:
+    label: "{{ item.path }}"
+  become: yes
+  ansible.builtin.copy:
+    dest: "{{ libvirt_pool_cloud_init_path }}/{{ item.path | replace('/var/local/cloud_init_data/', '') | replace('/', '-') }}"
+    group: kvm
+    mode: "0600"
+    owner: libvirt-qemu
+    remote_src: true
+    src: "{{ item.path }}"
+  notify: Refresh list of volumes in pool containing cloud-init images
+- name: Flush handlers (make sure cloudinit images are available)
+  ansible.builtin.meta: flush_handlers
+- name: Create domains xml
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  vars:
+    netdata: "{{ env_config_net[envname] }}"
+    addrdata: "{{ env_domain_addresses[envname][item.guest] }}"
+    userdata: "{{ env_default_userdata[envname] }}"
+  ansible.builtin.template:
+    dest: /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}/domain.xml
+    mode: "0640"
+    src: domain.xml.j2
+  register: create_domain_xml_out
+- name: List all system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name --all
+  register: libvirt_all_domain_list
+  changed_when: false
+- name: Define libvirt domains
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - define
+    - /var/local/cloud_init_data/{{ envname }}/{{ item.guest }}/domain.xml
+    - --validate
+  when: not item.guest in libvirt_all_domain_list.stdout_lines
+  register: domain_define_out
+  changed_when: domain_define_out.rc == 0
+  failed_when: domain_define_out.rc != 0 or (item.guest in libvirt_all_domain_list.stdout_lines and create_domain_xml_out.changed)
+- name: Flush handlers (make sure domains are available)
+  ansible.builtin.meta: flush_handlers
+- name: Dump network XML (to check for existing DNS record)
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh net-dumpxml {{ envname }}
+  register: libvirt_network_xml
+  changed_when: false
+- name: Add v4 DHCP entry for instances
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  vars:
+    addrdata: "{{ env_domain_addresses[envname][item.guest] }}"
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - net-update
+    - "{{ envname }}"
+    - add
+    - ip-dhcp-host
+    - <host ip='{{ addrdata.v4addr }}' mac='{{ addrdata.mac }}' name="{{ item.usedata.hostname }}" />
+    - --parent-index
+    - 0
+    - --live
+    - --config
+  register: dhcpv4_add_out
+  when: addrdata.v4addr not in libvirt_network_xml.stdout
+  changed_when: dhcpv4_add_out.rc == 0
+- name: Add v6 DNS entry for instances
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  vars:
+    addrdata: "{{ env_domain_addresses[envname][item.guest] }}"
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - net-update
+    - "{{ envname }}"
+    - add
+    - dns-host
+    - <host ip='{{ addrdata.v6addr }}'><hostname>{{ item.userdata.hostname }}</hostname></host>
+    - --live
+    - --config
+  register: dnsv6_add_out
+  when: addrdata.v6addr not in libvirt_network_xml.stdout
+  changed_when: dnsv6_add_out.rc == 0
+- name: List active system instances on libvirtd host
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name
+  register: libvirt_active_domain_list
+  changed_when: false
+- name: Start libvirt domains
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - start
+    - "{{ item.guest }}"
+  register: domain_start_out
+  when: item.guest not in libvirt_active_domain_list.stdout_lines
+  changed_when: domain_start_out.rc == 0
+  failed_when: "'already exists' not in domain_start_out.stderr and domain_start_out.rc != 0"
+- name: Set libvirt domains as autostarted
+  become: yes
+  loop: "{{ env_domain_creation_params[envname] }}"
+  loop_control:
+    label: "{{ item.guest }}"
+  ansible.builtin.command:
+    argv:
+    - virsh
+    - autostart
+    - "{{ item.guest }}"
+    creates: /etc/libvirt/qemu/autostart/{{ item.guest }}.xml
+  register: domain_autostart_out
+  changed_when: false
+...

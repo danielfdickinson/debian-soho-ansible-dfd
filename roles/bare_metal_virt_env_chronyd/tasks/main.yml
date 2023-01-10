@@ -1,0 +1,32 @@
+---
+# yamllint disable rule:line-length
+- name: Configure chronyd to allow NTP from guests
+  become: yes
+  ansible.builtin.template:
+    dest: /etc/chrony/conf.d/allow_{{ envname }}_guests.conf
+    content:
+    group: root
+    mode: "0644"
+    owner: root
+    src: allow_guest.conf.j2
+  when: v4nat_addr is defined or v6nat_addr is defined
+  notify: Restart chrony
+- name: Allow NTP from guests to host
+  become: yes
+  community.general.ufw:
+    dest: "{{ v4nat_addr }}"
+    direction: in
+    rule: allow
+    port: 123
+    src: "{{ v4nat_net }}/{{ v4nat_prefix }}"
+  when: v4nat_addr is defined
+- name: Allow NTP from guests to host (v6)
+  become: yes
+  community.general.ufw:
+    dest: "{{ v6nat_addr }}"
+    direction: in
+    rule: allow
+    port: 123
+    src: "{{ v6nat_net }}/{{ v6nat_prefix }}"
+  when: v6nat_addr is defined
+...

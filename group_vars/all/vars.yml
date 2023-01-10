@@ -5,149 +5,6 @@ email_interfaces: "{{ vault_email_interfaces_map[envname] }}"
 email_interfaces_map: "{{ vault_email_interfaces_map }}"
 email_relayhost: "{{ vault_email_relayhost_map[envname] }}"
 email_relayhost_map: "{{ vault_email_relayhost_map }}"
-env_default_userdata:
-  ldev:
-    apt:
-      preserve_sources_list: true
-      http_proxy: "{{ vault_env_default_userdata['ldev']['apt']['http_proxy'] }}"
-    groups:
-    - adm
-    - sudo
-    - sudonp
-    - sys
-    ntp_servers:
-    - "{{ vault_env_conn_admin['ldev']['v4nat_addr'] }}"
-    - "{{ vault_env_conn_admin['ldev']['v6nat_addr'] }}"
-    packages:
-    - molly-guard
-    - powermgmt-base
-    - python3-gi
-    - ufw
-    - unattended-upgrades
-    runcmd_before:
-    - [set, -xe]
-    - [systemctl, reload, apparmor]
-    runcmd_after:
-    - [bash, /run/ci-files/conf-ufw]
-    - [systemctl, daemon-reload]
-    - [systemctl, restart, networking]
-    - [rm, -rf, /run/ci-files]
-    users:
-    - name: "{{ vault_env_conn_admin['ldev']['admin_user'] }}"
-      gecos: "{{ vault_env_conn_admin['ldev']['admin_gecos'] }}"
-      groups:
-      - adm
-      - sudo
-      - sudonp
-      homedir: "{{ vault_env_conn_admin['ldev']['admin_base_homedir'] }}/{{ vault_env_conn_admin['ldev']['admin_user'] }}"
-      lock_passwd: true
-      shell: /bin/bash
-      ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ vault_env_conn_admin['ldev']['admin_ssh_key_userdata'] }}
-    write_files: "{{ role_write_files }}"
-    # So lookups don't error when we aren't handling userdata
-env_guest_userdata:
-  bare_metal_local:
-    dlcicl01:
-      fqdn: "{{ vault_env_guest_userdata['bare_metal_local']['dlcicl01']['fqdn'] }}"
-  ldev:
-    airlock:
-      fqdn: "{{ vault_env_guest_userdata['ldev']['airlock']['fqdn'] }}"
-      hostname: airlockldev
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
-      users:
-      - name: "{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
-        homedir: "{{ admin_base_homedir }}/{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
-        lock_passwd: true
-        shell: /bin/bash
-        ssh_authorized_keys:
-        - "{{ vault_env_conn_admin['ldev']['bastion_ssh_key'] }}"
-    gate:
-      fqdn: "{{ vault_env_guest_userdata['ldev']['gate']['fqdn'] }}"
-      hostname: gateldev
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
-    gdav:
-      bootcmd:
-      - [mkdir, -p, /var/lib/postgresql]
-      - [mkdir, -p, /var/spool/sogo]
-      disk_setups:
-        /dev/vdc: ["100"]
-        /dev/vdd: ["100"]
-      fqdn: "{{ vault_env_guest_userdata['ldev']['gdav']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
-        "/dev/vdd":
-        - "1"
-      hostname: gdavldev
-      mounts:
-      - [/dev/vdc1, /var/lib/postgresql]
-      - [/dev/vdd1, /var/spool/sogo]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
-    imap:
-      bootcmd:
-      - [mkdir, -p, /var/vmail]
-      disk_setups:
-        /dev/vdc: ["100"]
-      fqdn: "{{ vault_env_guest_userdata['ldev']['imap']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
-      hostname: imapldev
-      mounts:
-      - [/dev/vdc1, /var/vmail]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
-      users:
-      - name: "{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
-        homedir: "{{ admin_base_homedir }}/{{ vault_env_conn_admin['ldev']['bastion_user'] }}"
-        lock_passwd: true
-        shell: /bin/bash
-        ssh_authorized_keys:
-        - "{{ vault_env_conn_admin['ldev']['bastion_ssh_key'] }}"
-    smtp01:
-      bootcmd:
-      - [mkdir, -p, /var/spool/postfix]
-      disk_setups:
-        /dev/vdc: ["100"]
-      fqdn: "{{ vault_env_guest_userdata['ldev']['smtp01']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
-      hostname: smtp01ldev
-      mounts:
-      - [/dev/vdc1, /var/spool/postfix]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
-    www:
-      bootcmd:
-      - [mkdir, -p, /var/www]
-      disk_setups:
-        /dev/vdc: ["100"]
-      fqdn: "{{ vault_env_guest_userdata['ldev']['www']['fqdn'] }}"
-      fs_setups:
-        "/dev/vdc":
-        - "1"
-      hostname: wwwldev
-      mounts:
-      - [/dev/vdc1, /var/www]
-      packages:
-      - fail2ban
-      runcmd:
-      - [systemctl, restart, fail2ban]
 external_relayhost: "{{ vault_env_conn_admin[envname]['external_relayhost'] }}"
 gdav_port: "{{ libvirt_guest_definitions[envname]['gdav']['gdav_port'] }}"
 gdav_server_name_external: "{{ vault_env_conn_admin[envname]['gdav_server_name_external'] }}"
@@ -167,6 +24,10 @@ libvirt_guest_definitions: "{{ vault_libvirt_guest_definitions }}"
 libvirt_os_base_image_name: debian-11-generic-amd64-20221219-1234.qcow2
 libvirt_os_cloud_image_sha512sums_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/SHA512SUMS"
 libvirt_os_cloud_image_url: "https://cloud.debian.org/images/cloud/bullseye/20221219-1234/debian-11-generic-amd64-20221219-1234.qcow2"
+libvirt_pool_base_images: "{{ host_libvirt_pool_base_images }}"
+libvirt_pool_base_images_path: "{{ host_libvirt_pool_base_images_path }}"
+libvirt_pool_cloud_init: "{{ host_libvirt_pool_cloud_init }}"
+libvirt_pool_cloud_init_path: "{{ host_libvirt_pool_cloud_init_path }}"
 lmtp_port: "{{ libvirt_guest_definitions[envname]['imap']['lmtp_port'] }}"
 mail_groupware_users: "{{ vault_env_conn_admin[envname]['mail_groupware_users'] }}"
 mail_local_destinations: "{{ env_depends_conn_admin[envname]['mail_local_destinations'] }}"
@@ -205,14 +66,6 @@ sogodb_password: "{{ vault_env_conn_admin[envname]['sogodb_password'] }}"
 submission_port: "{{ libvirt_guest_definitions[envname]['imap']['submission_port'] }}"
 submission_relay_host: "{{ env_guest_userdata[envname]['smtp01']['fqdn'] }}"
 submission_relay_port: "{{ libvirt_guest_definitions[envname]['smtp01']['submission_relay_port'] }}"
-v4nat_addr: "{{ vault_env_conn_admin[envname]['v4nat_addr'] }}"
-v4nat_cidr: "{{ vault_env_conn_admin[envname]['v4nat_addr'] + '/' + (vault_env_conn_admin[envname]['v4nat_prefix'] | string) }}"
-v4nat_net: "{{ vault_env_conn_admin[envname]['v4nat_net'] }}"
-v4nat_prefix: "{{ vault_env_conn_admin[envname]['v4nat_prefix'] }}"
-v6nat_addr: "{{ vault_env_conn_admin[envname]['v6nat_addr'] }}"
-v6nat_cidr: "{{ vault_env_conn_admin[envname]['v6nat_addr'] }}/64"
-v6nat_net: "{{ vault_env_conn_admin[envname]['v6nat_net'] }}"
-v6nat_prefix: "{{ vault_env_conn_admin[envname]['v6nat_prefix'] }}"
 virtual_alias_domains: "{{ mail_groupware_users | selectattr('alias_domains', 'defined') | map(attribute='alias_domains') | unique | difference(virtual_mailbox_domains) | unique }}"
 virtual_alias_domains_hosts: "{{ ([groups['all'] | map('extract', hostvars, 'ansible_facts') | reject('eq', {}) | map(attribute='fqdn'), hostvars | dict2items | map(attribute='key')] | flatten(levels=1)) | unique | difference([virtual_alias_domains, virtual_mailbox_domains] | flatten | unique) }}"
 virtual_mailbox_domains: "{{ mail_groupware_users | map(attribute='maildomain') | unique }}"

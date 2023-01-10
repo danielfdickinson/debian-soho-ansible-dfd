@@ -1,4 +1,0 @@
-Port {{ instance_item.value['ansible_ssh_port'] is defined | ternary(instance_item.value['ansible_ssh_port'], edata.ansible_ssh_port) }}
-PermitRootLogin no
-PasswordAuthentication no
-KbdInteractiveAuthentication no

@@ -1,0 +1,41 @@
+---
+- name: Restart libvirtd
+  become: yes
+  ansible.builtin.service:
+    name: libvirtd
+    state: restarted
+  listen: Restart changed libvirt guests
+- name: List running guests
+  become: yes
+  ansible.builtin.command:
+    cmd: virsh list --name --state-running
+  register: running_guests_out
+  changed_when: false
+- name: Identify changed guests
+  ansible.builtin.command: echo "{{ item.guest | quote }}"
+  loop: "{{ hooks_qemu_result.results }}"
+  when: item is changed
+  register: changed_guests
+  changed_when: stdout is defined and stdout != ""
+  listen: Restart changed libvirt guests
+- name: Stop changed libvirt guests
+  become: yes
+  ansible.builtin.command: virsh suspend {{ item | quote }}
+  loop: "{{ changed_guests.results | map(attribute='stdout') | unique }}"
+  when:
+  - item is defined
+  - item != ""
+  - item in running_guests_out.stdout_lines
+  listen: Restart changed libvirt guests
+- name: Start changed libvirt guests
+  become: yes
+  ansible.builtin.command: virsh resume {{ item | quote }}
+  loop: "{{ changed_guests.results | map(attribute='stdout') | unique }}"
+  when:
+  - item is defined
+  - item != ""
+  - item in running_guests_out.stdout_lines
+  listen: Restart changed libvirt guests
+- name: Flush handlers in handlers
+  ansible.builtin.meta: flush_handlers
+...

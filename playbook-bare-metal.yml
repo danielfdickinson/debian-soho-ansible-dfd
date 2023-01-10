@@ -1,15 +1,4 @@
 ---
-- name: Ensure required variables are supplied on the command line
-  hosts: bare_metal
-  gather_facts: false
-  pre_tasks:
-  - name: Ensure given environment is valid
-    ansible.builtin.assert:
-      that:
-      - envname in group_names
-      quiet: true
-      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
-
 - name: Configure name resolution
   hosts: bare_metal
   gather_facts: true
@@ -21,6 +10,9 @@
   hosts: bare_metal:&local_ipv6
   roles:
   - bare_metal_network_ipv6
+  vars:
+    local_ipv6_cidr: "{{ env_domain_addresses['bare_metal']['v6addr'] }}/{{ env_domain_addresses['bare_metal']['v6prefix'] }}"
+    local_ipv6_gateway: "{{ env_domain_addresses['bare_metal']['v6gateway'] }}"
 
 - name: Make second interface a bridge
   hosts: bare_metal:&bridge_second_interface
