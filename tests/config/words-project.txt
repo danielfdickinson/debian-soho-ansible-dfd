@@ -132,6 +132,8 @@ imapldev
 imaps
 inet
 inodes
+ipaddr
+ipaddrs
 keytab
 kss
 kvm

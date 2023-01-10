@@ -111,7 +111,7 @@
     interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
-    src: "{{ libvirt_guest_definitions[envname]['gate']['v4addr'] }}"
+    src: "{{ ipaddrs['v4addr']['gateldev'] }}"
     to_port: "{{ gdav_port }}"
   when: ansible_facts['default_ipv4'] is defined
 - name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v6)
@@ -121,7 +121,7 @@
     interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
     direction: in
     proto: tcp
-    src: "{{ libvirt_guest_definitions[envname]['gate']['v6addr'] }}"
+    src: "{{ ipaddrs['v6addr']['gateldev'] }}"
     to_port: "{{ gdav_port }}"
   when: ansible_facts['default_ipv4'] is defined
 ...

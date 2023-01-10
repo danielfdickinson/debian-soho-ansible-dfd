@@ -18,6 +18,9 @@ central_external_domain: "{{ vault_central_external_domain }}"
 central_external_email: "{{ vault_central_external_email }}"
 central_internal_domain: "{{ vault_central_internal_domain }}"
 central_internal_email: "{{ vault_central_internal_email }}"
+remote_admin_ip: "{{ vault_remote_admin_ip }}"
+remote_ignore_ips: "{{ remote_admin_ip }}{% if remote_monitoring_ips is defined %} {{ remote_monitoring_ips }}{% endif %}"
+remote_monitoring_ips: "{{ vault_remote_monitoring_ips }}"
 
 fallback_dns: "{{ vault_env_conn_admin[envname]['fallback_dns'] }}"
 internal_relay_port: "{{ vault_env_conn_admin[envname]['internal_relay_port'] }}"
@@ -26,8 +29,12 @@ libvirt_client_user: "{{ vault_env_conn_admin[envname]['libvirt_client_user'] }}
 local_freshclam_mirror: "{{ vault_env_conn_admin[envname]['local_freshclam_mirror'] }}"
 mail_local_destinations: "{{ default_mail_local_destinations }}"
 opendkim_private_key: "{{ vault_env_conn_admin[envname]['opendkim_private_key'] | default(None) }}"
-remote_admin_ip: "{{ vault_env_conn_admin[envname]['remote_admin_ip'] }}"
-remote_ignore_ips: "{{ remote_admin_ip }}{% if remote_monitoring_ips is defined %} {{ remote_monitoring_ips }}{% endif %}"
-remote_monitoring_ips: "{{ vault_env_conn_admin[envname]['remote_monitoring_ips'] }}"
 v6natnet_ula: "{{ vault_env_conn_admin[envname]['v6natnet_ula'] }}"
+ipaddrs:
+  v4addr:
+    gdavkss: "{{ hostvars['gdavkss.kss']['ansible_facts']['default_ipv4']['address'] }}"
+    imapkss: "{{ hostvars['imapkss.kss']['ansible_facts']['default_ipv4']['address'] }}"
+  v6addr:
+    gdavkss: "{{ hostvars['gdavkss.kss']['ansible_facts']['default_ipv6']['address'] }}"
+    imapkss: "{{ hostvars['imapkss.kss']['ansible_facts']['default_ipv6']['address'] }}"
 ...

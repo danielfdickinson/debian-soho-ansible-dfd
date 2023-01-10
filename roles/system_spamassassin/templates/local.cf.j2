@@ -35,10 +35,9 @@ report_safe 1
 #
 # trusted_networks 212.17.35.
 
-msa_networks {{ libvirt_guest_definitions[envname]['imap']['v4addr'] }}/32 {{ libvirt_guest_definitions[envname]['imap']['v6addr'] }}/128
-trusted_networks {{ libvirt_guest_definitions[envname][instance_name]['v4addr'] }}/32 {{ libvirt_guest_definitions[envname][instance_name]['v6addr'] }}/128
-trusted_networks {{ libvirt_guest_definitions[envname]['imap']['v4addr'] }}/32 {{ libvirt_guest_definitions[envname]['imap']['v6addr'] }}/128
-
+msa_networks {{ ipaddrs['v4addr']['imapldev'] }}/32 {{ ipaddrs['v6addr']['imapldev'] }}/128
+trusted_networks {{ ipaddrs['v4addr']['imapldev'] }}/32 {{ ipaddrs['v6addr']['imapldev'] }}/128
+trusted_networks {{ ipaddrs['v4addr']['smtp01ldev'] }}/32 {{ ipaddrs['v6addr']['smtp01ldev'] }}/128
 
 #   Set file-locking method (flock is not safe over NFS, but is faster)
 #

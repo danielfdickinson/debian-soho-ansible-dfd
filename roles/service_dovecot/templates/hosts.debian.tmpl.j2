@@ -18,7 +18,7 @@ you need to add the following to config:
 127.0.1.1 {% raw %}{{fqdn}} {{hostname}}
 {% endraw %}
 127.0.0.1 localhost sogodb
-{{ libvirt_guest_definitions['ldev']['gdav']['v4addr'] }} gdavldev.ldev.thecshore.ca
+{{ ipaddrs['v4addr']['gdavldev'] }} gdavldev.ldev.thecshore.ca
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback sogodb
@@ -27,3 +27,5 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
+
+{{ ipaddrs['v6addr']['gdavldev'] }} gdavldev.ldev.thecshore.ca
