@@ -1,6 +1,0 @@
-auto {{ ansible_facts['default_ipv4']['interface'] }}
-iface {{ ansible_facts['default_ipv4']['interface'] }} inet6 static
-	address {{ local_ipv6_cidr }}
-{% if local_ipv6_gateway is defined and local_ipv6_gateway != "" %}
-	gateway {{ local_ipv6_gateway }}
-{% endif %}

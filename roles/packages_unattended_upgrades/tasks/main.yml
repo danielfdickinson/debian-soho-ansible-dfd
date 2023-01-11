@@ -8,7 +8,6 @@
     - unattended-upgrades
     state: present
 - name: Configure unattended-upgrades
-  # Note that unattended-upgrades is not already configured for bare-metal
   ansible.builtin.copy:
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
     group: root

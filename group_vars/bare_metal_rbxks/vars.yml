@@ -33,53 +33,5 @@ opendkim_private_key: "{{ vault_opendkim_private_key | default(None) }}"
 remote_admin_ip: "{{ vault_remote_admin_ip | default(None) }}"
 remote_ignore_ips: "{{ remote_admin_ip }}{% if remote_monitoring_ips is defined %} {{ remote_monitoring_ips }}{% endif %}"
 remote_monitoring_ips: "{{ vault_remote_monitoring_ips | default([]) }}"
-second_interface: "{{ host_second_interface | default(None) }}"
-storage_extra_use_lvm2: "{{ host_storage_extra_use_lvm2 | default(None) }}"
-storage_filesystems: "{{ host_storage_filesystems | default(None) }}"
-storage_logical_volumes: "{{ host_storage_logical_volumes | default(None) }}"
-storage_mountpoints: "{{ host_storage_mountpoints | default(None) }}"
-storage_mounts: "{{ host_storage_mounts | default(None) }}"
-storage_volume_groups: "{{ host_storage_volume_groups | default(None) }}"
 v6natnet_ula: "{{ vault_v6natnet_ula | default(None) }}"
-env_default_userdata:
-  kss:
-    apt:
-      preserve_sources_list: true
-      http_proxy: "{{ vault_env_default_userdata['kss']['apt']['http_proxy'] }}"
-    groups:
-    - adm
-    - sudo
-    - sudonp
-    - sys
-    ntp_servers:
-    - "{{ vault_env_config_net['kss']['v4nat_addr'] }}"
-    - "{{ vault_env_config_net['kss']['v6nat_addr'] }}"
-    packages:
-    - molly-guard
-    - powermgmt-base
-    - python3-gi
-    - ufw
-    - unattended-upgrades
-    runcmd_before:
-    - [set, -xe]
-    - [systemctl, reload, apparmor]
-    runcmd_after:
-    - [bash, /run/ci-files/conf-ufw]
-    - [systemctl, daemon-reload]
-    - [systemctl, restart, networking]
-    - [rm, -rf, /run/ci-files]
-    users:
-    - name: "{{ vault_env_conn_admin['kss']['admin_user'] }}"
-      gecos: "{{ vault_env_conn_admin['kss']['admin_gecos'] }}"
-      groups:
-      - adm
-      - sudo
-      - sudonp
-      homedir: "{{ vault_env_conn_admin['kss']['admin_base_homedir'] }}/{{ vault_env_conn_admin['ldev']['admin_user'] }}"
-      lock_passwd: true
-      shell: /bin/bash
-      ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ vault_env_conn_admin['kss']['admin_ssh_key_userdata'] }}
-    write_files: "{{ role_write_files }}"
-    # So lookups don't error when we aren't handling userdata
 ...

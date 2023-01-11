@@ -1,4 +1,0 @@
-ON_BOOT=start
-START_DELAY=5
-ON_SHUTDOWN=shutdown
-#SYNC_TIME=1

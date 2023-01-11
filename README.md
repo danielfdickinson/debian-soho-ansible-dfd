@@ -1,7 +1,11 @@
 # DFD Debian Libvirt VM cluster via Ansible
 
-Bare-metal and Libvirt virtual machine deployment via Ansible for a 'SOHO/KOHO
+Bare-metal and virtual machine management via Ansible for a 'SOHO/KOHO
 infrastructure' cluster, including mail server, groupware, and web hosting.
+
+The virtual machines are presumed to have been previously deployed. The author
+is currently using [Ansible to deploy a VM cluster on
+Libvirt](https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd).
 
 This repository should not include any unencrypted private or even particularly
 personalised information. It does, however, depend on adding some (to be
@@ -19,7 +23,7 @@ Not yet created.
 
 ### Repository URL
 
-<https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd>
+<https://gitlab.com/danielfdickinson/debian-soho-ansible-dfd>
 
 ## Features and default configuration
 
@@ -27,16 +31,7 @@ TBD
 
 ## Using this cluster deployment
 
-1. Prepare a cluster using
-<https://gitlab.com/danielfdickinson/debian-libvirt-terraform-dfd>.
-2. Clone the repository and cd into it
-
-	```bash
-	git clone https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd
-	cd debian-libvirt-ansible-dfd
-	```
-
-3. The main steps: TBD.
+TBD
 
 ## Getting help, discussing, and/or modifying
 

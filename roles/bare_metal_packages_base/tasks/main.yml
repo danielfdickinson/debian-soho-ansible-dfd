@@ -1,8 +1,0 @@
----
-- name: Ensure smartmontools
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - smartmontools
-    state: present
-...

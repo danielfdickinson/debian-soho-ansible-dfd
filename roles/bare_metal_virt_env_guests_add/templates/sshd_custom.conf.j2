@@ -1,4 +1,0 @@
-Port {{ item['ssh_port'] is defined | ternary(item['ssh_port'], netdata['ssh_port']) }}
-PermitRootLogin no
-PasswordAuthentication no
-KbdInteractiveAuthentication no

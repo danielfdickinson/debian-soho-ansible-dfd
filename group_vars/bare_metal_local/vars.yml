@@ -1,23 +1,18 @@
 ---
-admin_base_homedir: "{{ env_default_params['bare_metal']['admin_base_homedir'] }}"
-admin_gecos: "{{ env_default_params['bare_metal']['admin_gecos'] }}"
-admin_password: "{{ env_default_params['bare_metal']['admin_password'] }}"
-admin_ssh_key: "{{ env_default_params['bare_metal']['admin_ssh_key'] }}"
-admin_ssh_key_userdata: "{{ env_default_params['bare_metal']['admin_ssh_key_userdata'] }}"
-admin_user: "{{ env_default_params['bare_metal']['admin_user'] }}"
-ansible_become_password: "{{ env_default_params['bare_metal']['ansible_become_password'] }}"
+admin_base_homedir: "{{ vault_admin_base_homedir }}"
+admin_gecos: "{{ vault_admin_gecos }}"
+admin_password: "{{ vault_admin_password }}"
+admin_ssh_key: "{{ vault_admin_ssh_key }}"
+admin_ssh_key_userdata: "{{ vault_admin_ssh_key_userdata }}"
+admin_user: "{{ vault_admin_user }}"
+ansible_become_password: "{{ vault_ansible_become_password }}"
 ansible_ssh_host_key_checking: false # Note: this should be true in production
-ansible_ssh_port: "{{ env_default_params['bare_metal']['ansible_ssh_port'] }}"
-ansible_ssh_user: "{{ env_default_params['bare_metal']['ansible_ssh_user'] }}"
+ansible_ssh_port: "{{ vault_ansible_ssh_port }}"
+ansible_ssh_user: "{{ vault_ansible_ssh_user }}"
 central_external_domain: "{{ vault_central_external_domain }}"
 central_external_email: "{{ vault_central_external_email }}"
 central_internal_domain: "{{ vault_central_internal_domain }}"
 central_internal_email: "{{ vault_central_internal_email }}"
-env_config_net: "{{ vault_env_config_net }}"
-env_default_params: "{{ vault_env_default_params }}"
-env_domain_addresses: "{{ vault_env_domain_addresses }}"
-env_domain_creation_params: "{{ vault_env_domain_creation_params }}"
-env_domain_forwards: "{{ vault_env_domain_forwards }}"
 fallback_dns: "{{ vault_fallback_dns }}"
 internal_relay_port: "{{ vault_internal_relay_port }}"
 libvirt_client_ssh_key: "{{ vault_libvirt_client_ssh_key }}"
@@ -29,53 +24,5 @@ opendkim_private_key: "{{ vault_opendkim_private_key | default(None) }}"
 remote_admin_ip: "{{ vault_remote_admin_ip | default(None) }}"
 remote_ignore_ips: "{{ remote_admin_ip }}{% if remote_monitoring_ips is defined %} {{ remote_monitoring_ips }}{% endif %}"
 remote_monitoring_ips: "{{ vault_remote_monitoring_ips | default([]) }}"
-second_interface: "{{ host_second_interface | default(None) }}"
-storage_extra_use_lvm2: "{{ host_storage_extra_use_lvm2 | default(None) }}"
-storage_filesystems: "{{ host_storage_filesystems | default(None) }}"
-storage_logical_volumes: "{{ host_storage_logical_volumes | default(None) }}"
-storage_mountpoints: "{{ host_storage_mountpoints | default(None) }}"
-storage_mounts: "{{ host_storage_mounts | default(None) }}"
-storage_volume_groups: "{{ host_storage_volume_groups | default(None) }}"
 v6natnet_ula: "{{ vault_v6natnet_ula | default(None) }}"
-env_default_userdata:
-  ldev:
-    apt:
-      preserve_sources_list: true
-      http_proxy: "{{ vault_env_default_userdata['ldev']['apt']['http_proxy'] }}"
-    groups:
-    - adm
-    - sudo
-    - sudonp
-    - sys
-    ntp_servers:
-    - "{{ vault_env_config_net['ldev']['v4nat_addr'] }}"
-    - "{{ vault_env_config_net['ldev']['v6nat_addr'] }}"
-    packages:
-    - molly-guard
-    - powermgmt-base
-    - python3-gi
-    - ufw
-    - unattended-upgrades
-    runcmd_before:
-    - [set, -xe]
-    - [systemctl, reload, apparmor]
-    runcmd_after:
-    - [bash, /run/ci-files/conf-ufw]
-    - [systemctl, daemon-reload]
-    - [systemctl, restart, networking]
-    - [rm, -rf, /run/ci-files]
-    users:
-    - name: "{{ env_default_params['ldev']['admin_user'] }}"
-      gecos: "{{ env_default_params['ldev']['admin_gecos'] }}"
-      groups:
-      - adm
-      - sudo
-      - sudonp
-      homedir: "{{ env_default_params['ldev']['admin_base_homedir'] }}/{{ env_default_params['ldev']['admin_user'] }}"
-      lock_passwd: true
-      shell: /bin/bash
-      ssh_authorized_keys:
-      - no-agent-forwarding,no-port-forwarding {{ env_default_params['ldev']['admin_ssh_key_userdata'] }}
-    write_files: "{{ role_write_files }}"
-    # So lookups don't error when we aren't handling userdata
 ...

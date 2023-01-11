@@ -1,3 +1,0 @@
-#!/bin/bash
-
-run-parts --arg="${1}" --arg="${2}" --regex='[a-zA-Z0-9_]*\.hook' -- /etc/libvirt-forward-hooks.d
