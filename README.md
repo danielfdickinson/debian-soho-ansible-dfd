@@ -1,4 +1,4 @@
-# DFD Debian Libvirt VM cluster via Ansible
+# DFD Debian SOHO via Ansible
 
 Bare-metal and virtual machine management via Ansible for a 'SOHO/KOHO
 infrastructure' cluster, including mail server, groupware, and web hosting.
