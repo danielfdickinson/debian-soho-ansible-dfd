@@ -44,6 +44,8 @@ repos:
     - main
     - --branch
     - "v[0-9].[0-9]" # yamllint disable-line
+    - --branch
+    - cbay02
   - id: pretty-format-json
     # - Checks that all your JSON files are pretty. "Pretty"
     # here means that keys are sorted and indented.
