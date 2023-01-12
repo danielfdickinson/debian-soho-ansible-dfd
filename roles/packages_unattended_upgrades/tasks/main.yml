@@ -8,6 +8,7 @@
     - unattended-upgrades
     state: present
 - name: Configure unattended-upgrades
+  become: yes
   ansible.builtin.copy:
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
     group: root

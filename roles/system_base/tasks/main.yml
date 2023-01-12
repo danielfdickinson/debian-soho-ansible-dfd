@@ -2,6 +2,7 @@
 # Even though this is package-specific config it does not belong to the tmux
 # package role because it is also a vendor (us) configuration
 - name: Configure tmux for new users
+  become: yes
   ansible.builtin.copy:
     dest: /etc/skel/.tmux.conf
     group: root
