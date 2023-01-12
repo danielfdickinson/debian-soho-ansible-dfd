@@ -1,4 +1,5 @@
 ---
+host_ansible_ssh_host: dlcicl01.thecshore.ca
 host_ansible_ssh_port: "{{ vault_host_ansible_ssh_port }}"
 host_email_interfaces: "{{ vault_host_email_interfaces }}"
 host_email_relayhost: "{{ vault_host_email_relayhost }}"

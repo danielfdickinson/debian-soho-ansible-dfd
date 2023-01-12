@@ -1,15 +1,4 @@
 ---
-- name: Ensure required variables are supplied on command line
-  hosts: all:!bare_metal
-  gather_facts: false
-  pre_tasks:
-  - name: Ensure given environment is valid
-    ansible.builtin.assert:
-      that:
-      - envname in group_names
-      quiet: true
-      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
-
 - name: Wait for cloud init to finish
   hosts: all
   tasks:
