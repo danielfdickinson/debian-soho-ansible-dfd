@@ -1,5 +1,7 @@
 ---
 dependencies:
+- role: system_cert_ca_private
+- role: system_cert_server_private
 - role: packages_apache2
 # Because ansible-lint complains otherwise
 galaxy_info:

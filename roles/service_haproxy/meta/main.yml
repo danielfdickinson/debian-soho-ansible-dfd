@@ -2,6 +2,7 @@
 dependencies:
 - role: system_cert_ca_private
 - role: system_cert_server_private
+- role: system_cert_client_private
 - role: system_cert_public
 - role: system_fail2ban
   vars:

@@ -1,14 +1,10 @@
 ---
-- name: Ensure required variables are supplied on command line
-  hosts: website_servers
-  gather_facts: false
-  pre_tasks:
-  - name: Ensure given environment is valid
-    ansible.builtin.assert:
-      that:
-      - envname in group_names
-      quiet: true
-      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+- name: Gather facts for web servers and reverse proxy
+  hosts: all
+  gather_facts: true
+  tasks:
+  - name: Ensure facts gathered
+    ansible.builtin.setup:
 
 - name: Configure website servers (including limited rsyncd for site deploys)
   hosts: website_servers
