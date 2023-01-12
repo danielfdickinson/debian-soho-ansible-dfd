@@ -17,10 +17,4 @@
     owner: root
     src: local.cf.j2
   notify: Restart spamd
-- name: Enable spamd
-  become: yes
-  ansible.builtin.systemd:
-    name: spamassassin
-    enabled: true
-    state: started
 ...

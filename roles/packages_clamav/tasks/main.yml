@@ -1,5 +1,6 @@
 ---
 - name: Prevent freshclam install from modifying our configuration
+  become: yes
   ansible.builtin.copy:
     content: conf_force_conffold=YES
     dest: /etc/ucf.conf

@@ -1,14 +1,10 @@
 ---
-- name: Ensure required variables are supplied on command line
-  hosts: mailbox_servers:internal_mxes:external_mxes
-  gather_facts: false
-  pre_tasks:
-  - name: Ensure given environment is valid
-    ansible.builtin.assert:
-      that:
-      - envname in group_names
-      quiet: true
-      fail_msg: "{{ envname | quote }} is not a valid envname (environment)"
+- name: Gather facts for mail servers
+  hosts: all
+  gather_facts: true
+  tasks:
+  - name: Ensure facts gathered
+    ansible.builtin.setup:
 
 - name: Configure IMAP (mailbox) servers
   hosts: mailbox_servers

@@ -3,6 +3,6 @@ root: {{ admin_user }}@{{ central_internal_domain }}
 # Basic system aliases
 MAILER-DAEMON: postmaster
 postmaster: {{ admin_user }}
-{% for admin_alias in ( well_known_admin_aliases | unique | difference( [ admin_user, "root" ]  )) %}
+{% for admin_alias in ( well_known_admin_aliases | unique | difference( [ admin_user, "root" ] )) %}
 {{ admin_alias }}: root
 {% endfor %}

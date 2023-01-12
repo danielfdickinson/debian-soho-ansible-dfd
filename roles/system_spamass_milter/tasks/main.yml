@@ -1,4 +1,10 @@
 ---
+- name: Enable spamd
+  become: yes
+  ansible.builtin.systemd:
+    name: spamassassin
+    enabled: true
+    state: started
 - name: Configure spamass-milter startup
   become: yes
   ansible.builtin.copy:
