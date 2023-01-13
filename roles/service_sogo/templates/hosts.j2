@@ -7,7 +7,7 @@
 #
 127.0.1.1 {{ ansible_facts['fqdn'] }} {{ ansible_facts['hostname'] }}
 127.0.0.1 localhost sogodb
-{{ ipaddrs['v4addr']['imapldev'] }} imapldev.ldev.thecshore.ca
+{{ ipaddrs['v4addr']['imapkss'] }} imapkss.kss.thecshore.ca
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback sogodb
@@ -17,4 +17,4 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 
-{{ ipaddrs['v6addr']['imapldev'] }} imapldev.ldev.thecshore.ca
+{{ ipaddrs['v6addr']['imapkss'] }} imapkss.kss.thecshore.ca
