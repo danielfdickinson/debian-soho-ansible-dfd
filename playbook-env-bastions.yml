@@ -1,6 +1,6 @@
 ---
 - name: Wait for cloud init to finish
-  hosts: bastions
+  hosts: libvirtd_hosts:bastions
   tasks:
   - name: Check cloud init status
     community.general.cloud_init_data_facts:
@@ -16,13 +16,18 @@
     failed_when: res.cloud_init_data_facts.status.v1.errors is defined and res.cloud_init_data_facts.status.v1.errors
     changed_when: false
 
+- name: Configure libvirtd hosts and bastions with base config
+  hosts: libvirtd_hosts:bastions
+  gather_facts: true
+  roles:
+  - system_base
+  - system_fail2ban_ssh
+
 - name: Configure bastions in order to access other guests
   hosts: bastions
   gather_facts: true
   roles:
-  - system_base
   - user_bastion_user_add
   - packages_ssh_proxy
-  - system_fail2ban_ssh
   - packages_firmware
 ...
