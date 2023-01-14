@@ -82,7 +82,7 @@ submission_relay_host: "{{ hostvars['imapldev.ldev']['ansible_facts']['fqdn'] }}
 submission_relay_port: "{{ vault_submission_relay_port }}"
 v4nat_net: "{{ ansible_facts['default_ipv4']['network'] }}"
 v4nat_prefix: "{{ ansible_facts['default_ipv4']['prefix'] }}"
-v6nat_net: "{{ ansible_facts['default_ipv6']['address'] }}"
+v6nat_net: "{{ ansible_facts['default_ipv6']['gateway'] }}"
 v6nat_prefix: "{{ ansible_facts['default_ipv6']['prefix'] }}"
 v6natnet_ula: "{{ vault_v6natnet_ula }}"
 virtual_alias_domains: "{{ mail_groupware_users | selectattr('alias_domains', 'defined') | map(attribute='alias_domains') | unique | difference(virtual_mailbox_domains) | unique }}"
@@ -91,7 +91,7 @@ virtual_mailbox_domains: "{{ mail_groupware_users | map(attribute='maildomain') 
 webhosts_add_www: "{{ vault_webhosts_add_www }}"
 webhosts_noadd_www: "{{ vault_webhosts_noadd_www }}"
 websites_static: "{{ vault_websites_static }}"
-www_port: "{{ vault_wwww_port }}"
+www_port: "{{ vault_www_port }}"
 ipaddrs:
   v4addr:
     gateldev: "{{ hostvars['gateldev.ldev']['ansible_facts']['default_ipv4']['address'] }}"

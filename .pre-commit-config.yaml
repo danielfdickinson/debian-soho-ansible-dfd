@@ -91,7 +91,7 @@ repos:
   rev: 0ce89b6009f628b1681a825519b683dc0f1a1392
   hooks:
   - id: dansabel
-    exclude: ^(roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$)
+    exclude: ^(requirements.yml$|roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$)
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
   rev: v6.17.0

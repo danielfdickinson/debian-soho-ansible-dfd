@@ -1,5 +1,0 @@
----
-ufw_common_rules:
-- port: "{{ ansible_ssh_port }}"
-ufw_rules: "{{ [ufw_common_rules, ufw_role_rules] | flatten | unique }}"
-...
