@@ -4,13 +4,13 @@ dependencies:
 - role: packages_base
 - role: packages_tmux
 - role: packages_unattended_upgrades
-- role: system_ufw
+- role: danielfdickinson.system_base_debian.ufw
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
   description: Configure expected system base
   license: MIT
-  min_ansible_version: "6.0"
+  min_ansible_version: 2.14.1
   platforms:
   - name: Debian
     versions:

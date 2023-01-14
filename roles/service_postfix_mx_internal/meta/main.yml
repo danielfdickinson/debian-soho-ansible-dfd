@@ -9,19 +9,18 @@ dependencies:
     # We _are_ the internal MX, so false
     postfix_smtp_to_internal_mx: false
     postfix_virtual_mailboxes: "{{ mail_groupware_users | selectattr('maildomain', 'equalto', central_internal_domain) }}"
-- role: system_ufw
-  vars:
-    ufw_role_rules:
-    - from: "{{ v4nat_net }}/{{ v4nat_prefix }}"
-      port: "{{ internal_relay_port }}"
-    - from: "{{ v6nat_net }}/{{ v6nat_prefix }}"
-      port: "{{ internal_relay_port }}"
+- role: danielfdickinson.system_base_debian.ufw
+  ufw_added_rules:
+  - from: "{{ v4nat_net }}/{{ v4nat_prefix }}"
+    port: "{{ internal_relay_port | string }}"
+  - from: "{{ v6nat_net }}/{{ v6nat_prefix }}"
+    port: "{{ internal_relay_port | string }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
   description: Configure postfix as internal MX
   license: MIT
-  min_ansible_version: "6.0"
+  min_ansible_version: 2.14.1
   platforms:
   - name: Debian
     versions:

@@ -1,0 +1,17 @@
+---
+collections:
+- name: ansible.utils
+  version: 2.8.0
+  source: "https://galaxy.ansible.com"
+- name: community.general
+  version: 6.1.0
+  source: "https://galaxy.ansible.com"
+- name: danielfdickinson.system_base_debian
+  source: "https://gitlab.com/danielfdickinson/ansible_system_base_debian_dfd"
+  type: git
+  version: 0.2.0-dev
+roles:
+- name: maxhoesel.nut_netclient
+  version: main
+  source: "https://galaxy.ansible.com"
+...

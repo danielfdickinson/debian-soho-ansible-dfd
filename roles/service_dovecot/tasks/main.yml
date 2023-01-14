@@ -64,56 +64,14 @@
       owner: mail
       src: users.j2
     notify: Restart dovecot
-- name: Allow access to Dovecot through firewall
+- name: Allow health check from OVH RTM
   become: yes
-  block:
-  - name: Allow health check from OVH RTM
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: "{{ item }}"
-      to_port: "{{ health_check_port_dovecot }}"
-    loop: "{{ remote_monitoring_ips }}"
-  - name: Allow IMAP from anywhere
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: any
-      to_port: "{{ imap_port }}"
-  - name: Allow ManageSieve from anywhere
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: any
-      to_port: "{{ sieve_port }}"
-  - name: Allow Submission from anywhere
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: any
-      to_port: "{{ submission_port }}"
-  - name: Allow LMTP from local (internal) network (v4)
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: "{{ v4nat_net }}/{{ v4nat_prefix }}"
-      to_port: "{{ lmtp_port }}"
-  - name: Allow LMTP from local (internal) network (v6)
-    community.general.ufw:
-      rule: allow
-      interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-      direction: in
-      proto: tcp
-      src: "{{ v6nat_net }}/{{ v6nat_prefix }}"
-      to_port: "{{ lmtp_port }}"
+  community.general.ufw:
+    rule: allow
+    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
+    direction: in
+    proto: tcp
+    src: "{{ item }}"
+    to_port: "{{ health_check_port_dovecot }}"
+  loop: "{{ remote_monitoring_ips }}"
 ...

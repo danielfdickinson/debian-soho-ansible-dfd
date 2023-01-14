@@ -1,4 +1,5 @@
 CHACHA
+DFD
 DKIM
 DMARC
 DN's
@@ -160,6 +161,7 @@ mailpassword
 mailuser
 markdownlint
 maxconn
+maxhoesel
 maxproc
 mcopy
 mmap

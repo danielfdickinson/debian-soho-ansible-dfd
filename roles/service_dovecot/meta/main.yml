@@ -10,12 +10,26 @@ dependencies:
       dest: dovecot
 - role: packages_dovecot
 - role: service_postfix_mx_internal
+- role: danielfdickinson.system_base_debian.ufw
+  vars:
+    rmt_port:
+      port: "{{ health_check_port_dovecot }}"
+    rmt_rules: "{{ ['from'] | product(remote_monitoring_ips) | combinations(1) | map('community.general.dict') | combinations(1) | map('product', [rmt_port]) | map('flatten', 1) | map('combine') }}"
+    dovecot_add_rules:
+    - port: "{{ imap_port | string }}"
+    - port: "{{ sieve_port | string }}"
+    - port: "{{ submission_port | string }}"
+    - from: "{{ ipaddrs['v4addr']['smtp01ldev'] }}"
+      port: "{{ lmtp_port | string }}"
+    - from: "{{ ipaddrs['v6addr']['smtp01ldev'] }}"
+      port: "{{ lmtp_port | string }}"
+  ufw_added_rules: "{{ [rmt_rules, dovecot_add_rules] | flatten(1) }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
   description: Configure dovecot as mailbox server (IMAP) and Submission relay
   license: MIT
-  min_ansible_version: "6.0"
+  min_ansible_version: 2.14.1
   platforms:
   - name: Debian
     versions:

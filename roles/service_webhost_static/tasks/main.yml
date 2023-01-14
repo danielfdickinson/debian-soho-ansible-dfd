@@ -68,11 +68,4 @@
     key: "{{ item.ssh_key }}"
     user: "{{ item.operator }}"
     state: present
-- name: Allow HTTPS in
-  become: yes
-  community.general.ufw:
-    rule: allow
-    direction: in
-    proto: tcp
-    port: 443
 ...

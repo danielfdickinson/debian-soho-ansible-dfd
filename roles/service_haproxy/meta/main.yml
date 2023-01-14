@@ -9,12 +9,16 @@ dependencies:
     f2b_jails:
     - content: "{{ lookup('file', 'haproxy_jail.local') }}"
       dest: haproxy
+- role: danielfdickinson.system_base_debian.ufw
+  ufw_added_rules:
+  - port: "{{ http_port | string }}"
+  - port: "{{ https_port | string }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
   description: Configure haproxy (as reverse proxy)
   license: MIT
-  min_ansible_version: "6.0"
+  min_ansible_version: 2.14.1
   platforms:
   - name: Debian
     versions:

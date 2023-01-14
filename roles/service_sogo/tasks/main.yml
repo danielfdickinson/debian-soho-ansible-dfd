@@ -104,24 +104,4 @@
     owner: sogo
     src: sogo.conf.j2
   notify: Restart SOGo
-- name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v4)
-  become: yes
-  community.general.ufw:
-    rule: allow
-    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-    direction: in
-    proto: tcp
-    src: "{{ ipaddrs['v4addr']['gatekss'] }}"
-    to_port: "{{ gdav_port }}"
-  when: ansible_facts['default_ipv4'] is defined
-- name: Allow HTTPS traffic from proxy to Apache2 for SOGo (v6)
-  become: yes
-  community.general.ufw:
-    rule: allow
-    interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
-    direction: in
-    proto: tcp
-    src: "{{ ipaddrs['v6addr']['gatekss'] }}"
-    to_port: "{{ gdav_port }}"
-  when: ansible_facts['default_ipv4'] is defined
 ...
