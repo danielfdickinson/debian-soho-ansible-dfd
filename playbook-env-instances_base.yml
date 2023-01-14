@@ -26,7 +26,8 @@
   hosts: all:!libvirtd_hosts:!bastions
   # Avoid connectivity issues by not rebooting vm host or bastion
   roles:
-  - system_base
+  - danielfdickinson.system_base_debian.dfd_base_misc
+  - danielfdickinson.system_base_debian.ufw
   - packages_firmware
 
 - name: Configure OVH (BHS) clients for backups

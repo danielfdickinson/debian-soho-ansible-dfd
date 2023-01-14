@@ -20,7 +20,8 @@
   hosts: libvirtd_hosts:bastions
   gather_facts: true
   roles:
-  - system_base
+  - danielfdickinson.system_base_debian.dfd_base_misc
+  - danielfdickinson.system_base_debian.ufw
   - system_fail2ban_ssh
 
 - name: Configure bastions in order to access other guests
