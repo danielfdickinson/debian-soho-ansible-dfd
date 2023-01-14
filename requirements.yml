@@ -7,11 +7,10 @@ collections:
   version: 6.1.0
   source: "https://galaxy.ansible.com"
 - name: danielfdickinson.system_base_debian
+  version: 0.2.0-dev
   source: "https://gitlab.com/danielfdickinson/ansible_system_base_debian_dfd"
   type: git
-  version: 0.2.0-dev
 roles:
-- name: maxhoesel.nut_netclient
+- src: maxhoesel.nut_netclient
   version: main
-  source: "https://galaxy.ansible.com"
 ...
