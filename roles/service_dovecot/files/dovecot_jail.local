@@ -1,5 +1,0 @@
-[dovecot]
-enabled = true
-
-[sieve]
-enabled = true

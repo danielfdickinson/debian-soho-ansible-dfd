@@ -1,8 +1,0 @@
-[sshd]
-#mode = normal
-{%if ansible_ssh_port != 22 %}
-port = {{ ansible_ssh_port }}
-{% else %}
-port = ssh
-{% endif %}
-enabled = true
