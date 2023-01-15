@@ -1,9 +1,0 @@
----
-- name: Ensure netcat-openbsd only for external SSH hosts
-  become: yes
-  ansible.builtin.apt:
-    name:
-    - netcat-openbsd
-    state: present
-  when: "'external_ssh' in group_names"
-...
