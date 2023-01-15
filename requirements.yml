@@ -1,4 +1,8 @@
 ---
+roles:
+- name: maxhoesel.nut_netclient
+  version: main
+
 collections:
 - name: ansible.utils
   version: 2.8.0
@@ -10,7 +14,4 @@ collections:
   version: 0.2.0-dev
   source: "https://gitlab.com/danielfdickinson/ansible_system_base_debian_dfd"
   type: git
-roles:
-- src: maxhoesel.nut_netclient
-  version: main
 ...
