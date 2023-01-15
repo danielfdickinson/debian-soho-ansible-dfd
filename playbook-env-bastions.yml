@@ -30,5 +30,5 @@
   roles:
   - user_bastion_user_add
   - packages_ssh_proxy
-  - packages_firmware
+  - danielfdickinson.system_base_debian.firmware_install
 ...
