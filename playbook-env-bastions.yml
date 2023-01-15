@@ -22,7 +22,7 @@
   roles:
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
-  - system_fail2ban_ssh
+  - danielfdickinson.system_base_debian.fail2ban
 
 - name: Configure bastions in order to access other guests
   hosts: bastions
