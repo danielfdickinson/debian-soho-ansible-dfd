@@ -28,7 +28,7 @@
   roles:
   - danielfdickinson.system_base_debian.dfd_base_misc
   - danielfdickinson.system_base_debian.ufw
-  - packages_firmware
+  - danielfdickinson.system_base_debian.firmware_install
 
 - name: Configure OVH (BHS) clients for backups
   hosts: backup_clients:&ovh_bhs

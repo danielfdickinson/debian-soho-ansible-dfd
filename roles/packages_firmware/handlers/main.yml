@@ -1,7 +1,0 @@
----
-- name: Reboot host
-  become: yes
-  ansible.builtin.reboot:
-    search_paths:
-    - /lib/molly-guard
-...
