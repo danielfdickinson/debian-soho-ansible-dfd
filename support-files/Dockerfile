@@ -4,7 +4,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	python3 \
 	ansible \
-	ansible-lint \
 	build-essential \
 	curl \
 	git \
@@ -22,7 +21,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
 
 ENV PATH=/root/.local/bin:${PATH}
 
-RUN python3 -m pip install --user pre-commit
+RUN python3 -m pip install --user pre-commit ansible-lint
 
 RUN git clone --depth 1 https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd.git && \
 	cd debian-libvirt-ansible-dfd && \
