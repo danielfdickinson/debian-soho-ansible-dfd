@@ -31,7 +31,7 @@
   - user_bastion_user_add
   - danielfdickinson.system_base_debian.firmware_install
   tasks:
-  - name: Ensure netcat-openbsd only for external SSH hosts
+  - name: Ensure netcat-openbsd only for bastions (it's used for SSH proxy)
     become: yes
     ansible.builtin.apt:
       name:

@@ -11,4 +11,5 @@ host_public_cert_cert_file: "{{ vault_public_cert_cert_file }}"
 host_public_cert_cert_file_src: "{{ vault_public_cert_cert_file_src }}"
 host_public_cert_key_file: "{{ vault_public_cert_key_file }}"
 host_public_cert_key_file_src: "{{ vault_public_cert_key_file_src }}"
+hostname_aliases: "{{ vault_host_hostname_aliases }}"
 ...

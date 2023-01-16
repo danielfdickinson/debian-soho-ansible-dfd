@@ -16,11 +16,12 @@
     failed_when: res.cloud_init_data_facts.status.v1.errors is defined and res.cloud_init_data_facts.status.v1.errors
     changed_when: false
 
-- name: For all guests, add a password to admin user
+- name: For all hosts add a password to admin user and set fqdn/hostname aliases
   hosts: all
   gather_facts: true
   roles:
   - user_admin_add_password
+  - danielfdickinson.system_base_debian.network_hosts_file
 
 - name: Except bastions, install base packages and firmware, and reboot guests
   hosts: all:!libvirtd_hosts:!bastions
