@@ -8,22 +8,6 @@
     - postgresql
     - python3-psycopg2
     - sogo
-- name: Add a hostname alias for DB use
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/hosts
-    group: root
-    mode: "0644"
-    owner: root
-    src: hosts.j2
-- name: Persist hostname alias for DB use
-  become: yes
-  ansible.builtin.template:
-    dest: /etc/cloud/templates/hosts.debian.tmpl
-    group: root
-    mode: "0644"
-    owner: root
-    src: hosts.debian.tmpl.j2
 - name: Add sogo DB user
   become_user: postgres
   become: yes
