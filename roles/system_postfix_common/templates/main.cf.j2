@@ -80,7 +80,9 @@ myhostname = {{ ansible_facts['fqdn'] }}
 mynetworks_style = host
 myorigin = {{ ansible_facts['fqdn'] }}
 notify_classes = resource, software, 2bounce
+{% if postfix_is_external_mx %}
 policyd-spf_time_limit = 3600
+{% endif %}
 readme_directory = no
 {% if postfix_direct_delivery %}
 relayhost = {{ external_relayhost }}
