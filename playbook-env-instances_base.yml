@@ -40,6 +40,7 @@
   hosts: backup_clients:&ovh_bhs
   roles:
   - backup_ovh
+  - backup_restic
 
 - name: Configure backups on all guests and bare-metal hosts were we can
   hosts: backup_clients
