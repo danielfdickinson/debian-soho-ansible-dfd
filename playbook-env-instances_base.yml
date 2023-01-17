@@ -20,13 +20,12 @@
   hosts: all
   gather_facts: true
   roles:
-  - danielfdickinson.system_base_debian.user_admin
-  - danielfdickinson.system_base_debian.network_hosts_file
-  vars:
+  - role: danielfdickinson.system_base_debian.user_admin
     new_base_homedir: "{{ admin_base_homedir }}"
     new_admin_password: "{{ admin_password }}"
     new_admin_ssh_key: "{{ admin_ssh_key }}"
     new_admin_user: "{{ admin_user }}"
+  - role: danielfdickinson.system_base_debian.network_hosts_file
 
 - name: Except bastions, install base packages and firmware, and reboot guests
   hosts: all:!libvirtd_hosts:!bastions
