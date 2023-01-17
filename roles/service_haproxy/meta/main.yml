@@ -4,9 +4,6 @@ dependencies:
 - role: system_cert_server_private
 - role: system_cert_client_private
 - role: system_cert_public
-- role: danielfdickinson.system_base_debian.fail2ban
-  f2b_jails:
-  - dest: haproxy
 - role: danielfdickinson.system_base_debian.ufw
   ufw_added_rules:
   - port: "{{ http_port | string }}"

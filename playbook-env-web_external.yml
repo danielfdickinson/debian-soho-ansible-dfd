@@ -20,4 +20,8 @@
   hosts: rproxy_external
   roles:
   - service_haproxy
+  - role: danielfdickinson.system_base_debian.fail2ban
+    # Must be after the haproxy so that the logs exist before access (by f2b)
+    f2b_jails:
+    - dest: haproxy
 ...

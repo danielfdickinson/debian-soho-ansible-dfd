@@ -28,7 +28,10 @@
   hosts: bastions
   gather_facts: true
   roles:
-  - user_bastion_user_add
+  - role: danielfdickinson.system_base_debian.user_add_other_base
+    new_base_homedir: "{{ admin_base_homedir }}"
+    new_user: "{{ bastion_user }}"
+    new_user_ssh_key: "{{ bastion_ssh_key }}"
   - danielfdickinson.system_base_debian.firmware_install
   tasks:
   - name: Ensure netcat-openbsd only for bastions (it's used for SSH proxy)
