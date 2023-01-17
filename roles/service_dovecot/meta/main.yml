@@ -9,6 +9,7 @@ dependencies:
 - role: packages_dovecot
 - role: service_postfix_mx_internal
 - role: danielfdickinson.system_base_debian.ufw
+  ufw_added_rules: "{{ [rmt_rules, dovecot_add_rules] | flatten(1) }}"
   vars:
     rmt_port:
       port: "{{ health_check_port_dovecot }}"
@@ -21,7 +22,6 @@ dependencies:
       port: "{{ lmtp_port | string }}"
     - from: "{{ ipaddrs['v6addr']['smtp01ldev'] }}"
       port: "{{ lmtp_port | string }}"
-  ufw_added_rules: "{{ [rmt_rules, dovecot_add_rules] | flatten(1) }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
