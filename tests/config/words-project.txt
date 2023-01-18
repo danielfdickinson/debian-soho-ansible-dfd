@@ -49,6 +49,7 @@ airlockldev
 alpn
 apic
 apop
+asis
 autocreation
 autofix
 backupmx
