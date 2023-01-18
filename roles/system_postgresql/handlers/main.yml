@@ -1,7 +1,7 @@
 ---
-- name: Restart SOGo
+- name: Restart PostgreSQL
   become: yes
   ansible.builtin.systemd:
-    name: sogo
+    name: postgresql
     state: restarted
 ...

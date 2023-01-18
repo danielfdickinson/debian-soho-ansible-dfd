@@ -1,5 +1,11 @@
 ---
 dependencies:
+- role: system_postgresql
+  vars:
+    postgres_host_access_list:
+    - address: 127.0.0.1/32
+      database: sogo
+      users: sogo
 - role: service_apache2_site
   vars:
     apache2_global_https_port: "{{ gdav_port }}"

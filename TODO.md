@@ -3,7 +3,6 @@
 ## For first deploy to 'production'
 
 * Add backupmx role in a separate environment
-* Configure postgresql role so new deploy with existing data volume works
 * Enable redirects via `.htaccess` for static webhost
 * Enable `deploy-test` password protected static web host vhost
 * Make sure we have wanted headers on static web hosts.

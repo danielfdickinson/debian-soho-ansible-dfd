@@ -5,7 +5,6 @@
     name:
     - libpq-dev
     - memcached
-    - postgresql
     - python3-psycopg2
     - sogo
 - name: Add sogo DB user
