@@ -6,6 +6,7 @@ mods_conf_list:
 - dir
 - http2
 - status
+mods_conf_service_add: []
 mods_default_removable_auth_compat:
 # Compatibility with 2.2.x ACL
 - access_compat
@@ -35,4 +36,5 @@ mods_default_add:
 - rewrite
 - ssl
 - "{% if apache2_global_proxy_protocol is defined %}{% if apache2_global_proxy_protocol != 'Off' %}remoteip{% endif %}{% else %}remoteip{% endif %}"
+mods_service_add: []
 ...
