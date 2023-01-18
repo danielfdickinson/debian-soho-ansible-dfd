@@ -3,6 +3,14 @@ dependencies:
 - role: service_apache2_site
   vars:
     apache2_global_cache_disk_path: /
+    apache2_global_https_port: "{{ www_port }}"
+    apache2_global_index_files:
+    - index.html
+    - index.asis
+    mods_conf_service_add:
+    - asis
+    mods_service_add:
+    - asis
     virtual_hosts: "{{ websites_static | map(attribute='vhost') }}"
 - role: danielfdickinson.system_base_debian.ufw
   ufw_added_rules:
