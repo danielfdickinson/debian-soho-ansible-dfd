@@ -7,4 +7,4 @@ backend be_webhost
 	tcp-request content track-sc2 src
 	tcp-request content reject if suspect_scan suspected_abuser
 
-	server webhost01 wwwldev.ldev:443 send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ private_ca_cert_file }} verify required alpn h2,http/1.1
+	server webhost01 wwwldev.ldev:{{ www_port }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ private_ca_cert_file }} verify required alpn h2,http/1.1
