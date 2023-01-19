@@ -16,8 +16,12 @@ ServerTokens {{ apache2_global_server_tokens }}
 ServerSignature {{ apache2_global_server_signature }}
 
 <IfModule mod_headers.c>
-	Header set X-Content-Type-Options: {{ apache2_global_content_type_options | default("\"nosniff\"") }}
-	Header set X-Frame-Options: {{ apache2_global_frame_options | default("\"sameorigin\"") }}
+	Header set Cross-Origin-Opener-Policy: {{ apache2_global_coop | default("same-origin") }}
+	Header set Cross-Origin-Embedder-Policy: {{ apache2_global_coep | default("require-corp") }}
+	Header set Referrer-Policy: {{ apache2_global_referrer_policy | default("no-referrer") }}
+	Header append Vary: {{ apache_global_vary | default("Origin") }}
+	Header set X-Content-Type-Options: {{ apache2_global_content_type_options | default("nosniff") }}
+	Header set X-Frame-Options: {{ apache2_global_frame_options | default("DENY") }}
 </IfModule>
 
 # vim: syntax=apache
