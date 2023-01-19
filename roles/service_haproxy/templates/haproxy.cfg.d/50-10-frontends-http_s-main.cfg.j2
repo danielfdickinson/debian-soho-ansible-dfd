@@ -42,9 +42,10 @@ frontend fe_http_s
 	http-request redirect scheme https code 301 drop-query if !{ ssl_fc } !path_acme dom_web_nowww
 	http-request redirect scheme https code 301 drop-query if !{ ssl_fc } !path_acme dom_web_www
 	http-request redirect location "https://%[capture.req.hdr(0)]%[path]" code 301 if { query -m found } !dom_gate !dom_gdav
+
 	http-request allow if dom_gate || dom_gdav || dom_web_nowww || dom_web_www
 
-	use_backend be_certbot if path_acme HTTP
+	# use_backend be_certbot if path_acme HTTP
 
 	use_backend be_webhost if dom_web_nowww || dom_web_www
 	use_backend be_sogo if dom_gdav
