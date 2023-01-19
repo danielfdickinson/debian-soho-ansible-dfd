@@ -36,6 +36,10 @@ dependencies:
         </IfModule>
         </Directory>
 
+        <IfModule headers_module>
+        Header set Content-Security-Policy "default-src https://{{ gdav_server_name_external}}/; object-src https://{{ gdav_server_name_external }}/; script-src https://{{ gdav_server_name_external}}/ 'unsafe-inline' 'unsafe-eval'; style-src https://{{ gdav_server_name_external }}/ 'unsafe-inline'"
+        </IfModule>
+
         {% raw %}
         # Redirect / to /SOGo
         {% endraw %}
