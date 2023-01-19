@@ -54,7 +54,8 @@
   - 10-20-global-dh-param
   - 20-10-userlist-stats
   - 20-14-userlist-sogo
-  - 50-10-frontends-http_s-main
+  - 50-10-frontends-rtm
+  - 50-20-frontends-http_s
   - 70-14-backends-sogo
   - 70-80-backends-webhost
   ansible.builtin.template:
