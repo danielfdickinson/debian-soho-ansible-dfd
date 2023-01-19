@@ -21,6 +21,8 @@ central_internal_email: "{{ vault_central_internal_email }}"
 default_mail_local_destinations: "{{ vault_default_mail_local_destinations }}"
 email_interfaces: "{{ vault_email_interfaces }}"
 email_relayhost: "{{ host_email_relayhost | default('imapldev.ldev') }}"
+envname: ldev
+env_domain_addon: ldev.ldev
 external_relayhost: "{{ vault_external_relayhost }}"
 gdav_port: "{{ vault_gdav_port }}"
 gdav_server_name_external: "{{ vault_gdav_server_name_external }}"
