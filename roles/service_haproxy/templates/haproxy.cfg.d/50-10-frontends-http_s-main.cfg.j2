@@ -2,9 +2,6 @@ frontend fe_http_s
 	bind 0.0.0.0:{{ https_port }},[::]:{{ https_port }} ssl crt {{ public_cert_full_file }} alpn h2,http/1.1
 	bind 0.0.0.0:{{ http_port }},[::]:{{ http_port }}
 
-	monitor-uri /haproxy-health
-
-	option forwardfor except 127.0.0.0/8
 	option abortonclose
 
 	log-format "%{+Q}o %{-Q}ci %{-Q}[capture.req.hdr(0)] - [%trg] %r %ST %B %[capture.req.hdr(1)] %[capture.req.hdr(2)] %cp %ms %ft %b %s"

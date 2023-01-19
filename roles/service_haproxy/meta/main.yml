@@ -5,9 +5,15 @@ dependencies:
 - role: system_cert_client_private
 - role: system_cert_public
 - role: danielfdickinson.system_base_debian.ufw
-  ufw_added_rules:
-  - port: "{{ http_port | string }}"
-  - port: "{{ https_port | string }}"
+  ufw_added_rules: "{{ [rmt_rules, ha_add_rules] | flatten(1) }}"
+  vars:
+    rmt_port:
+      port: "{{ health_check_port_haproxy }}"
+    rmt_rules: "{{ ['from'] | product(remote_monitoring_ips) | combinations(1) | map('community.general.dict') | combinations(1) | map('product', [rmt_port]) | map('flatten', 1) | map('combine') }}"
+    ha_add_rules:
+    - port: "{{ http_port | string }}"
+    - port: "{{ https_port | string }}"
+
 # Because ansible-lint complains otherwise
 galaxy_info:
   author: Daniel F. Dickinson <dfdpublic@wildtechgarden.ca>
