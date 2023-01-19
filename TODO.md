@@ -4,7 +4,7 @@
 
 * Add backupmx role in a separate environment
 * Enable `deploy-test` password protected static web host vhost
-* Make sure we have wanted headers on static web hosts.
+* Configure cache-control headers via 'Expires' module for web hosts
 
 ## Soon after
 

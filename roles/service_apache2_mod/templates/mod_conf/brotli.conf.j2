@@ -1,0 +1,51 @@
+# Configuration modified from
+# https://bytepursuits.com/apache-enabling-brotli-compression-with-gzip-deflate-fallback
+# Also includes settings
+# from https://httpd.apache.org/docs/2.4/mod/mod_brotli.html
+# Split into brotli.conf, deflate.conf, and no-recompress.conf
+
+
+# Static Brotli:
+
+# Browser accepts brotli, and matching pre-compressed file exists => rewrite
+# to .br file. For each file format set the correct mime type (otherwise brotli
+# mime type is returned) and prevent Apache from recompressing the files
+
+<IfModule mod_rewrite.c>
+	<IfModule mod_headers.c>
+		# Serve brotli compressed CSS, HTML, JS, or SVG files if they exist and
+		# the client accepts brotli.
+		RewriteCond "%{HTTP:Accept-encoding}" "br"
+		RewriteCond "%{REQUEST_FILENAME}.br" "-s"
+		RewriteRule "^(.+)\.(css|html|js|svg)" "$1\.$2\.br" [QSA]
+
+		# Serve correct content types, and prevent double compression
+		RewriteRule "\.css\.br$" "-" [T=text/css,E=no-brotli,E=no-gzip]
+		RewriteRule "\.html\.br$" "-" [T=text/html,E=no-brotli,E=no-gzip]
+		RewriteRule "\.js\.br$" "-" [T=application/javascript,E=no-brotli,E=no-gzip]
+		RewriteRule "\.svg\.br$" "-" [T=image/svg+xml,E=no-brotli,E=no-gzip]
+
+		<FilesMatch "((\.svg|\.js|\.html|\.css)\.br)$>
+			# Serve correct encoding type.
+			Header append Content-Encoding br
+
+			# Force proxies to cache brotli &
+			# non-brotli css/js/html/svg files separately
+			Header append Vary Accept-Encoding
+		</FilesMatch>
+	</IfModule>
+</IfModule>
+
+# Dynamic brotli:
+
+<IfModule mod_brotli.c>
+	<IfModule mod_filter.c>
+		AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css
+		AddOutputFilterByType BROTLI_COMPRESS application/x-javascript application/javascript application/ecmascript text/javascript application/javascript application/json
+		AddOutputFilterByType BROTLI_COMPRESS application/rss+xml
+		AddOutputFilterByType BROTLI_COMPRESS application/xml
+		AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/vnd.ms-fontobject image/x-icon
+		AddOutputFilterByType BROTLI_COMPRESS application/wasm
+	</IfModule>
+</IfModule>

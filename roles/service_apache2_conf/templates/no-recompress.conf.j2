@@ -1,0 +1,16 @@
+# Configuration modified from
+# https://bytepursuits.com/apache-enabling-brotli-compression-with-gzip-deflate-fallback
+# Also includes settings
+# from https://httpd.apache.org/docs/2.4/mod/mod_brotli.html
+# Split into brotli.conf, deflate.conf, and no-recompress.conf
+
+<IfModule mod_setenvif.c>
+	# Some content won't benefit from brotli or gzip, like already
+	# pre-compressed content, so let us not bother with it
+	SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp)$ no-brotli no-gzip dont-vary
+</IfModule>
+
+<IfModule mod_headers.c>
+	# Make sure proxies don't deliver the wrong content
+	Header append Vary Accept-Encoding env=!dont-vary
+</IfModule>

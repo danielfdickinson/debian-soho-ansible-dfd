@@ -1,6 +1,7 @@
 ---
 mods_conf_list:
 - alias
+- brotli
 - cache_disk
 - deflate
 - dir
