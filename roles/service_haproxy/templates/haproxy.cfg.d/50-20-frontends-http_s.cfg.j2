@@ -56,8 +56,8 @@ frontend fe_http_s
 	http-response set-header X-Content-Type-Options nosniff if !{ res.hdr(x-content-type-options) -m found }
 	http-response set-header X-Frame-Options DENY if !{ res.hdr(x-frame-options) -m found } || !uri_pdf
 	http-response set-header X-Frame-Options SAMEORIGIN if uri_pdf
-	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/;\ object-src\ https://%[capture.req.hdr(0)] if !{ res.hdr(content-security-policy) -m found } !uri_pdf !uri_svg
-	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/\ \'unsafe-inline\';\ object-src\ https://%[capture.req.hdr(0)]/ if uri_pdf || uri_svg
+	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/;\ object-src\ https://%[capture.req.hdr(0)]/ if !{ res.hdr(content-security-policy) -m found } !uri_pdf !uri_svg
+	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/\ \'unsafe-inline\';\ object-src\ https://%[capture.req.hdr(0)]/ if !{ res.hdr(content-security-policy) -m found } uri_pdf || !{ res.hdr(content-security-policy) -m found } uri_svg
 
 
 	# use_backend be_certbot if path_acme HTTP
