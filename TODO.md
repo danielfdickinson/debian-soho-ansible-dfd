@@ -32,3 +32,5 @@ handled via data/variables
 (decouple the logic/skeletons from the environment data) or move most of this
 repo into collections so that this repo is the data and not the
 logic/skeletons.
+* Enable server status on port 80 without proxy protocol only for
+localhost for apache2.
