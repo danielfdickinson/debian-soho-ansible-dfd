@@ -18,6 +18,12 @@ frontend fe_http_s
 	tcp-request connection track-sc0 src
 	tcp-request connection reject if { sc0_get_gpc0 gt 0 }
 
+	acl path_mal_beg path_beg -f /etc/haproxy/acl-files/mal_beg.txt
+	acl path_mal_sub path_sub -f /etc/haproxy/acl-files/mal_sub.txt
+	acl path_mal_end path_end -f /etc/haproxy/acl-files/mal_end.txt
+	acl path_mal_host_dom hdr(host) -m dom -f /etc/haproxy/acl-files/mal_host_dom.txt
+	acl query_mal_sub query -m sub -f /etc/haproxy/acl-files/mal_query_sub.txt
+
 	acl path_acme path_beg /.well-known/acme-challenge/
 	acl path_stats path /server-stats
 	acl path_root path /
@@ -27,13 +33,8 @@ frontend fe_http_s
 	acl dom_web_nowww hdr(host) -f /etc/haproxy/acl-files/web_nowww.txt
 	acl dom_web_www hdr(host) -f /etc/haproxy/acl-files/web_www.txt
 
-	acl path_mal_beg path_beg -f /etc/haproxy/acl-files/mal_beg.txt
-	acl path_mal_sub path_sub -f /etc/haproxy/acl-files/mal_sub.txt
-	acl path_mal_end path_end -f /etc/haproxy/acl-files/mal_end.txt
-	acl path_mal_host_dom hdr(host) -m dom {{ ha_mal_host_doms | join(' ') }}
-	acl query_mal_sub query -m sub {{ ha_mal_query_substrings | join(' ') }}
-
 	http-request deny if path_mal_beg || path_mal_sub || path_mal_end || path_mal_host_dom || query_mal_sub
+
 	http-request redirect location "https://www.%[capture.req.hdr(0)]%HP" code 301 if dom_web_www !{ hdr_beg(host) -i www }
 	http-request redirect prefix https://%[capture.req.hdr(0)]/SOGo code 301 if path_root dom_gdav
 	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gate

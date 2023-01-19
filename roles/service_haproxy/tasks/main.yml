@@ -70,6 +70,8 @@
   loop:
   - mal_beg
   - mal_end
+  - mal_host_dom
+  - mal_query_sub
   - mal_sub
   - web_nowww
   - web_www
