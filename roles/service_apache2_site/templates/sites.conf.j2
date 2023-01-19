@@ -1,7 +1,6 @@
 <IfModule mod_ssl.c>
 {# Don't create virtual hosts unless we are told about them #}
-{% for vhost in virtual_hosts %}
-	# Only enable virtual hosts if we have mod_ssl
+# Only enable virtual hosts if we have mod_ssl
 	<VirtualHost *:{{ vhost['https_port'] | default(apache2_global_https_port) }}>
 		ServerName {{ vhost['server_name_external'] }}
 
@@ -22,12 +21,11 @@
 
 		{% if vhost['additional_directives'] is defined %}
 
-{{ vhost['additional_directives'] }}
+	{{ vhost['additional_directives'] }}
 
 		{% endif %}
 
 		ErrorLog ${APACHE_LOG_DIR}/error_{{ vhost['server_name_external'] }}.log
 		Customlog ${APACHE_LOG_DIR}/access_{{ vhost['server_name_external'] }}.log combined
 	</VirtualHost>
-{% endfor %}
 </IfModule>

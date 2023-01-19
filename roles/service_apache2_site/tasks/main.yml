@@ -17,6 +17,8 @@
   loop: "{{ virtual_hosts }}"
   loop_control:
     label: "{{ item.server_name_external }}"
+  vars:
+    vhost: "{{ item }}"
   notify: Restart apache2
 - name: Enable vhosts
   become: yes
