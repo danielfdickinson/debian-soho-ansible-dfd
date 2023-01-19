@@ -1,6 +1,6 @@
 frontend fe_http_s
-	bind 0.0.0.0:443,[::]:443 ssl crt {{ public_cert_full_file }} alpn h2,http/1.1
-	bind 0.0.0.0:80,[::]:80
+	bind 0.0.0.0:{{ https_port }},[::]:{{ https_port }} ssl crt {{ public_cert_full_file }} alpn h2,http/1.1
+	bind 0.0.0.0:{{ http_port }},[::]:{{ http_port }}
 
 	monitor-uri /haproxy-health
 
@@ -25,8 +25,8 @@ frontend fe_http_s
 	acl path_stats path /server-stats
 	acl path_root path /
 
-	acl dom_gate hdr(host) gatekss.kss gatekss.kss.thecshore.ca
-	acl dom_gdav hdr(host) gdavkss.kss gdavkss.kss.thecshore.ca
+	acl dom_gate hdr(host) gate{{ env_domain_addon }} gate{{ env_domain_addon }}.thecshore.ca
+	acl dom_gdav hdr(host) gdav{{ env_domain_addon }} gdav{{ env_domain_addon }}.thecshore.ca
 	acl dom_web_nowww hdr(host) -f /etc/haproxy/acl-files/web_nowww.txt
 	acl dom_web_www hdr(host) -f /etc/haproxy/acl-files/web_www.txt
 
@@ -38,7 +38,7 @@ frontend fe_http_s
 
 	http-request deny if path_mal_beg || path_mal_sub || path_mal_end || path_mal_host_dom || query_mal_sub
 	http-request redirect location "https://www.%[capture.req.hdr(0)]%HP" code 301 if dom_web_www !{ hdr_beg(host) -i www }
-	http-request redirect prefix https://gdavkss.kss.thecshore.ca/SOGo code 301 if path_root dom_gdav
+	http-request redirect prefix https://%[capture.req.hdr(0)]/SOGo code 301 if path_root dom_gdav
 	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gate
 	http-request redirect scheme https code 301 if !{ ssl_fc } !path_acme dom_gdav
 	http-request redirect scheme https code 301 drop-query if !{ ssl_fc } !path_acme dom_web_nowww

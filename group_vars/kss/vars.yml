@@ -21,6 +21,8 @@ central_internal_email: "{{ vault_central_internal_email }}"
 default_mail_local_destinations: "{{ vault_default_mail_local_destinations }}"
 email_interfaces: "{{ vault_email_interfaces }}"
 email_relayhost: "{{ host_email_relayhost | default('imapkss.kss') }}"
+envname: kss
+env_domain_addon: kss.kss
 external_relayhost: "{{ vault_external_relayhost }}"
 gdav_port: "{{ vault_gdav_port }}"
 gdav_server_name_external: "{{ vault_gdav_server_name_external }}"
