@@ -28,6 +28,9 @@ frontend fe_http_s
 	acl path_stats path /server-stats
 	acl path_root path /
 
+	acl uri_pdf capture.req.uri -m end .pdf
+	acl uri_svg capture.req.uri -m end .svg
+
 	acl dom_gate hdr(host) gate{{ env_domain_addon }} gate{{ env_domain_addon }}.thecshore.ca
 	acl dom_gdav hdr(host) gdav{{ env_domain_addon }} gdav{{ env_domain_addon }}.thecshore.ca
 	acl dom_web_nowww hdr(host) -f /etc/haproxy/acl-files/web_nowww.txt
@@ -44,6 +47,18 @@ frontend fe_http_s
 	http-request redirect location "https://%[capture.req.hdr(0)]%[path]" code 301 if { query -m found } !dom_gate !dom_gdav
 
 	http-request allow if dom_gate || dom_gdav || dom_web_nowww || dom_web_www
+
+	http-response set-header Access-Control-Allow-Origin https://%[capture.req.hdr(0)]/
+	http-response set-header Cross-Origin-Opener-Policy same-origin if !{ res.hdr(cross-origin-opener-policy) }
+	http-response set-header Cross-Origin-Embedder-Policy require-corp if !{ res.hdr(cross-origin-embedder-policy) -m found }
+	http-response set-header Referrer-Policy no-referrer if !{ res.hdr(referrer-policy) -m found }
+	http-response set-header Vary Origin,Accept-Encoding if !{ res.hdr(vary) -m found }
+	http-response set-header X-Content-Type-Options nosniff if !{ res.hdr(x-content-type-options) -m found }
+	http-response set-header X-Frame-Options DENY if !{ res.hdr(x-frame-options) -m found } || !uri_pdf
+	http-response set-header X-Frame-Options SAMEORIGIN if uri_pdf
+	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/;\ object-src\ https://%[capture.req.hdr(0)] if !{ res.hdr(content-security-policy) -m found } !uri_pdf !uri_svg
+	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/\ \'unsafe-inline\';\ object-src\ https://%[capture.req.hdr(0)]/ if uri_pdf || uri_svg
+
 
 	# use_backend be_certbot if path_acme HTTP
 
