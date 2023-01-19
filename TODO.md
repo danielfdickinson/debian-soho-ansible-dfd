@@ -26,3 +26,9 @@ setup
 	* Use a separate repo for holding the demo users and aliases.
 	* Make sure I have a reasonable way of adding/removing uses and aliases from
 		the database.
+* Fix roles which are environment-specific in the role itself; that should be
+handled via data/variables
+* Where possible, move environment data (even in vaults) out of this repo
+(decouple the logic/skeletons from the environment data) or move most of this
+repo into collections so that this repo is the data and not the
+logic/skeletons.
