@@ -5,6 +5,7 @@ mods_conf_list:
 - cache_disk
 - deflate
 - dir
+- expires
 - http2
 - status
 mods_conf_service_add: []
