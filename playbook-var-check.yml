@@ -8,7 +8,7 @@
 
 - name: Output variables gathered
   gather_facts: false
-  hosts: ldev_host
+  hosts: kss_host
   tasks:
   # - name: Print all facts
   #   ansible.builtin.debug:
