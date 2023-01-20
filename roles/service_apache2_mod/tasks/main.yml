@@ -8,6 +8,7 @@
     owner: root
     src: mod_conf/{{ item }}.conf.j2
   loop: "{{ [mods_conf_list, mods_conf_service_add] | flatten | unique }}"
+  register: mod_conf_out
   notify: Restart apache2
 - name: Disable apache2 modules not required on host
   become: yes
@@ -23,7 +24,7 @@
     name: "{{ item }}"
     force: true
     state: absent
-  loop: "{{ mods_added_remove | default([]) }}"
+  loop: "{{ [mods_added_remove | default([]), mod_conf_out.results | selectattr('changed') | map(attribute='item') | default([])] | flatten(1) | unique | default([]) }}"
   notify: Restart apache2
 - name: Enable apache2 modules we want for an up-to-date experience
   become: yes
