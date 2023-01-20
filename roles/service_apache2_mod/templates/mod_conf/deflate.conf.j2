@@ -39,25 +39,13 @@
 
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
-		AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
-		AddOutputFilterByType DEFLATE application/x-javascript application/javascript application/ecmascript text/javascript application/javascript application/json
+		AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/json application/json
+		AddOutputFilterByType DEFLATE application/x-javascript application/javascript application/ecmascript text/javascript
 		AddOutputFilterByType DEFLATE application/rss+xml
-		AddOutputFilterByType DEFLATE application/xml
+		AddOutputFilterByType DEFLATE application/xml application/xhtml+xml
 		AddOutputFilterByType DEFLATE image/svg+xml
-		AddOutputFilterByType DEFLATE application/x-font-ttf application/vnd.ms-fontobject image/x-icon
+		AddOutputFilterByType DEFLATE application/x-font-ttf application/vnd.ms-fontobject image/x-icon font/tff font/woff font/woff2
 		AddOutputFilterByType DEFLATE application/wasm
 	</IfModule>
 </IfModule>
-
-<IfModule mod_setenvif.c>
-	# Some content won't benefit from brotli or gzip, like already
-	# pre-compressed content, so let us not bother with it
-	SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp)$ no-brotli no-gzip dont-vary
-</IfModule>
-
-<IfModule mod_headers.c>
-	# Make sure proxies don't deliver the wrong content
-	Header append Vary Accept-Encoding env=!dont-vary
-</IfModule>
-
 # vim: syntax=apache
