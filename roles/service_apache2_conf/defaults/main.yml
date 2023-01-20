@@ -7,11 +7,13 @@ conf_default_remove:
 - localized-error-pages
 - serve-cgi-bin
 conf_default_add:
+- add-mime-types
 - global-log
 - ha-proxy-protocol
 - no-recompress
 - private-ssl
 conf_conf_list:
+- add-mime-types
 - global-log
 - ha-proxy-protocol
 - no-recompress
