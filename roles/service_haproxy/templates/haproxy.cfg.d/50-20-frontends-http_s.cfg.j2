@@ -59,7 +59,6 @@ frontend fe_http_s
 	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/;\ object-src\ https://%[capture.req.hdr(0)]/ if !{ res.hdr(content-security-policy) -m found } !uri_pdf !uri_svg
 	http-response set-header Content-Security-Policy default-src\ https://%[capture.req.hdr(0)]/\ \'unsafe-inline\';\ object-src\ https://%[capture.req.hdr(0)]/ if !{ res.hdr(content-security-policy) -m found } uri_pdf || !{ res.hdr(content-security-policy) -m found } uri_svg
 
-
 	# use_backend be_certbot if path_acme HTTP
 
 	use_backend be_webhost if dom_web_nowww || dom_web_www
