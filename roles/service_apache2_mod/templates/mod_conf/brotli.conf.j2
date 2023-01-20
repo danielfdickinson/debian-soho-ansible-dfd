@@ -40,12 +40,12 @@
 
 <IfModule mod_brotli.c>
 	<IfModule mod_filter.c>
-		AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css
-		AddOutputFilterByType BROTLI_COMPRESS application/x-javascript application/javascript application/ecmascript text/javascript application/javascript application/json
+		AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/json application/json
+		AddOutputFilterByType BROTLI_COMPRESS application/x-javascript application/javascript application/ecmascript text/javascript
 		AddOutputFilterByType BROTLI_COMPRESS application/rss+xml
-		AddOutputFilterByType BROTLI_COMPRESS application/xml
+		AddOutputFilterByType BROTLI_COMPRESS application/xml application/xhtml+xml
 		AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
-		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/vnd.ms-fontobject image/x-icon
+		AddOutputFilterByType BROTLI_COMPRESS application/x-font-ttf application/vnd.ms-fontobject image/x-icon font/tff font/woff font/woff2
 		AddOutputFilterByType BROTLI_COMPRESS application/wasm
 	</IfModule>
 </IfModule>
