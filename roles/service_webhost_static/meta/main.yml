@@ -7,9 +7,7 @@ dependencies:
     apache2_global_index_files:
     - index.html
     - index.asis
-    error_subsites:
-      "test-umbrella.ldev.thecshore.ca":
-      - dananke-theme
+    error_subsites: "{{ host_static_error_subsites }}"
     mods_conf_service_add:
     - asis
     mods_service_add:

@@ -7,13 +7,13 @@
 	SOGoLoginModule = Calendar;
 	SOGoAppointmentSendEMailNotifications = YES;
 	SOGoMailingMechanism = smtp;
-	SOGoSMTPServer = "smtp://imapkss.kss.thecshore.ca:587/?tls=YES";
+	SOGoSMTPServer = "smtp://{{ imap_server_name_external }}:587/?tls=YES";
 	SOGoTimeZone = "America/Toronto";
 	SOGoSentFolderName = Sent;
 	SOGoTrashFolderName = Trash;
 	SOGoDraftsFolderName = Drafts;
-	SOGoIMAPServer = "imaps://imapkss.kss.thecshore.ca:143/?tls=YES";
-	SOGoSieveServer = "sieve://imapkss.kss.thecshore.ca:4190/?tls=YES";
+	SOGoIMAPServer = "imaps://{{ imap_server_name_external }}:143/?tls=YES";
+	SOGoSieveServer = "sieve://{{ imap_server_name_external }}:4190/?tls=YES";
 	SOGoIMAPAclConformsToIMAPExt = YES;
 	SOGoVacationEnabled = NO;
 	SOGoForwardEnabled = NO;
