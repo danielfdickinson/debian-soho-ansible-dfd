@@ -96,14 +96,14 @@ websites_static: "{{ vault_websites_static }}"
 www_port: "{{ vault_www_port }}"
 ipaddrs:
   v4addr:
-    gateldev: "{{ hostvars['gate' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
-    gdavldev: "{{ hostvars['gdav' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
-    imapldev: "{{ hostvars['imap' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
-    smtp01ldev: "{{ hostvars['smtp01' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
+    gate: "{{ hostvars['gate' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
+    gdav: "{{ hostvars['gdav' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
+    imap: "{{ hostvars['imap' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
+    smtp01: "{{ hostvars['smtp01' + env_domain_addon]['ansible_facts']['default_ipv4']['address'] }}"
   v6addr:
-    gateldev: "{{ hostvars['gate' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
-    gdavldev: "{{ hostvars['gdav' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
-    imapldev: "{{ hostvars['imap' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
-    smtp01ldev: "{{ hostvars['smtp01' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
+    gate: "{{ hostvars['gate' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
+    gdav: "{{ hostvars['gdav' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
+    imap: "{{ hostvars['imap' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
+    smtp01: "{{ hostvars['smtp01' + env_domain_addon]['ansible_facts']['default_ipv6']['address'] }}"
 well_known_admin_aliases: "{{ vault_well_known_admin_aliases }}"
 ...

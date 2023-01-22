@@ -18,9 +18,9 @@ dependencies:
     - port: "{{ imap_port | string }}"
     - port: "{{ sieve_port | string }}"
     - port: "{{ submission_port | string }}"
-    - from: "{{ ipaddrs['v4addr']['smtp01ldev'] }}"
+    - from: "{{ ipaddrs['v4addr']['smtp01'] }}"
       port: "{{ lmtp_port | string }}"
-    - from: "{{ ipaddrs['v6addr']['smtp01ldev'] }}"
+    - from: "{{ ipaddrs['v6addr']['smtp01'] }}"
       port: "{{ lmtp_port | string }}"
 # Because ansible-lint complains otherwise
 galaxy_info:

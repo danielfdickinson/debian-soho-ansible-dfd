@@ -90,9 +90,9 @@ dependencies:
         </IfModule>
 - role: danielfdickinson.system_base_debian.ufw
   ufw_added_rules:
-  - from: "{{ ipaddrs['v4addr']['gateldev'] }}"
+  - from: "{{ ipaddrs['v4addr']['gate'] }}"
     port: "{{ gdav_port | string }}"
-  - from: "{{ ipaddrs['v6addr']['gateldev'] }}"
+  - from: "{{ ipaddrs['v6addr']['gate'] }}"
     port: "{{ gdav_port | string }}"
 # Because ansible-lint complains otherwise
 galaxy_info:
