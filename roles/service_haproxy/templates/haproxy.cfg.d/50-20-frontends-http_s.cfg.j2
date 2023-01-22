@@ -31,8 +31,8 @@ frontend fe_http_s
 	acl uri_pdf capture.req.uri -m end .pdf
 	acl uri_svg capture.req.uri -m end .svg
 
-	acl dom_gate hdr(host) gate{{ env_domain_addon }} gate{{ env_domain_addon }}.thecshore.ca
-	acl dom_gdav hdr(host) gdav{{ env_domain_addon }} gdav{{ env_domain_addon }}.thecshore.ca
+	acl dom_gate hdr(host) gate{{ env_domain_addon }} {{ gate_server_name_external }}
+	acl dom_gdav hdr(host) gdav{{ env_domain_addon }} {{ gdav_server_name_external }}
 	acl dom_web_nowww hdr(host) -f /etc/haproxy/acl-files/web_nowww.txt
 	acl dom_web_www hdr(host) -f /etc/haproxy/acl-files/web_www.txt
 
