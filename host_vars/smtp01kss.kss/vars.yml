@@ -1,4 +1,5 @@
 ---
+host_local_freshclam_custom_url: "{{ vault_host_local_freshclam_custom_url }}"
 host_private_cert_cert_content: "{{ vault_private_cert_cert_content }}"
 host_private_cert_cert_file: "{{ vault_private_cert_cert_file }}"
 host_private_cert_key_content: "{{ vault_private_cert_key_content }}"

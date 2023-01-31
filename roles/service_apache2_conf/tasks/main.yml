@@ -40,6 +40,6 @@
     cmd: a2enconf {{ item | quote }}
   register: a2enconf_add_out
   changed_when: a2enconf_add_out.rc == 0 and "already enabled" not in a2enconf_add_out.stdout
-  loop: "{{ [conf_default_add, (conf_service_add | default(None))] | flatten | unique | default([]) }}"
+  loop: "{{ [(conf_default_add is defined) | ternary(conf_default_add, []), (conf_service_add is defined) | ternary(conf_service_add, [])] | flatten | unique | default([]) }}"
   notify: Restart apache2
 ...

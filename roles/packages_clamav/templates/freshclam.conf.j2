@@ -23,4 +23,11 @@ Bytecode true
 NotifyClamd /etc/clamav/clamd.conf
 # Check for new database 24 times a day
 Checks 24
+{% if local_freshclam_custom_url is defined %}
+DatabaseCustomURL file:///var/local/freshclam-seed-db/
+{% endif %}
+{% if local_freshclam_mirror is defined %}
 DatabaseMirror {{ local_freshclam_mirror }}
+{% else %}
+DatabaseMirror database.clamav.net
+{% endif %}
