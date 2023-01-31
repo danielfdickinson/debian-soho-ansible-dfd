@@ -23,7 +23,7 @@
     mode: "0755"
     owner: root
     state: directory
-- name: Copy freshclam seed db files
+- name: Copy freshclam seed db files from local custom url
   become: yes
   ansible.builtin.copy:
     dest: /var/local/freshclam-seed-db/
@@ -31,8 +31,26 @@
     mode: "0755"
     owner: root
     src: "{{ local_freshclam_custom_url }}"
-  when: local_freshclam_custom_url is defined
-- name: Create freshclam configuration that uses private mirror
+- name: Configure webfsd for serving seed db
+  become: yes
+  ansible.builtin.copy:
+    dest: /etc/webfsd.conf
+    group: root
+    mode: "0644"
+    owner: root
+    src: webfsd.conf
+- name: Ensure webfsd is installed
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - webfs
+- name: Restart webfsd
+  become: yes
+  ansible.builtin.service:
+    name: webfs
+    state: restarted
+  changed_when: false
+- name: Create freshclam configuration that may use private mirror
   # Note that use of a https://pypi.org/project/cvdupdate/ private
   # mirror is recommended during testing to avoid being rate limited.
   become: yes
