@@ -7,7 +7,6 @@
     group: root
     mode: "0644"
     owner: root
-  when: local_freshclam_mirror is defined
 - name: Ensure clamav directory exists
   become: yes
   ansible.builtin.file:
@@ -16,7 +15,23 @@
     mode: "0755"
     owner: root
     state: directory
-  when: local_freshclam_mirror is defined
+- name: Ensure freshclam seed db directory exists
+  become: yes
+  ansible.builtin.file:
+    path: /var/local/freshclam-seed-db
+    group: root
+    mode: "0755"
+    owner: root
+    state: directory
+- name: Copy freshclam seed db files
+  become: yes
+  ansible.builtin.copy:
+    dest: /var/local/freshclam-seed-db/
+    group: root
+    mode: "0755"
+    owner: root
+    src: "{{ local_freshclam_custom_url }}"
+  when: local_freshclam_custom_url is defined
 - name: Create freshclam configuration that uses private mirror
   # Note that use of a https://pypi.org/project/cvdupdate/ private
   # mirror is recommended during testing to avoid being rate limited.
@@ -27,7 +42,6 @@
     mode: "0644"
     owner: root
     src: freshclam.conf.j2
-  when: local_freshclam_mirror is defined
 - name: Ensure clamav-daemon is installed
   become: yes
   ansible.builtin.apt:
