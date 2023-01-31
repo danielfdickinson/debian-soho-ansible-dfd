@@ -16,4 +16,4 @@ backend be_sogo
 	http-request auth realm SOGo unless auth_sogo
 	http-request deny
 
-	server sogo01 gdavkss.kss:{{ gdav_port }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ private_ca_cert_file }} verify required alpn h2,http/1.1
+	server sogo01 gdav{{ env_domain_addon }}:{{ gdav_port }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ private_ca_cert_file }} verify required alpn h2,http/1.1

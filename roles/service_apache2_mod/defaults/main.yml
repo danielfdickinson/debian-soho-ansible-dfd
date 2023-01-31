@@ -29,6 +29,7 @@ mods_noauth_list:
 - authz_user
 mods_default_add:
 # Modules we want for an up to date web experience and/or better SEO
+- alias
 - brotli
 - cache
 - cache_disk

@@ -7,6 +7,5 @@ host_private_client_cert_cert_content: "{{ vault_private_client_cert_cert_conten
 host_private_client_cert_cert_file: "{{ vault_private_client_cert_cert_file }}"
 host_private_client_cert_key_content: "{{ vault_private_client_cert_key_content }}"
 host_private_client_cert_key_file: "{{ vault_private_client_cert_key_file }}"
-hostname_aliases: "{{ vault_host_hostname_aliases }}"
-localhost_aliases: "{{ vault_host_localhost_aliases }}"
+host_static_error_subsites: "{{ vault_host_static_error_subsites }}"
 ...
