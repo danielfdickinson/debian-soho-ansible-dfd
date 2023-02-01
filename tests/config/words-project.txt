@@ -71,6 +71,7 @@ ciphersuites
 clamav
 clamd
 coep
+cvdupdate
 dananke
 danielfdickinson
 dansabel
@@ -280,6 +281,8 @@ virusalert
 vmail
 vmailbox
 vtype
+webfs
+webfsd
 webp
 winbind
 wtg
