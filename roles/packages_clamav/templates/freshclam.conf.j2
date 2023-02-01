@@ -23,7 +23,7 @@ Bytecode true
 NotifyClamd /etc/clamav/clamd.conf
 # Check for new database 24 times a day
 Checks 24
-DatabaseMirror localhost:8543
+DatabaseMirror 127.0.0.1:8543
 {% if local_freshclam_mirror is defined %}
 DatabaseMirror {{ local_freshclam_mirror }}
 {% else %}
