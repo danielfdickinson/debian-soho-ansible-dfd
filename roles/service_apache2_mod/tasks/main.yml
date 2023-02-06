@@ -31,6 +31,6 @@
   community.general.apache2_module:
     name: "{{ item }}"
     state: present
-  loop: "{{ [mods_default_add, mods_service_add] | flatten | unique | default([]) }}"
+  loop: "{{ [mods_default_add, mods_service_add, mods_conf_list] | flatten | unique | default([]) }}"
   notify: Restart apache2
 ...
