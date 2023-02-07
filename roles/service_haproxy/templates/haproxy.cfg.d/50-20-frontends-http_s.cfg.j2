@@ -49,7 +49,7 @@ frontend fe_http_s
 	http-request allow if dom_gate || dom_gdav || dom_web_nowww || dom_web_www
 
 	http-response set-header Access-Control-Allow-Origin https://%[capture.req.hdr(0)]/
-	http-response set-header Cross-Origin-Opener-Policy same-origin if !{ res.hdr(cross-origin-opener-policy) }
+	http-response set-header Cross-Origin-Opener-Policy same-origin if !{ res.hdr(cross-origin-opener-policy) -m found }
 	http-response set-header Cross-Origin-Embedder-Policy require-corp if !{ res.hdr(cross-origin-embedder-policy) -m found }
 	http-response set-header Referrer-Policy no-referrer if !{ res.hdr(referrer-policy) -m found }
 	http-response set-header Vary Origin,Accept-Encoding if !{ res.hdr(vary) -m found }

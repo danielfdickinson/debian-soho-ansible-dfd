@@ -24,6 +24,8 @@ email_relayhost: "{{ host_email_relayhost | default('imap' + env_domain_addon) }
 env_domain_addon: "{{ vault_env_domain_addon }}"
 envname: "{{ vault_envname }}"
 external_relayhost: "{{ vault_external_relayhost }}"
+deploytest_fqdn: "{{ vault_deploytest_fqdn }}"
+deploytest_users: "{{ vault_deploytest_users }}"
 gdav_port: "{{ vault_gdav_port }}"
 gate_server_name_external: "{{ vault_gate_server_name_external }}"
 gdav_server_name_external: "{{ vault_gdav_server_name_external }}"

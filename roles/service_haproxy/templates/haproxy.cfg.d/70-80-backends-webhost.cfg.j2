@@ -4,7 +4,17 @@ backend be_webhost
 	stick-table type ip size 2m expire 10m store http_req_rate(10s)
 	acl suspect_scan sc2_http_req_rate gt 100
 	acl suspected_abuser sc0_inc_gpc0(fe_http_s) gt 0
+
+	acl dom_deploytest hdr(host) {{ deploytest_fqdn }}
+	acl auth_deploytest http_auth(deploy-test-auth)
+
 	tcp-request content track-sc2 src
 	tcp-request content reject if suspect_scan suspected_abuser
+
+	http-request add-header X-Remote-User %[http_auth_user] if auth_deploytest
+	http-request allow if auth_deploytest dom_deploytest
+	http-request allow if !dom_deploytest
+	http-request auth realm Deploy-Test if dom_deploytest !auth_deploytest
+	http-request deny
 
 	server webhost01 www{{ env_domain_addon }}:{{ www_port }} send-proxy check ssl crt {{ private_client_cert_full_file }} ca-file {{ private_ca_cert_file }} verify required alpn h2,http/1.1

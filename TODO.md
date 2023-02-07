@@ -3,7 +3,6 @@
 ## For first deploy to 'production'
 
 * Add backupmx role in a separate environment
-* Enable `deploy-test` password protected static web host vhost
 
 ## Soon after
 

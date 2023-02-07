@@ -1,0 +1,4 @@
+userlist deploy-test-auth
+{% for deployuser in deploytest_users %}
+	user {{ deployuser.name }} {{ deployuser['password_type'] | default('password') }} {{ deployuser.password }}
+{% endfor %}
