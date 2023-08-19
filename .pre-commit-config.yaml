@@ -55,31 +55,31 @@ repos:
     args: [--markdown-linebreak-ext=md]
 
 - repo: "https://github.com/igorshubovych/markdownlint-cli"
-  rev: v0.32.2
+  rev: v0.35.0
   hooks:
   - id: markdownlint
     args: [--config, tests/config/markdownlint.json]
     files: .+\.(md|markdown)$
 
 - repo: "https://github.com/adrienverge/yamllint"
-  rev: v1.28.0
+  rev: v1.32.0
   hooks:
   - id: yamllint
     args: [-c=./.yamllint]
     exclude: ^(_vendor|.*/vault.yml$)
 
 - repo: "https://github.com/zricethezav/gitleaks"
-  rev: v8.15.2
+  rev: v8.17.0
   hooks:
   - id: gitleaks
 
 - repo: "https://github.com/jorisroovers/gitlint"
-  rev: v0.18.0
+  rev: v0.19.1
   hooks:
   - id: gitlint
 
 - repo: "https://github.com/editorconfig-checker/editorconfig-checker.python"
-  rev: 2.6.2
+  rev: 2.7.2
   hooks:
   - id: editorconfig-checker
     alias: ec
@@ -88,13 +88,13 @@ repos:
     exclude: ^(LICENSE|.*/master\.cf(\.j2)?$|roles/.*/templates/(hosts\.debian\.tmpl|hosts)\.j2|.yamllint$)
 
 - repo: "https://github.com/semaphor-dk/dansabel"
-  rev: 0ce89b6009f628b1681a825519b683dc0f1a1392
+  rev: 1.4.0
   hooks:
   - id: dansabel
     exclude: ^(requirements.yml$|roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$)
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
-  rev: v6.17.0
+  rev: v7.0.0
   hooks:
   - id: cspell
     args:

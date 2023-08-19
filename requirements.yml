@@ -12,6 +12,6 @@ collections:
   source: "https://galaxy.ansible.com"
 - name: danielfdickinson.system_base_debian
   version: 0.2.0
-  source: "https://gitlab.com/danielfdickinson/ansible_system_base_debian_dfd"
+  source: "https://github.com/danielfdickinson/system_base_debian"
   type: git
 ...

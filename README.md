@@ -5,7 +5,7 @@ infrastructure' cluster, including mail server, groupware, and web hosting.
 
 The virtual machines are presumed to have been previously deployed. The author
 is currently using [Ansible to deploy a VM cluster on
-Libvirt](https://gitlab.com/danielfdickinson/debian-libvirt-ansible-dfd).
+Libvirt](https://github.com/danielfdickinson/debian-libvirt-ansible-dfd).
 
 This repository should not include any unencrypted private or even particularly
 personalised information. It does, however, depend on adding some (to be
@@ -23,7 +23,7 @@ Not yet created.
 
 ### Repository URL
 
-<https://gitlab.com/danielfdickinson/debian-soho-ansible-dfd>
+<https://github.com/danielfdickinson/debian-soho-ansible-dfd>
 
 ## Features and default configuration
 
