@@ -69,7 +69,7 @@ repos:
     exclude: ^(_vendor|.*/vault.yml$)
 
 - repo: "https://github.com/zricethezav/gitleaks"
-  rev: v8.17.0
+  rev: v8.18.0
   hooks:
   - id: gitleaks
 
@@ -94,7 +94,7 @@ repos:
     exclude: ^(requirements.yml$|roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$)
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
-  rev: v7.0.0
+  rev: v7.0.1
   hooks:
   - id: cspell
     args:
