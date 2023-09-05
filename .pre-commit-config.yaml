@@ -55,7 +55,7 @@ repos:
     args: [--markdown-linebreak-ext=md]
 
 - repo: "https://github.com/igorshubovych/markdownlint-cli"
-  rev: v0.35.0
+  rev: v0.36.0
   hooks:
   - id: markdownlint
     args: [--config, tests/config/markdownlint.json]
@@ -94,7 +94,7 @@ repos:
     exclude: ^(requirements.yml$|roles/(postfix_mx_internal/tasks/main.yml|chronyd_libvirtd/tasks/main.yml|libvirtd_network_add/templates/v4v6natnet.xml.j2)$|support-files/sample_group_vars_all_vault.yml$)
 
 - repo: "https://github.com/streetsidesoftware/cspell-cli"
-  rev: v7.0.1
+  rev: v7.3.0
   hooks:
   - id: cspell
     args:
